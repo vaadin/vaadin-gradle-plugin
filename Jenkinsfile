@@ -47,15 +47,15 @@ pipeline {
       }
       steps {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'GithubID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-          sh "rm -rf /tmp/docs; git clone --depth=1 https://github.com/devsoap/docs.git /tmp/docs"
-          sh "cp -R build/docs/groovydoc /tmp/docs/docs/_vaadin_flow_gradle_plugin_api"
+          /* sh "rm -rf /tmp/docs; git clone --depth=1 https://github.com/vaadin/TODO-repository-to-gradle-plugin-docs-TODO.git /tmp/docs" */
+          sh "cp -R build/docs/groovydoc /tmp/docs/docs/_vaadin_gradle_plugin_api"
           dir('/tmp/docs') {
-            sh "git config user.email 'jenkins@devsoap.com'"
+            /* sh "git config user.email 'TODO@TODO.com'" */
             sh "git config user.name 'Jenkins'"
             sh "git checkout -b vaadin-flow-gradle-plugin/${params.buildVersion}"
             sh "git add docs/_vaadin_flow_gradle_plugin_api"
-            sh "git commit -m 'Update API documentation for Vaadin FLow Gradle Plugin ${params.buildVersion}'"
-            sh "git remote add docs https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/devsoap/docs.git"
+            sh "git commit -m 'Update API documentation for Vaadin Gradle Plugin ${params.buildVersion}'"
+            sh "git remote add docs https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vaadin/TODO-repository-to-gradle-plugin-docs-TODO.git"
             sh "git push docs vaadin-flow-gradle-plugin/${params.buildVersion}"
           }
         }

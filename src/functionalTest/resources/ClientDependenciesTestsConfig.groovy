@@ -1,5 +1,6 @@
 /*
  * Copyright 2018-2019 Devsoap Inc.
+ * Copyright 2019 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +15,8 @@
  * limitations under the License.
  */
 
-import com.devsoap.vaadinflow.ClientDependenciesTest
-import com.devsoap.vaadinflow.LegacyClientDependenciesTest
+import com.vaadin.gradle.ClientDependenciesTest
+import com.vaadin.gradle.LegacyClientDependenciesTest
 
 runner {
     include LegacyClientDependenciesTest, ClientDependenciesTest

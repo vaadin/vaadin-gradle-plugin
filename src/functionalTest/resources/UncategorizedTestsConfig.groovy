@@ -1,5 +1,6 @@
 /*
  * Copyright 2018-2019 Devsoap Inc.
+ * Copyright 2019 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.devsoap.spock.Smoke
-import com.devsoap.vaadinflow.ClientDependenciesTest
-import com.devsoap.vaadinflow.LegacyClientDependenciesTest
-import com.devsoap.vaadinflow.LegacyClientProductionModeConfigTest
-import com.devsoap.vaadinflow.LegacyClientProductionModeTest
-import com.devsoap.vaadinflow.FunctionalTest
-import com.devsoap.vaadinflow.MultimoduleFunctionalTest
+import com.vaadin.spock.Smoke
+import com.vaadin.gradle.ClientDependenciesTest
+import com.vaadin.gradle.LegacyClientDependenciesTest
+import com.vaadin.gradle.LegacyClientProductionModeConfigTest
+import com.vaadin.gradle.LegacyClientProductionModeTest
+import com.vaadin.gradle.FunctionalTest
+import com.vaadin.gradle.MultimoduleFunctionalTest
 
 runner {
     include FunctionalTest, MultimoduleFunctionalTest

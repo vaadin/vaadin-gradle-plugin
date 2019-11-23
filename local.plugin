@@ -20,9 +20,8 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.devsoap:gradle-vaadin-flow-plugin:$pluginVersion"
+        classpath "com.vaadin:vaadin-gradle-plugin:$pluginVersion"
         classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
-        classpath "com.devsoap:devsoap-license-plugin:1.0.3"
         classpath 'io.github.classgraph:classgraph:4.8.49'
 	}
 }
@@ -33,6 +32,6 @@ repositories {
     flatDir dirs: gradlePluginDirectory
 }
 
-if (!project.plugins.findPlugin(com.devsoap.vaadinflow.VaadinFlowPlugin)) {
-    project.apply(plugin: com.devsoap.vaadinflow.VaadinFlowPlugin)
+if (!project.plugins.findPlugin(com.vaadin.gradle.VaadinPlugin)) {
+    project.apply(plugin: com.vaadin.gradle.VaadinPlugin)
 }
