@@ -1,5 +1,6 @@
 /*
  * Copyright 2018-2019 Devsoap Inc.
+ * Copyright 2019 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.devsoap.vaadinflow.util
+package com.vaadin.gradle.util
 
-import com.devsoap.vaadinflow.VaadinFlowPlugin
-import com.devsoap.vaadinflow.extensions.VaadinClientDependenciesExtension
+import com.vaadin.gradle.VaadinPlugin
+import com.vaadin.gradle.extensions.VaadinClientDependenciesExtension
 import com.moowork.gradle.node.NodeExtension
 import com.moowork.gradle.node.variant.Variant
 import org.gradle.api.Project
@@ -49,7 +50,7 @@ class VaadinYarnRunnerTest extends Specification {
 
         project = new ProjectBuilder().withProjectDir(testProjectDir).build()
 
-        project.plugins.apply(VaadinFlowPlugin)
+        project.plugins.apply(VaadinPlugin)
 
         project.extensions.getByType(NodeExtension).with {
             variant = new Variant()

@@ -5,7 +5,7 @@ To develop the plugin locally you will need to clone the sources of the plugin.
 You can do it by just cloning this repository:
 
 ```bash
-$> git clone https://github.com/devsoap/gradle-vaadin-flow.git
+$> git clone https://github.com/vaadin/gradle-vaadin-flow.git
 ```
 
 The project is a Gradle project so you can just import it into your preferred IDE.
@@ -29,12 +29,12 @@ The source code is split into 6 different sub packages:
 ##### actions
 
 Every action is related to a plugin that is applied to the project. For example, the GrettyPluginAction is only run for 
-projects which have applied the Gretty plugin. The purpose of these actions is to configure third party plugins so they
-integrate in a seamless manner with the Vaadin Flow plugin.
+projects which have applied the Gretty plugin. The purpose of these actions is to configure third party plug-ins so they
+integrate in a seamless manner with the Vaadin Gradle Plugin.
 
 ##### creators
 
-Creators are responsible for creating files and folders for the user from pre-defined templates. They are mostly used for
+Creators are responsible for creating files and folders for the user from predefined templates. They are mostly used for
 the *vaadinCreate\** tasks. All creator tasks operates on a model.
 
 ##### models
@@ -104,13 +104,6 @@ If you only want to run a single test then it can be achieved by running the fol
 
 ```bash
 ./gradlew -Dorg.gradle.testkit.debug=true functionalTest -x test --stacktrace --info --tests "*<name of test here>*"
-```
-
-If you have a PRO subscription you can also add the following environment variables to be able to run the test in PRO mode:
-
-```
-DEVSOAP_EMAIL=<PRO subscription email>
-DEVSOAP_KEY=<PRO subscription key>
 ```
 
 ##### Pull requests

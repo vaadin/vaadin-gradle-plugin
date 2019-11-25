@@ -1,5 +1,6 @@
 /*
  * Copyright 2018-2019 Devsoap Inc.
+ * Copyright 2019 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-def vaadinType = 'com.devsoap.vaadinflow.extensions.VaadinFlowPluginExtension'
-def vaadinClientType = 'com.devsoap.vaadinflow.extensions.VaadinClientDependenciesExtension'
-def devsoapType = 'com.devsoap.license.DevsoapLicenseExtension'
+def vaadinType = 'com.vaadin.gradle.extensions.VaadinPluginExtension'
+def vaadinClientType = 'com.vaadin.gradle.extensions.VaadinClientDependenciesExtension'
 def vaadinProperty = 'vaadin'
 def vaadinClientProperty = 'vaadinClientDependencies'
-def devsoapProperty = 'devsoap'
+def contributorProperty = 'contributor'
 def vaadinCtx = context(ctype: vaadinType)
 def gradleType = 'gradle'
 def gradleArtifactRepositoryType = 'org.gradle.api.artifacts.repositories.ArtifactRepository'
@@ -78,7 +78,7 @@ contributor(closureCtx, {
         method name: 'npm', params: ['version' :  String.name, 'dependency' : String.name]
         method name: 'npm', params: ['dependencyNotation' : String.name]
     }
-    if(enclosingCall(devsoapProperty)) {
+    if(enclosingCall(contributorProperty)) {
         property name: 'email', type: String.name
         property name: 'key', type: String.name
     }
@@ -87,7 +87,7 @@ contributor(closureCtx, {
 contributor(scriptContext, {
    property name: vaadinProperty, type: vaadinType
    property name: vaadinClientProperty, type: vaadinClientType
-   property name: devsoapProperty, type: devsoapType
+   property name: contributorProperty, type: contributorType
    method name: vaadinProperty, params: ['config': Closure.name], type: Void.name
    method name: vaadinClientProperty, params: ['config': Closure.name], type: Void.name
 })
