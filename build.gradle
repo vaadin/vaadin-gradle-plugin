@@ -38,7 +38,7 @@ plugins {
 
 defaultTasks 'jar'
 group 'com.vaadin'
-version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '2.0-SNAPSHOT-'+ new Date().format('yyyyMMdd')
+version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '1.0-SNAPSHOT-'+ new Date().format('yyyyMMdd')
 archivesBaseName = 'vaadin-gradle-plugin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -67,7 +67,7 @@ processResources {
         filesMatching('versions.properties'){
             filter(ReplaceTokens, tokens: [
                 version: project.version,
-                signature: System.getenv('PRODUCT_SIGNATURE') ?: 'e1058e32-c659-4606-876d-6ace3703292f'
+                signature: System.getenv('PRODUCT_SIGNATURE') ?: 'e1058e32-c659-4606-876d-6ace3703292f' /* TODO REPLACE! */
             ])
         }
     }
@@ -143,7 +143,7 @@ artifacts {
 groovydoc {
     docTitle = "Vaadin Gradle Plugin $version API"
     windowTitle = "Vaadin Gradle Plugin $version"
-    footer = "Vaadin Gradle Plugin is maintained by <a href=\"https://github.com/vaadin/\">Vaadin</a>. Copyright © 2018-2019"
+    footer = "Vaadin Gradle Plugin is maintained by <a href=\"https://vaadin.com/\">Vaadin Ltd</a>."
 }
 
 
@@ -223,7 +223,7 @@ gradlePlugin {
     testSourceSets sourceSets.functionalTest
     plugins {
         vaadinPlugin {
-            id = 'com.vaadin.gradle'
+            id = 'com.vaadin'
             implementationClass = 'com.vaadin.gradle.VaadinPlugin'
         }
     }
@@ -232,7 +232,7 @@ gradlePlugin {
 pluginBundle {
     website = 'https://github.com/vaadin/gradle-vaadin-flow'
     vcsUrl = 'https://github.com/vaadin/gradle-vaadin-flow'
-    description = 'Build Vaadin applications with Gradle!'
+    description = 'Build Vaadin applications with Gradle'
     tags = ['vaadin', 'vaadin-flow', 'vaadin-elements', 'polymer', 'java', 'groovy', 'kotlin']
     plugins {
         vaadinPlugin {

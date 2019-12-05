@@ -62,8 +62,8 @@ import javax.inject.Inject
 @Log('LOGGER')
 class VaadinPlugin implements Plugin<Project> {
 
-    static final String PLUGIN_ID = 'com.vaadin.gradle'
-    static final String PRODUCT_NAME = 'gradle-vaadin-flow'
+    static final String PLUGIN_ID = 'com.vaadin'
+    static final String PRODUCT_NAME = 'vaadin-gradle-plugin'
 
     private static final String COMPILE_CONFIGURATION = 'compile'
     private final List<PluginAction> actions = []
