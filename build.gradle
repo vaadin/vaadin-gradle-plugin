@@ -143,7 +143,7 @@ artifacts {
 groovydoc {
     docTitle = "Vaadin Gradle Plugin $version API"
     windowTitle = "Vaadin Gradle Plugin $version"
-    footer = "Vaadin Gradle Plugin is maintained by <a href=\"https://github.com/vaadin/\">Vaadin</a>. Copyright © 2018-2019"
+    footer = "Vaadin Gradle Plugin is maintained by <a href=\"https://vaadin.com/\">Vaadin Ltd</a>."
 }
 
 
