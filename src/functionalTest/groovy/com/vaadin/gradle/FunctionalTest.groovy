@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
  */
 class FunctionalTest extends Specification {
 
-    static final String PLUGIN_ID = 'com.vaadin.gradle'
+    static final String PLUGIN_ID = 'com.vaadin'
 
     static final String DEFAULT_TEST_VAADIN_VERSION = '14.0.3'
 
