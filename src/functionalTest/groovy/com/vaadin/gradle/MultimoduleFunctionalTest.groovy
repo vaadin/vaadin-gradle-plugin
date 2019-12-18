@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
  */
 class MultimoduleFunctionalTest extends Specification {
 
-    static final String PLUGIN_ID = 'com.vaadin.gradle'
+    static final String PLUGIN_ID = 'com.vaadin'
 
     @Rule
     protected TemporaryFolder rootProjectDir

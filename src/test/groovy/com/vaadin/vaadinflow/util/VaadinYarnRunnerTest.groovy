@@ -71,7 +71,8 @@ class VaadinYarnRunnerTest extends Specification {
             yarnRc.text.contains('yarn-offline-mirror "/foo/bar"')
     }
 
-    void 'package.json contains scripts'() {
+// TODO This is probably obsolete
+/*    void 'package.json contains scripts'() {
         when:
             runner.init()
         then:
@@ -98,7 +99,7 @@ class VaadinYarnRunnerTest extends Specification {
             packageJson.text.contains(
                     '"bower": "C:/path/to/windows/node.exe ./node_modules/bower/bin/bower"')
     }
-
+*/
     private static class TestRunner extends VaadinYarnRunner {
 
         private final ExecResult result

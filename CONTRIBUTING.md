@@ -5,7 +5,7 @@ To develop the plugin locally you will need to clone the sources of the plugin.
 You can do it by just cloning this repository:
 
 ```bash
-$> git clone https://github.com/vaadin/gradle-vaadin-flow.git
+$> git clone https://github.com/vaadin/vaadin-gradle-plugin.git
 ```
 
 The project is a Gradle project so you can just import it into your preferred IDE.
@@ -85,14 +85,14 @@ plugins {
 }
 
 // Build the plugin jar and use the applyscript to apply it
-apply from: '<path yo your plugin repository>/gradle-vaadin-flow/local.plugin'
+apply from: '<path yo your plugin repository>/vaadin-gradle-plugin/local.plugin'
 
 // ... Continue configuring the project as you normally would
 vaadin.autoconfigure()
 ```
 
 You might need to tweak the paths in ``local.plugin`` to suit your environment. By default it uses 
-``$HOME/Repositories/gradle-vaadin-flow/build/libs`` to locate the plugin, but if you have a different path you will
+``$HOME/Repositories/vaadin-gradle-plugin/build/libs`` to locate the plugin, but if you have a different path you will
 need to change it. Please don't submit these changes however in a pull request, the CI server requires this path.
  
 

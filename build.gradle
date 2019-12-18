@@ -230,8 +230,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://github.com/vaadin/gradle-vaadin-flow'
-    vcsUrl = 'https://github.com/vaadin/gradle-vaadin-flow'
+    website = 'https://github.com/vaadin/vaadin-gradle-plugin'
+    vcsUrl = 'https://github.com/vaadin/vaadin-gradle-plugin'
     description = 'Build Vaadin applications with Gradle'
     tags = ['vaadin', 'vaadin-flow', 'vaadin-elements', 'polymer', 'java', 'groovy', 'kotlin']
     plugins {
