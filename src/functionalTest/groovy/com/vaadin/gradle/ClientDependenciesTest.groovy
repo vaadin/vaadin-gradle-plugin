@@ -35,7 +35,6 @@ class ClientDependenciesTest extends FunctionalTest {
             vaadin.autoconfigure()
             '''.stripIndent()
         when:
-            BuildResult createResult = run 'vaadinCreateProject'
             BuildResult jarResult = run('jar')
             File build = Paths.get(testProjectDir.root.canonicalPath, 'build').toFile()
             File frontend = Paths.get(build.canonicalPath, 'frontend').toFile()
@@ -44,8 +43,6 @@ class ClientDependenciesTest extends FunctionalTest {
             File genVaadin = Paths.get(build.canonicalPath, 'webapp-gen', 'VAADIN').toFile()
             File genBuild = new File(genVaadin, 'build')
         then:
-            createResult.output.contains('Licensed to ')
-            !createResult.output.contains('UNLICENSED')
             !jarResult.output.contains('Vaadin 13 (Flow 1) compatibility mode')
 
             new File(frontend, 'package.json').exists()

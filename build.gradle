@@ -23,6 +23,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
  **********************************************************************************************************************/
 plugins {
     id 'java-gradle-plugin'
+	id 'maven-publish'
     id 'groovy'
     id 'idea'
     id 'codenarc'
@@ -244,6 +245,18 @@ pluginBundle {
         groupId = project.group
         artifactId = project.archivesBaseName
     }
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+
+			from components.java
+		}
+	}
 }
 
 /***********************************************************************************************************************
