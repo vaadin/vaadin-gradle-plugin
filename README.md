@@ -2,6 +2,8 @@
 
 This is an experimental Vaadin Gradle Plugin for Vaadin 14 and newer. A stable version for older Vaadin versions can be found [here](https://devsoap.com/gradle-vaadin-flow-plugin/).
 
+Gradle 6 is not yet supported. Use version 5.6.4.
+
 Currently builds are available only from temporary pre-release repository. You can start with following build.gradle file (with final release the start will be simpler):
 
 ```
