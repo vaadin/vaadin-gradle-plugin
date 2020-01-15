@@ -99,17 +99,12 @@ class VaadinPluginAction extends PluginAction {
 
         String vaadinVersion = Versions.version(PLUGIN_VERSION_KEY)
         LogUtils.printIfNotPrintedBefore( project,
-                "Using Vaadin Gradle Plugin $vaadinVersion (UNLICENSED)"
+                "Using Vaadin Gradle Plugin $vaadinVersion "
         )
 
         VaadinPluginExtension vaadin = project.extensions[VaadinPluginExtension.NAME]
         if (!vaadin.versionSet) {
             LOGGER.warning('vaadin.version is not set, falling back to latest Vaadin version')
-        }
-
-        if (vaadin.submitStatisticsUnset) {
-            LOGGER.warning('Allow Vaadin to gather usage statistics by setting ' +
-                    'vaadin.submitStatistics=true (hide this message by setting it to false)')
         }
 
         if (vaadin.compatibilityMode) {
