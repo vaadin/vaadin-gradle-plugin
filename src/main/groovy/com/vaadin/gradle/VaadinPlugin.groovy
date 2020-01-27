@@ -94,7 +94,7 @@ class VaadinPlugin implements Plugin<Project> {
             extensions.with {
                 create(VaadinPluginExtension.NAME, VaadinPluginExtension, project)
                 create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
-                create("vaadinFlow", VaadinFlowPluginExtension, project)
+                create('vaadinFlow', VaadinFlowPluginExtension, project)
             }
 
             tasks.with {
@@ -111,14 +111,14 @@ class VaadinPlugin implements Plugin<Project> {
                 register(ConvertGroovyTemplatesToHTML.NAME, ConvertGroovyTemplatesToHTML)
                 register(VersionCheckTask.NAME, VersionCheckTask)
 
-                findByPath("clean")?.doLast {
+                findByPath('clean')?.doLast {
                     project.delete("${project.projectDir}/target",
                             "${project.projectDir}/src/main/resources/META-INF/VAADIN/config",
                             "${project.projectDir}/src/main/resources/META-INF/VAADIN/build")
                 }
-                register("vaadinClean", VaadinCleanTask)
-                register("vaadinPrepareFrontend", VaadinPrepareFrontendTask)
-                register("vaadinBuildFrontend", VaadinBuildFrontendTask)
+                register('vaadinClean', VaadinCleanTask)
+                register('vaadinPrepareFrontend', VaadinPrepareFrontendTask)
+                register('vaadinBuildFrontend', VaadinBuildFrontendTask)
             }
 
             afterEvaluate {

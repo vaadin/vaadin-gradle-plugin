@@ -132,6 +132,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     include 'com/**/*.groovy'
     include 'com/**/*.java'
+    include 'com/**/*.kt'
 }
 
 /**
