@@ -94,7 +94,8 @@ class VaadinPlugin implements Plugin<Project> {
             extensions.with {
                 create(VaadinPluginExtension.NAME, VaadinPluginExtension, project)
                 create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
-                create('vaadinFlow', VaadinFlowPluginExtension, project)
+                // need to use reflection since Groovy+Kotlin projects are not really supported.
+                create('vaadinFlow', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
             }
 
             tasks.with {
@@ -116,9 +117,9 @@ class VaadinPlugin implements Plugin<Project> {
                             "${project.projectDir}/src/main/resources/META-INF/VAADIN/config",
                             "${project.projectDir}/src/main/resources/META-INF/VAADIN/build")
                 }
-                register('vaadinClean', VaadinCleanTask)
-                register('vaadinPrepareFrontend', VaadinPrepareFrontendTask)
-                register('vaadinBuildFrontend', VaadinBuildFrontendTask)
+                register('vaadinClean', Class.forName("com.vaadin.gradle.VaadinCleanTask"))
+                register('vaadinPrepareFrontend', Class.forName("com.vaadin.gradle.VaadinPrepareFrontendTask"))
+                register('vaadinBuildFrontend', Class.forName("com.vaadin.gradle.VaadinBuildFrontendTask"))
             }
 
             afterEvaluate {
