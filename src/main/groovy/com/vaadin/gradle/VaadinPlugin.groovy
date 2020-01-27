@@ -117,6 +117,7 @@ class VaadinPlugin implements Plugin<Project> {
                             "${project.projectDir}/src/main/resources/META-INF/VAADIN/build")
                 }
                 register("vaadinClean", VaadinCleanTask)
+                register("vaadinPrepareFrontend", VaadinPrepareFrontendTask)
                 register("vaadinBuildFrontend", VaadinBuildFrontendTask)
             }
 
