@@ -51,3 +51,14 @@ internal fun exec(logger: Logger, cwd: File, vararg args: String) {
 internal fun JsonObject.writeToFile(file: File) {
     file.writeText(JsonUtil.stringify(this, 2) + "\n")
 }
+
+/**
+ * Allows Kotlin-based gradle scripts to be configured via
+ * ```
+ * vaadin {
+ *   optimizeBundle = false
+ * }
+ * ```
+ */
+fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) =
+        convention.findByType(VaadinFlowPluginExtension::class.java)!!.apply(block)
