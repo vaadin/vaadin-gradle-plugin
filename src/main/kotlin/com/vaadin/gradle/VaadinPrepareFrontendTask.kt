@@ -20,7 +20,9 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
     init {
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
-        mustRunAfter("processResources")
+        // however, see VaadinPlugin why we actually need to run before processResources
+        // @todo mavi fix
+        //mustRunAfter("processResources")
     }
 
     @TaskAction

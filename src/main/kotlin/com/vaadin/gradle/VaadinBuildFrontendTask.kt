@@ -29,7 +29,9 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     init {
         dependsOn("vaadinPrepareFrontend")
         // Maven's task run in the LifecyclePhase.PREPARE_PACKAGE phase
-        mustRunAfter("classes")
+        // however, see VaadinPlugin why we actually need to run before processResources
+        // @todo mavi fix
+        //mustRunAfter("classes")
     }
 
     @TaskAction

@@ -51,6 +51,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.War
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.jvm.tasks.Jar
+import org.gradle.language.jvm.tasks.ProcessResources
 import org.gradle.tooling.UnsupportedVersionException
 import org.gradle.util.VersionNumber
 
@@ -137,6 +138,20 @@ class VaadinPlugin implements Plugin<Project> {
                 disableStatistics(project)
                 enableProductionMode(project)
                 validateVaadinVersion(project)
+
+                // Currently we're generating stuff into src/ ; the processResources task
+                // then copies stuff into the build/ folder, which allows the war task to package
+                // it into the WAR archive.
+                //
+                // We should use generated folder but then we need to force intellij to
+                // use that generated folder when launching the project in Tomcat:
+                // https://youtrack.jetbrains.com/issue/IDEA-176770
+                // and https://discuss.gradle.org/t/how-do-i-compile-generated-resources-i-e-include-in-runtime-classpath-and-jar-war/6295/3
+                //
+                // @todo mavi use generated folder but make sure it works with Intellij+Tomcat
+                project.tasks.withType(ProcessResources) { ProcessResources task ->
+                    task.mustRunAfter("vaadinBuildFrontend")
+                }
                 project.tasks.withType(War) { War task ->
                     // vaadinBuildFrontend generates resources which need to be placed inside of the WAR
                     task.mustRunAfter("vaadinBuildFrontend")
