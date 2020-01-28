@@ -3,6 +3,7 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
+import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
 
 open class VaadinFlowPluginExtension(project: Project) {
@@ -11,17 +12,25 @@ open class VaadinFlowPluginExtension(project: Project) {
      */
     var productionMode = false
 
-    // this is target/classes in Maven. Yes, I know I should use gradle's build/something/
-    // ideally create new build/output directory, however Intellij won't pick generated files
-    // (namely flow-build-info.json) from such directory when launching project in Tomcat.
-    // for now I'm thus generating into the src/ .
-    var buildOutputDirectory = "${project.projectDir}/src/main/resources"
+    /**
+     * The plugin will generate additional resource files here. These files need
+     * to be present on the classpath, in order for Vaadin to be
+     * able to run, both in dev mode and in the production mode. The plugin will automatically register
+     * this as an additional resource folder, which should then be picked up by the IDE.
+     * That will allow the app to run for example in Intellij with Tomcat.
+     *
+     * For example the `flow-build-info.json` goes here. See [webpackOutputDirectory]
+     * for more details.
+     */
+    var buildOutputDirectory = File(project.buildDir, "vaadin-generated")
 
     /**
      * The folder where webpack should output index.js and other generated
      * files.
+     *
+     * In the dev mode, the `flow-build-info.json` file is generated here.
      */
-    var webpackOutputDirectory = File("$buildOutputDirectory/META-INF/VAADIN/")
+    var webpackOutputDirectory = File(buildOutputDirectory, Constants.VAADIN_SERVLET_RESOURCES)
 
     /**
      * The folder where `package.json` file is located. Default is project root
@@ -79,4 +88,11 @@ open class VaadinFlowPluginExtension(project: Project) {
      * components.
      */
     var optimizeBundle = true
+
+    init {
+        project.afterEvaluate {
+            val cont = it.properties["sourceSets"] as SourceSetContainer
+            cont.getByName("main").resources.srcDirs(buildOutputDirectory)
+        }
+    }
 }

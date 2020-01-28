@@ -125,9 +125,7 @@ class VaadinPlugin implements Plugin<Project> {
                 register(VersionCheckTask.NAME, VersionCheckTask)
 
                 findByPath('clean')?.doLast {
-                    project.delete("${project.projectDir}/target",
-                            "${project.projectDir}/src/main/resources/META-INF/VAADIN/config",
-                            "${project.projectDir}/src/main/resources/META-INF/VAADIN/build")
+                    project.delete("${project.projectDir}/target")
                 }
                 register('vaadinClean', Class.forName("com.vaadin.gradle.VaadinCleanTask"))
                 register('vaadinPrepareFrontend', Class.forName("com.vaadin.gradle.VaadinPrepareFrontendTask"))
