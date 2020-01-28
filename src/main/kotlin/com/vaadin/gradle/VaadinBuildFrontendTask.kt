@@ -28,6 +28,8 @@ import java.io.File
 open class VaadinBuildFrontendTask : DefaultTask() {
     init {
         dependsOn("vaadinPrepareFrontend")
+        // Maven's task run in the LifecyclePhase.PREPARE_PACKAGE phase
+        mustRunAfter("classes")
     }
 
     @TaskAction

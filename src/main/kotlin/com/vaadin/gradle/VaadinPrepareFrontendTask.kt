@@ -18,6 +18,11 @@ import java.nio.file.Files
  */
 open class VaadinPrepareFrontendTask : DefaultTask() {
 
+    init {
+        // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
+        mustRunAfter("processResources")
+    }
+
     @TaskAction
     fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension

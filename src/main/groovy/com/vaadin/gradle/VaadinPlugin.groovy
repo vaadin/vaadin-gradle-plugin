@@ -47,7 +47,9 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.invocation.Gradle
+import org.gradle.api.tasks.bundling.War
 import org.gradle.internal.reflect.Instantiator
+import org.gradle.jvm.tasks.Jar
 import org.gradle.tooling.UnsupportedVersionException
 import org.gradle.util.VersionNumber
 
@@ -72,6 +74,10 @@ class VaadinPlugin implements Plugin<Project> {
     VaadinPlugin(Gradle gradle, Instantiator instantiator) {
         validateGradleVersion(gradle)
 
+        // WarPluginAction makes old task execute
+        // automatically before "war" task - that will interfere with the new task set.
+        // disable all actions - they're not needed with the new task set.
+/*
         actions << instantiator.newInstance(JavaPluginAction)
         actions << instantiator.newInstance(VaadinPluginAction)
         actions << instantiator.newInstance(NodePluginAction)
@@ -81,6 +87,7 @@ class VaadinPlugin implements Plugin<Project> {
         actions << instantiator.newInstance(SpringBootAction)
         actions << instantiator.newInstance(SassJavaPluginAction)
         actions << instantiator.newInstance(SassWarPluginAction)
+*/
     }
 
     @Override
@@ -126,6 +133,14 @@ class VaadinPlugin implements Plugin<Project> {
                 disableStatistics(project)
                 enableProductionMode(project)
                 validateVaadinVersion(project)
+                project.tasks.withType(War) { War task ->
+                    // vaadinBuildFrontend generates resources which need to be placed inside of the WAR
+                    task.mustRunAfter("vaadinBuildFrontend")
+                }
+                project.tasks.withType(Jar) { Jar task ->
+                    // vaadinBuildFrontend generates resources which need to be placed inside of the JAR
+                    task.mustRunAfter("vaadinBuildFrontend")
+                }
             }
         }
     }
