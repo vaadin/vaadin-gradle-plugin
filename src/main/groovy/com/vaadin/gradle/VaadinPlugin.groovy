@@ -47,6 +47,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.invocation.Gradle
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.War
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.jvm.tasks.Jar
@@ -92,6 +93,9 @@ class VaadinPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        // we need Java Plugin conventions so that we can ensure the order of tasks
+        project.getPluginManager().apply(JavaPlugin.class)
+
         project.with {
 
             actions.each { action ->
