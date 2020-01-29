@@ -140,6 +140,35 @@ vaadin.autoconfigure()
 
 [Preliminary documentation (targeting for final release)](https://github.com/vaadin-learning-center/learning-content/blob/author/magi/gradle-plugin/learn/tutorials/gradle-plugin/content.adoc)
 
+## Developing The Plugin
+
+Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
+to understand how Gradle plugins are developed.
+
+The main entry to the plugin is the `VaadinPlugin` class. When applied to the project, it will register
+all necessary tasks and extensions into the project.
+
+Launching all tests - TBD
+
+### Developing the plugin and testing it on-the-fly
+
+You can take advantage of [composite builds](https://docs.gradle.org/current/userguide/composite_builds.html),
+which will allow you to join together the plugin itself along with an example project using that plugin,
+into one composite project. The easiest way is to use the [Skeleton Starter Gradle](https://github.com/vaadin/skeleton-starter-gradle)
+example project.
+
+1. Clone the Skeleton Starter Gradle project and open it in Intellij
+2. Remove the entire `buildscript{}` block and the `apply plugin:"com.vaadin"` line and
+   uncomment the `id("com.vaadin")` line.
+3. Create a `settings.gradle` file containing the following line: `includeBuild("/home/mavi/work/vaadin/vaadin-gradle-plugin")`
+   (use full path on your system to the Gradle Plugin project)
+4. Reimport the Skeleton Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
+   should appear in your workspace.
+5. Open the terminal with Alt+F12.
+6. If you now type `./gradlew vaadinPrepareFronend` into the command line, Gradle will compile any changes done to
+   the Gradle plugin and will run updated code. You can verify that by adding `println()` statements
+   into the `VaadinPrepareFrontendTask` class.
+
 ## License
 
 This plugin is distributed under the Apache License 2.0 license. For more information about the license see the LICENSE file 
