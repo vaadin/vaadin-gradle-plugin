@@ -27,7 +27,11 @@ There are the following tasks:
   will allow you to run the project e.g. in Tomcat with Intellij Ultimate.
   The task checks that node and npm tools are installed, copies frontend resources available inside
   `.jar` dependencies to `node_modules`, and creates or updates `package.json` and `webpack.config.json` files.
-* `vaadinBuildFrontend` will compile everything in production mode.
+* `vaadinBuildFrontend` will use webpack to compile all JavaScript and CSS files into one huge bundle in production mode,
+  and will place that by default into the `build/vaadin-generated` folder. The folder is
+  then later picked up by `jar` and `war` tasks which then package the folder contents properly
+  onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
+  need to be invoked explicitly.
 
 Most common commands for the WAR project:
 
