@@ -6,18 +6,26 @@ import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+import org.gradle.api.tasks.SourceSetContainer
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.io.File
 import java.net.URL
 
+private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 internal fun getClassFinder(project: Project): ClassFinder {
-    val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
     val runtimeJars: List<File> = project.configurations.getByName("runtime").toList()
+
+    // we need to also analyze the project's classes
+    val sourceSet: SourceSetContainer = project.properties["sourceSets"] as SourceSetContainer
+    val classesDirs: List<File> = sourceSet.getByName("main").output.classesDirs
+            .toList()
+            .filter { it.exists() }
+
     val servletJar: List<File> = project.configurations.getByName("providedCompile")
             .filter { it.absolutePath.matches(servletApiJarRegex) }
             .toList()
-    val apis: Set<File> = (runtimeJars + servletJar).toSet()
+    val apis: Set<File> = (runtimeJars + classesDirs + servletJar).toSet()
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
     return ReflectionsClassFinder(*apiUrls.toTypedArray())
