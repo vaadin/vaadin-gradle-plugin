@@ -12,13 +12,16 @@ import java.io.File
 import java.nio.file.Files
 
 /**
- * This tasks checks that node and npm tools are installed, copies frontend
+ * This task checks that node and npm tools are installed, copies frontend
  * resources available inside `.jar` dependencies to `node_modules`, and creates
  * or updates `package.json` and `webpack.config.json` files.
  */
 open class VaadinPrepareFrontendTask : DefaultTask() {
 
     init {
+        group = "Vaadin"
+        description = "checks that node and npm tools are installed, copies frontend resources available inside `.jar` dependencies to `node_modules`, and creates or updates `package.json` and `webpack.config.json` files."
+
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
         // however, see VaadinPlugin why we actually need to run before processResources
         // @todo mavi fix

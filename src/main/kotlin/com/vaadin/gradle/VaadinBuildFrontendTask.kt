@@ -10,7 +10,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 /**
- * Goal that builds the frontend bundle.
+ * Task that builds the frontend bundle.
  *
  * It performs the following actions when creating a package:
  * * Update [Constants.PACKAGE_JSON] file with the [com.vaadin.flow.component.dependency.NpmPackage]
@@ -27,6 +27,9 @@ import java.io.File
  */
 open class VaadinBuildFrontendTask : DefaultTask() {
     init {
+        group = "Vaadin"
+        description = "Builds the frontend bundle with webpack"
+
         dependsOn("vaadinPrepareFrontend")
         // Maven's task run in the LifecyclePhase.PREPARE_PACKAGE phase
         // however, see VaadinPlugin why we actually need to run before processResources

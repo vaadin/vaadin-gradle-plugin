@@ -19,6 +19,9 @@ import org.gradle.api.tasks.TaskAction
  */
 open class VaadinCleanTask : DefaultTask() {
     init {
+        group = "Vaadin"
+        description = "Cleans the project completely and removes node_modules, package*.json and webpack.*.js"
+
         dependsOn("clean")
     }
 
