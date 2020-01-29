@@ -91,8 +91,8 @@ open class VaadinFlowPluginExtension(project: Project) {
 
     init {
         project.afterEvaluate {
-            val cont = it.properties["sourceSets"] as SourceSetContainer
-            cont.getByName("main").resources.srcDirs(buildOutputDirectory)
+            val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
+            sourceSets.getByName("main").resources.srcDirs(buildOutputDirectory)
         }
     }
 }
