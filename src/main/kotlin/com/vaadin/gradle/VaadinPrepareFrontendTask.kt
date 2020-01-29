@@ -8,6 +8,7 @@ import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
+import org.gradle.language.jvm.tasks.ProcessResources
 import java.io.File
 import java.nio.file.Files
 
@@ -23,9 +24,13 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         description = "checks that node and npm tools are installed, copies frontend resources available inside `.jar` dependencies to `node_modules`, and creates or updates `package.json` and `webpack.config.json` files."
 
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
-        // however, see VaadinPlugin why we actually need to run before processResources
-        // @todo mavi fix
-        //mustRunAfter("processResources")
+
+        // This task generating stuff into build/vaadin-generated/ ; the `processResources` task
+        // then copies stuff into the build/ folder, which allows the war task to package
+        // it into the WAR archive. Therefore, make sure to run this task before the `processResources` task.
+        project.tasks.named("processResources") { task ->
+            task.mustRunAfter("vaadinPrepareFrontend")
+        }
     }
 
     @TaskAction
