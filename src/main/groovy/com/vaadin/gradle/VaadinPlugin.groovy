@@ -47,6 +47,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.invocation.Gradle
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.tooling.UnsupportedVersionException
 import org.gradle.util.VersionNumber
@@ -67,54 +68,79 @@ class VaadinPlugin implements Plugin<Project> {
 
     private static final String COMPILE_CONFIGURATION = 'compile'
     private final List<PluginAction> actions = []
+    private final enableOldPlugin = Boolean.valueOf(System.getProperty("vaadin.enableOldPlugin"))
 
     @Inject
     VaadinPlugin(Gradle gradle, Instantiator instantiator) {
-        validateGradleVersion(gradle)
+        if (enableOldPlugin) {
+            validateGradleVersion(gradle)
 
-        actions << instantiator.newInstance(JavaPluginAction)
-        actions << instantiator.newInstance(VaadinPluginAction)
-        actions << instantiator.newInstance(NodePluginAction)
-        actions << instantiator.newInstance(WarPluginAction)
-        actions << instantiator.newInstance(GrettyDeprecatedPluginAction)
-        actions << instantiator.newInstance(GrettyPluginAction)
-        actions << instantiator.newInstance(SpringBootAction)
-        actions << instantiator.newInstance(SassJavaPluginAction)
-        actions << instantiator.newInstance(SassWarPluginAction)
+            actions << instantiator.newInstance(JavaPluginAction)
+            actions << instantiator.newInstance(VaadinPluginAction)
+            actions << instantiator.newInstance(NodePluginAction)
+            actions << instantiator.newInstance(WarPluginAction)
+            actions << instantiator.newInstance(GrettyDeprecatedPluginAction)
+            actions << instantiator.newInstance(GrettyPluginAction)
+            actions << instantiator.newInstance(SpringBootAction)
+            actions << instantiator.newInstance(SassJavaPluginAction)
+            actions << instantiator.newInstance(SassWarPluginAction)
+        }
     }
 
     @Override
     void apply(Project project) {
+        // we need Java Plugin conventions so that we can ensure the order of tasks
+        project.getPluginManager().apply(JavaPlugin.class)
+        def enableOldPlugin = this.enableOldPlugin
+
         project.with {
 
-            actions.each { action ->
-                action.apply(project)
+            if (enableOldPlugin) {
+                actions.each { action ->
+                    action.apply(project)
+                }
             }
 
             extensions.with {
-                create(VaadinPluginExtension.NAME, VaadinPluginExtension, project)
-                create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
+                if (enableOldPlugin) {
+                    create(VaadinPluginExtension.NAME, VaadinPluginExtension, project)
+                    create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
+                } else {
+                    // need to use reflection since Groovy+Kotlin projects are not really supported.
+                    create('vaadinFlow', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
+                }
             }
 
             tasks.with {
-                register(CreateProjectTask.NAME, CreateProjectTask)
-                register(CreateWebComponentTask.NAME, CreateWebComponentTask)
-                register(InstallYarnDependenciesTask.NAME, InstallYarnDependenciesTask)
-                register(InstallBowerDependenciesTask.NAME, InstallBowerDependenciesTask)
-                register(TranspileDependenciesTask.NAME, TranspileDependenciesTask)
-                register(AssembleClientDependenciesTask.NAME, AssembleClientDependenciesTask)
-                register(WrapCssTask.NAME, WrapCssTask)
-                register(CreateCompositeTask.NAME, CreateCompositeTask)
-                register(CreateComponentTask.NAME, CreateComponentTask)
-                register(CreateWebTemplateTask.NAME, CreateWebTemplateTask)
-                register(ConvertGroovyTemplatesToHTML.NAME, ConvertGroovyTemplatesToHTML)
-                register(VersionCheckTask.NAME, VersionCheckTask)
+                if (enableOldPlugin) {
+                    register(CreateProjectTask.NAME, CreateProjectTask)
+                    register(CreateWebComponentTask.NAME, CreateWebComponentTask)
+                    register(InstallYarnDependenciesTask.NAME, InstallYarnDependenciesTask)
+                    register(InstallBowerDependenciesTask.NAME, InstallBowerDependenciesTask)
+                    register(TranspileDependenciesTask.NAME, TranspileDependenciesTask)
+                    register(AssembleClientDependenciesTask.NAME, AssembleClientDependenciesTask)
+                    register(WrapCssTask.NAME, WrapCssTask)
+                    register(CreateCompositeTask.NAME, CreateCompositeTask)
+                    register(CreateComponentTask.NAME, CreateComponentTask)
+                    register(CreateWebTemplateTask.NAME, CreateWebTemplateTask)
+                    register(ConvertGroovyTemplatesToHTML.NAME, ConvertGroovyTemplatesToHTML)
+                    register(VersionCheckTask.NAME, VersionCheckTask)
+                } else {
+                    findByPath('clean')?.doLast {
+                        project.delete("${project.projectDir}/target")
+                    }
+                    register('vaadinClean', Class.forName("com.vaadin.gradle.VaadinCleanTask"))
+                    register('vaadinPrepareFrontend', Class.forName("com.vaadin.gradle.VaadinPrepareFrontendTask"))
+                    register('vaadinBuildFrontend', Class.forName("com.vaadin.gradle.VaadinBuildFrontendTask"))
+                }
             }
 
-            afterEvaluate {
-                disableStatistics(project)
-                enableProductionMode(project)
-                validateVaadinVersion(project)
+            if (enableOldPlugin) {
+                afterEvaluate {
+                    disableStatistics(project)
+                    enableProductionMode(project)
+                    validateVaadinVersion(project)
+                }
             }
         }
     }
