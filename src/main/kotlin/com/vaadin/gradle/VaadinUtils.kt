@@ -5,6 +5,7 @@ import com.vaadin.flow.server.scanner.ReflectionsClassFinder
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSetContainer
 import org.zeroturnaround.exec.ProcessExecutor
@@ -22,9 +23,13 @@ internal fun getClassFinder(project: Project): ClassFinder {
             .toList()
             .filter { it.exists() }
 
-    val servletJar: List<File> = project.configurations.getByName("providedCompile")
-            .filter { it.absolutePath.matches(servletApiJarRegex) }
-            .toList()
+    // for Spring Boot project there is no "providedCompile" scope: the WAR plugin brings that in.
+    val providedDeps: Configuration? = project.configurations.findByName("providedCompile")
+    val servletJar: List<File> = providedDeps
+            ?.filter { it.absolutePath.matches(servletApiJarRegex) }
+            ?.toList()
+            ?: listOf()
+
     val apis: Set<File> = (runtimeJars + classesDirs + servletJar).toSet()
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
