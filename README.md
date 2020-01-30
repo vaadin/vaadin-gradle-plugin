@@ -1,20 +1,22 @@
 # Vaadin Gradle Plugin
 
-This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14 and newer.
-Compared to Maven plugin, there are the following limitations:
+This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14 and newer. The implementation is now mostly based on the similar Maven plugin. Compared to Maven plugin, there are the following limitations:
 
 * Vaadin 14 Compatibility mode is not supported
 * Migration from Vaadin 13 to Vaadin 14 is not supported.
 
+*Features of the "old Vaadin gradle plugin" are currently behind a flag, but most likely removed from the final release. Please let us know if you find those essential! [See more...](#old-plugin-mode)*
+
 Prerequisites:
 * Java 8 or higher
-* node.js and npm installed locally. You can simply install those:
-  * Windows: [node.js Download site](https://nodejs.org/en/download/) - use the .msi 64-bit installer
-  * Linux: `sudo apt install npm`
+* node.js and npm installed locally. To install:
+  * Windows/Mac: [node.js Download site](https://nodejs.org/en/download/)
+  * Linux: Use package manager e.g. `sudo apt install npm` 
 
-There is currently no easy way of integrating this plugin into your build.
-Please see [Skeleton Starter Gradle](https://github.com/vaadin/skeleton-starter-gradle)
-example project for more information on how to integrate this plugin into your build.
+As opposed to the older version of Gradle pluging, the plugin don't create projects any more. We plan to support Gradle projects via vaadin.com/start at some point. In the mean time, refer to project examples that you can use as a basis for your Vaadin modules:
+
+* [Basic war project](https://github.com/vaadin/base-starter-gradle)
+* [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 
 ## Tasks
 
