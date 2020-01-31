@@ -106,20 +106,7 @@ for more details.
 
 You do not need to have node.js nor npm installed in your system, in order to use Vaadin. The Vaadin Gradle Plugin
 is able to help you with downloading of the node.js+npm distribution.
-
-In order to do that, you will need the [com.github.node-gradle.node](https://plugins.gradle.org/plugin/com.github.node-gradle.node) plugin.
-Add the following to your `build.gradle` file:
-
-```groovy
-plugins {
-    id "com.github.node-gradle.node" version "2.2.1"  // in order for vaadinPrepareNode to work
-}
-node {
-    version = "10.15.2"
-    download = true
-    // to download node+npm, just run the `vaadinPrepareNode` task
-}
-```
+You only need to run the `vaadinPrepareNode` task.
 
 In your development environment, all you need to do is to run:
 ```bash
@@ -132,6 +119,15 @@ from now on.
 In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
 ```bash
 ./gradlew clean vaadinPrepareNode vaadinBuildFrontend build
+```
+
+If you wish to override the node version which will be downloaded, simply specify
+the new version in the `vaadinFlow{}` block:
+
+```groovy
+vaadinFlow {
+    nodeVersion = "10.15.2"
+}
 ```
 
 # Old Plugin Mode

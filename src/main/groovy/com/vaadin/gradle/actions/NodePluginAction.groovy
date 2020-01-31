@@ -16,7 +16,7 @@
  */
 package com.vaadin.gradle.actions
 
-import com.vaadin.gradle.NodePlugin
+import com.moowork.gradle.node.NodePlugin
 import com.vaadin.gradle.extensions.VaadinClientDependenciesExtension
 import com.vaadin.gradle.util.HttpUtils
 import com.vaadin.gradle.util.LogUtils

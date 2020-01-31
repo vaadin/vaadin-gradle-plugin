@@ -1,5 +1,7 @@
 package com.vaadin.gradle
 
+import com.moowork.gradle.node.NodeExtension
+import com.moowork.gradle.node.NodePlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
@@ -32,10 +34,13 @@ open class VaadinPrepareNodeTask : DefaultTask() {
         group = "Vaadin"
         description = "prepares a local node distribution for use by Vaadin. Requires com.github.node-gradle.node plugin"
 
-        val nodeSetupTask: Task? = project.tasks.findByName("nodeSetup")
-        if (nodeSetupTask != null) {
-            dependsOn(nodeSetupTask)
-        }
+        project.pluginManager.apply(NodePlugin::class.java)
+        val nodeExtension: NodeExtension = project.extensions.getByType(NodeExtension::class.java)
+        val extension: VaadinFlowPluginExtension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension
+        nodeExtension.download = true
+        nodeExtension.version = extension.nodeVersion
+
+        dependsOn("nodeSetup")
     }
 
     @TaskAction
