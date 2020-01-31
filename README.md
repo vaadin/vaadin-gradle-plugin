@@ -104,7 +104,7 @@ for more details.
 
 ## Automatic Download of node.js and npm
 
-You do not have node.js nor npm installed in your system, in order to use Vaadin. The Vaadin Gradle Plugin
+You do not need to have node.js nor npm installed in your system, in order to use Vaadin. The Vaadin Gradle Plugin
 is able to help you with downloading of the node.js+npm distribution.
 
 In order to do that, you will need the [com.github.node-gradle.node](https://plugins.gradle.org/plugin/com.github.node-gradle.node) plugin.
