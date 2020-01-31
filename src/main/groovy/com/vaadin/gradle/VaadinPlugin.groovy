@@ -132,6 +132,7 @@ class VaadinPlugin implements Plugin<Project> {
                     register('vaadinClean', Class.forName("com.vaadin.gradle.VaadinCleanTask"))
                     register('vaadinPrepareFrontend', Class.forName("com.vaadin.gradle.VaadinPrepareFrontendTask"))
                     register('vaadinBuildFrontend', Class.forName("com.vaadin.gradle.VaadinBuildFrontendTask"))
+                    register('vaadinPrepareNode', Class.forName("com.vaadin.gradle.VaadinPrepareNodeTask"))
                 }
             }
 

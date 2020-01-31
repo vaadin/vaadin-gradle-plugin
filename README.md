@@ -34,6 +34,8 @@ There are the following tasks:
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
   need to be invoked explicitly.
+* `vaadinPrepareNode` will prepare a local distribution of node.js and npm for use by Vaadin.
+  Please see below for more information.
 
 Most common commands for the WAR project:
 
@@ -99,6 +101,38 @@ for more details.
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
+
+## Automatic Download of node.js and npm
+
+You do not have node.js nor npm installed in your system, in order to use Vaadin. The Vaadin Gradle Plugin
+is able to help you with downloading of the node.js+npm distribution.
+
+In order to do that, you will need the [com.github.node-gradle.node](https://plugins.gradle.org/plugin/com.github.node-gradle.node) plugin.
+Add the following to your `build.gradle` file:
+
+```groovy
+plugins {
+    id "com.github.node-gradle.node" version "2.2.1"  // in order for vaadinPrepareNode to work
+}
+node {
+    version = "10.15.2"
+    download = true
+    // to download node+npm, just run the `vaadinPrepareNode` task
+}
+```
+
+In your development environment, all you need to do is to run:
+```bash
+./gradlew vaadinPrepareNode
+```
+to download and prepare a local distribution of node.js. You only need to run this once:
+a folder named `node/` is created in the project directory, which will be used by Vaadin
+from now on.
+
+In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
+```bash
+./gradlew clean vaadinPrepareNode vaadinBuildFrontend build
+```
 
 # Old Plugin Mode
 

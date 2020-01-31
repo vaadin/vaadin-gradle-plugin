@@ -31,6 +31,10 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         project.tasks.named("processResources") { task ->
             task.mustRunAfter("vaadinPrepareFrontend")
         }
+
+        // if the vaadinPrepareNode task is going to be invoked, it needs to run before this task,
+        // in order to prepare the local copy of node.js
+        mustRunAfter("vaadinPrepareNode")
     }
 
     @TaskAction
