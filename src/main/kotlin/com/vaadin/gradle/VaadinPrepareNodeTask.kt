@@ -36,10 +36,11 @@ open class VaadinPrepareNodeTask : DefaultTask() {
 
         val nodeExtension: NodeExtension = project.extensions.getByType(NodeExtension::class.java)
         val extension: VaadinFlowPluginExtension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension
-        nodeExtension.download = true
+        nodeExtension.isDownload = true
         nodeExtension.version = extension.nodeVersion
 
         dependsOn("nodeSetup")
+        project.tasks.findByPath("nodeSetup")!!.enabled = true
     }
 
     @TaskAction
