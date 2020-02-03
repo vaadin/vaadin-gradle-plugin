@@ -109,7 +109,7 @@ class VaadinPlugin implements Plugin<Project> {
                     create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
                 } else {
                     // need to use reflection since Groovy+Kotlin projects are not really supported.
-                    create('vaadinFlow', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
+                    create('vaadin', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
                 }
             }
 

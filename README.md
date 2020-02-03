@@ -50,13 +50,6 @@ To configure the plugin, you can use the following snippet in your `build.gradle
 
 `build.gradle` in Groovy:
 ```groovy
-vaadinFlow {
-  optimizeBundle = false
-}
-```
-
-`build.gradle.kts` in Kotlin:
-```kotlin
 vaadin {
   optimizeBundle = false
 }
@@ -121,10 +114,10 @@ In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepa
 ```
 
 If you wish to override the node version which will be downloaded, simply specify
-the node.js version in the `vaadinFlow{}` block:
+the node.js version in the `vaadin {}` block:
 
 ```groovy
-vaadinFlow {
+vaadin {
     nodeVersion = "10.15.2"
 }
 ```

@@ -100,4 +100,9 @@ open class VaadinFlowPluginExtension(project: Project) {
             sourceSets.getByName("main").resources.srcDirs(buildOutputDirectory)
         }
     }
+
+    companion object {
+        fun get(project: Project): VaadinFlowPluginExtension =
+                project.extensions.getByName("vaadin") as VaadinFlowPluginExtension
+    }
 }

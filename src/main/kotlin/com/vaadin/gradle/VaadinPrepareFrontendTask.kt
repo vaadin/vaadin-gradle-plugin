@@ -39,7 +39,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
     @TaskAction
     fun vaadinPrepareFrontend() {
-        val extension: VaadinFlowPluginExtension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension
+        val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         Files.createDirectories(extension.frontendDirectory.toPath())
 
         // propagate build info
