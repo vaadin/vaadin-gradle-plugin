@@ -16,6 +16,7 @@
  */
 package com.vaadin.gradle
 
+import com.moowork.gradle.node.NodePlugin
 import com.vaadin.gradle.actions.GrettyDeprecatedPluginAction
 import com.vaadin.gradle.actions.GrettyPluginAction
 import com.vaadin.gradle.actions.JavaPluginAction
@@ -91,6 +92,7 @@ class VaadinPlugin implements Plugin<Project> {
     void apply(Project project) {
         // we need Java Plugin conventions so that we can ensure the order of tasks
         project.getPluginManager().apply(JavaPlugin.class)
+        project.getPluginManager().apply(NodePlugin.class)
         def enableOldPlugin = this.enableOldPlugin
 
         project.with {
@@ -107,7 +109,7 @@ class VaadinPlugin implements Plugin<Project> {
                     create(VaadinClientDependenciesExtension.NAME, VaadinClientDependenciesExtension, project)
                 } else {
                     // need to use reflection since Groovy+Kotlin projects are not really supported.
-                    create('vaadinFlow', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
+                    create('vaadin', Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
                 }
             }
 
@@ -132,6 +134,7 @@ class VaadinPlugin implements Plugin<Project> {
                     register('vaadinClean', Class.forName("com.vaadin.gradle.VaadinCleanTask"))
                     register('vaadinPrepareFrontend', Class.forName("com.vaadin.gradle.VaadinPrepareFrontendTask"))
                     register('vaadinBuildFrontend', Class.forName("com.vaadin.gradle.VaadinBuildFrontendTask"))
+                    register('vaadinPrepareNode', Class.forName("com.vaadin.gradle.VaadinPrepareNodeTask"))
                 }
             }
 

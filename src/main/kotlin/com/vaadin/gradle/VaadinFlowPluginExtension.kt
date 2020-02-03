@@ -89,10 +89,20 @@ open class VaadinFlowPluginExtension(project: Project) {
      */
     var optimizeBundle = true
 
+    /**
+     * When using the `vaadinPrepareNode` task, you can specify the node version to download here.
+     */
+    val nodeVersion: String = "12.14.1"
+
     init {
         project.afterEvaluate {
             val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
             sourceSets.getByName("main").resources.srcDirs(buildOutputDirectory)
         }
+    }
+
+    companion object {
+        fun get(project: Project): VaadinFlowPluginExtension =
+                project.extensions.getByName("vaadin") as VaadinFlowPluginExtension
     }
 }

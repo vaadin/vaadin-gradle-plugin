@@ -54,7 +54,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
 
     @TaskAction
     fun vaadinBuildFrontend() {
-        val extension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension
+        val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
 
         // update build file

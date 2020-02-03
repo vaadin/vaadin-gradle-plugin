@@ -9,7 +9,7 @@ This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 
 
 Prerequisites:
 * Java 8 or higher
-* node.js and npm installed locally. To install:
+* node.js and npm, either installed locally or automatically by the Vaadin Gradle Plugin via the `vaadinPrepareNode` task. To install locally:
   * Windows/Mac: [node.js Download site](https://nodejs.org/en/download/)
   * Linux: Use package manager e.g. `sudo apt install npm` 
 
@@ -34,6 +34,8 @@ There are the following tasks:
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
   need to be invoked explicitly.
+* `vaadinPrepareNode` will prepare a local distribution of node.js and npm for use by Vaadin.
+  Please see below for more information.
 
 Most common commands for the WAR project:
 
@@ -48,13 +50,6 @@ To configure the plugin, you can use the following snippet in your `build.gradle
 
 `build.gradle` in Groovy:
 ```groovy
-vaadinFlow {
-  optimizeBundle = false
-}
-```
-
-`build.gradle.kts` in Kotlin:
-```kotlin
 vaadin {
   optimizeBundle = false
 }
@@ -99,6 +94,36 @@ for more details.
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
+
+## Automatic Download of node.js and npm
+
+You do not need to have node.js nor npm installed in your system, in order to use Vaadin.
+The `vaadinPrepareNode` task will download the node.js+npm distribution and will place it
+into the `node/` folder which will then be picked automatically by Vaadin.
+
+In your development environment, just run:
+```bash
+./gradlew vaadinPrepareNode
+```
+to download and prepare a local distribution of node.js. You only need to run this once,
+in order to populate the folder `node/`.
+
+In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
+```bash
+./gradlew clean vaadinPrepareNode vaadinBuildFrontend build
+```
+
+If you wish to override the node version which will be downloaded, simply specify
+the node.js version in the `vaadin {}` block:
+
+```groovy
+vaadin {
+    nodeVersion = "10.15.2"
+}
+```
+
+Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
+it's best to select the LTS release.
 
 # Old Plugin Mode
 
