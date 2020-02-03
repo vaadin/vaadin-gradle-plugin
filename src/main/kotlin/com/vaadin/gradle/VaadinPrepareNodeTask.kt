@@ -8,23 +8,8 @@ import java.lang.IllegalStateException
 
 /**
  * Copies the node.js distro downloaded by the com.github.node-gradle.node plugin
- * to the node/ folder which Vaadin expects.
- *
- * You need to manually include the com.github.node-gradle.node plugin into your build file
- * in order for this to work. Luckily, that's very easy:
- *
- * ```
- * plugins {
- *   id "com.github.node-gradle.node" version "2.2.1"
- * }
- * node {
- *   version = "10.15.2"
- *   download = true
- * }
- * ```
- *
- * This task will automatically detect the presence of the `nodeSetup` task and will
- * automatically depend on it.
+ * to the node/ folder which Vaadin expects. Automatically includes and invokes
+ * the com.github.node-gradle.node plugin.
  * @author mavi
  */
 open class VaadinPrepareNodeTask : DefaultTask() {
