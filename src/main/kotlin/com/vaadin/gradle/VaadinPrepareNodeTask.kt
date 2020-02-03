@@ -1,9 +1,7 @@
 package com.vaadin.gradle
 
 import com.moowork.gradle.node.NodeExtension
-import com.moowork.gradle.node.NodePlugin
 import org.gradle.api.DefaultTask
-import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 import java.lang.IllegalStateException
