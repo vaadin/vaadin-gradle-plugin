@@ -107,7 +107,6 @@ for more details.
 You do not need to have node.js nor npm installed in your system, in order to use Vaadin.
 The `vaadinPrepareNode` task will download the node.js+npm distribution and will place it
 into the `node/` folder which will then be picked automatically by Vaadin.
-the Vaadin Gradle Plugin.
 
 In your development environment, just run:
 ```bash
