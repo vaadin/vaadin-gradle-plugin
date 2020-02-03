@@ -9,7 +9,7 @@ This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 
 
 Prerequisites:
 * Java 8 or higher
-* node.js and npm installed locally. To install:
+* node.js and npm, either installed locally or automatically by the Vaadin Gradle Plugin via the `vaadinPrepareNode` task. To install locally:
   * Windows/Mac: [node.js Download site](https://nodejs.org/en/download/)
   * Linux: Use package manager e.g. `sudo apt install npm` 
 
@@ -104,17 +104,17 @@ for more details.
 
 ## Automatic Download of node.js and npm
 
-You do not need to have node.js nor npm installed in your system, in order to use Vaadin. The Vaadin Gradle Plugin
-is able to help you with downloading of the node.js+npm distribution.
-You only need to run the `vaadinPrepareNode` task.
+You do not need to have node.js nor npm installed in your system, in order to use Vaadin.
+The `vaadinPrepareNode` task will download the node.js+npm distribution and will place it
+into the `node/` folder which will then be picked automatically, both by Vaadin and
+the Vaadin Gradle Plugin.
 
-In your development environment, all you need to do is to run:
+In your development environment, just run:
 ```bash
 ./gradlew vaadinPrepareNode
 ```
-to download and prepare a local distribution of node.js. You only need to run this once:
-a folder named `node/` is created in the project directory, which will be used by Vaadin
-from now on.
+to download and prepare a local distribution of node.js. You only need to run this once,
+in order to populate the folder `node/`.
 
 In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
 ```bash
@@ -122,13 +122,16 @@ In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepa
 ```
 
 If you wish to override the node version which will be downloaded, simply specify
-the new version in the `vaadinFlow{}` block:
+the node.js version in the `vaadinFlow{}` block:
 
 ```groovy
 vaadinFlow {
     nodeVersion = "10.15.2"
 }
 ```
+
+Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
+it's best to select the LTS release.
 
 # Old Plugin Mode
 
