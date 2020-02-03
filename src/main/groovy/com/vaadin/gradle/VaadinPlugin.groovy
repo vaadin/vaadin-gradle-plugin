@@ -16,6 +16,7 @@
  */
 package com.vaadin.gradle
 
+import com.moowork.gradle.node.NodePlugin
 import com.vaadin.gradle.actions.GrettyDeprecatedPluginAction
 import com.vaadin.gradle.actions.GrettyPluginAction
 import com.vaadin.gradle.actions.JavaPluginAction
@@ -91,6 +92,7 @@ class VaadinPlugin implements Plugin<Project> {
     void apply(Project project) {
         // we need Java Plugin conventions so that we can ensure the order of tasks
         project.getPluginManager().apply(JavaPlugin.class)
+        project.getPluginManager().apply(NodePlugin.class)
         def enableOldPlugin = this.enableOldPlugin
 
         project.with {

@@ -34,7 +34,6 @@ open class VaadinPrepareNodeTask : DefaultTask() {
         group = "Vaadin"
         description = "prepares a local node distribution for use by Vaadin. Requires com.github.node-gradle.node plugin"
 
-        project.pluginManager.apply(NodePlugin::class.java)
         val nodeExtension: NodeExtension = project.extensions.getByType(NodeExtension::class.java)
         val extension: VaadinFlowPluginExtension = project.extensions.getByName("vaadinFlow") as VaadinFlowPluginExtension
         nodeExtension.download = true
