@@ -44,12 +44,10 @@ There are the following tasks:
 * `vaadinPrepareNode` will download a local distribution of node.js and npm into the `node/` folder for use by Vaadin.
   Please see below for more information.
 
-Most common commands for the WAR project:
+Most common commands for all projects:
 
 * `./gradlew clean vaadinPrepareFrontend` - prepares the project for development
 * `./gradlew clean vaadinBuildFrontend build` - will compile Vaadin in production mode, then packages everything into the WAR archive.
-
-This project does not support Spring - please see [Vaadin Spring Boot Example Project](https://github.com/vaadin/base-starter-spring-gradle) for more details.
 
 ## Configuration
 
