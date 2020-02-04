@@ -1,11 +1,15 @@
 # Vaadin Gradle Plugin
 
-This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14 and newer. The implementation is now mostly based on the similar Maven plugin. Compared to Maven plugin, there are the following limitations:
+This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14
+and newer. The implementation is now mostly based on the similar Maven plugin.
+Compared to Maven plugin, there are the following limitations:
 
 * Vaadin 14 Compatibility mode is not supported
 * Migration from Vaadin 13 to Vaadin 14 is not supported.
 
-*Features of the "old Vaadin gradle plugin" are currently behind a flag, but most likely removed from the final release. Please let us know if you find those essential! [See more...](#old-plugin-mode)*
+> Features of the "old Vaadin gradle plugin" are currently behind a flag, and
+>will be most likely removed from the final release. Please let us know if you
+>find those essential! [See more...](#old-plugin-mode)
 
 Prerequisites:
 * Java 8 or higher
@@ -13,9 +17,12 @@ Prerequisites:
   * Windows/Mac: [node.js Download site](https://nodejs.org/en/download/)
   * Linux: Use package manager e.g. `sudo apt install npm` 
 
-As opposed to the older version of Gradle pluging, the plugin don't create projects any more. We plan to support Gradle projects via vaadin.com/start at some point. In the mean time, refer to project examples that you can use as a basis for your Vaadin modules:
+As opposed to the older version of Gradle plugin, the new plugin doesn't create
+projects any more. We plan to support Gradle projects via [vaadin.com/start](https://vaadin.com/start)
+at some point. In the mean time, refer to project examples that you can use
+as a basis for your Vaadin modules:
 
-* [Basic war project](https://github.com/vaadin/base-starter-gradle)
+* [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 
 ## Tasks
@@ -34,7 +41,7 @@ There are the following tasks:
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
   need to be invoked explicitly.
-* `vaadinPrepareNode` will prepare a local distribution of node.js and npm for use by Vaadin.
+* `vaadinPrepareNode` will download a local distribution of node.js and npm into the `node/` folder for use by Vaadin.
   Please see below for more information.
 
 Most common commands for the WAR project:
@@ -42,7 +49,7 @@ Most common commands for the WAR project:
 * `./gradlew clean vaadinPrepareFrontend` - prepares the project for development
 * `./gradlew clean vaadinBuildFrontend build` - will compile Vaadin in production mode, then packages everything into the WAR archive.
 
-Spring Boot project: TBD
+This project does not support Spring - please see [Vaadin Spring Boot Example Project](https://github.com/vaadin/base-starter-spring-gradle) for more details.
 
 ## Configuration
 
@@ -61,12 +68,13 @@ All configuration options follow. Note that you **RARELY** need to change anythi
   The `vaadinBuildFrontend` task will automatically switch this to true, there is no need for you to configure anything.
 * `buildOutputDirectory = File(project.buildDir, "vaadin-generated")`: 
   The plugin will generate additional resource files here. These files need
-to be present on the classpath, in order for Vaadin to be
-able to run, both in dev mode and in the production mode. The plugin will automatically register
-this as an additional resource folder, which should then be picked up by the IDE.
-That will allow the app to run for example in Intellij with Tomcat.
-For example the `flow-build-info.json` goes here. See [webpackOutputDirectory]
-for more details.
+  to be present on the classpath, in order for Vaadin to be
+  able to run, both in dev mode and in the production mode.
+  The plugin will automatically register
+  this as an additional resource folder, which should then be picked up by the IDE.
+  That will allow the app to run for example in Intellij with Tomcat.
+  For example the `flow-build-info.json` goes here. See [webpackOutputDirectory]
+  for more details.
 * `webpackOutputDirectory = File(buildOutputDirectory, "META-INF/VAADIN/")`:
   The folder where webpack should output index.js and other generated files.
   In the dev mode, the `flow-build-info.json` file is generated here.
@@ -94,6 +102,9 @@ for more details.
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
+* `nodeVersion = "12.14.1"`: When using the `vaadinPrepareNode` task, this property
+  specifies which node version to download. Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
+  it's best to select the LTS release.
 
 ## Automatic Download of node.js and npm
 
