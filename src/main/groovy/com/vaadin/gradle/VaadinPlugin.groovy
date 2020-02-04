@@ -112,7 +112,7 @@ class VaadinPlugin implements Plugin<Project> {
                     def extensionName = 'vaadin'
                     if (findByName(extensionName) != null) {
                         // fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/26
-                        extensionName = 'vaadinFlow'
+                        extensionName = 'vaadin14'
                     }
                     create(extensionName, Class.forName("com.vaadin.gradle.VaadinFlowPluginExtension"), project)
                 }
