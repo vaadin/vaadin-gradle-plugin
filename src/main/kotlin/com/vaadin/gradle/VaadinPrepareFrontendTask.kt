@@ -71,7 +71,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         // not be able to read files from jar path.
         val isJarPackaging: Boolean = project.tasks.withType(War::class.java).isEmpty()
         if (isJarPackaging) {
-            val jarFiles: Set<File> = project.configurations.getByName("compileClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()
+            val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()
             builder.copyResources(jarFiles)
         }
 
