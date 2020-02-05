@@ -18,7 +18,7 @@ class VaadinPlugin : Plugin<Project> {
             // fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/26
             extensionName = "vaadin14"
         }
-        project.extensions.create("vaadin", VaadinFlowPluginExtension::class.java, project)
+        project.extensions.create(extensionName, VaadinFlowPluginExtension::class.java, project)
 
         project.tasks.apply {
             findByPath("clean")!!.doLast {
