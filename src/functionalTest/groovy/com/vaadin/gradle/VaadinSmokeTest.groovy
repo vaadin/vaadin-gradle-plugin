@@ -26,6 +26,19 @@ class VaadinSmokeTest {
             plugins {
                 id 'com.vaadin'
             }
+            repositories {
+                jcenter()
+            }
+            dependencies {
+                // Vaadin 14
+                compile("com.vaadin:vaadin-core:14.1.16") {
+            //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                            .forEach { group -> exclude(group: group) }
+                }
+            }
         """
     }
 
@@ -33,7 +46,7 @@ class VaadinSmokeTest {
     void smoke() {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments('vaadinClean')
+                .withArguments('vaadinClean', '--stacktrace')
                 .withPluginClasspath()
                 .build()
 
@@ -58,7 +71,7 @@ class VaadinSmokeTest {
     void testPrepareFrontend() {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments('vaadinPrepareNode', 'vaadinPrepareFrontend')
+                .withArguments('vaadinPrepareNode', 'vaadinPrepareFrontend', '--stacktrace')
                 .withPluginClasspath()
                 .build()
 
@@ -74,7 +87,7 @@ class VaadinSmokeTest {
     void testBuildFrontend() {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments('vaadinPrepareNode', 'vaadinBuildFrontend')
+                .withArguments('vaadinPrepareNode', 'vaadinBuildFrontend', '--stacktrace')
                 .withPluginClasspath()
                 .build()
 
