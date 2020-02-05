@@ -142,7 +142,7 @@ to understand how Gradle plugins are developed.
 The main entry to the plugin is the `VaadinPlugin` class. When applied to the project, it will register
 all necessary tasks and extensions into the project.
 
-Simply use Intellij (Community is enough) to open the project.
+Use Intellij (Community is enough) to open the project.
 
 ## Running The IT/Functional Tests
 
