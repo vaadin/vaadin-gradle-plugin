@@ -117,6 +117,13 @@ class VaadinSmokeTest {
             repositories {
                 jcenter()
             }
+            // test that we can configure both plugins
+            vaadin {
+                version = "8.9.4"
+            }
+            vaadin14 {
+                optimizeBundle = true
+            }
         """)
         // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
         // extension would crash even this very simple build.
