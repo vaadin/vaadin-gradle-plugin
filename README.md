@@ -134,6 +134,27 @@ vaadin {
 Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
 it's best to select the LTS release.
 
+# Developing The Plugin
+
+Open the project in Intellij.
+
+TBD
+
+## Running The IT/Functional Tests
+
+There is a comprehensive test suite which tests the plugin in various generated projects.
+To run the suite, simply run
+
+```bash
+./gradlew check
+```
+
+That will run the `functionalTest` task which will run all tests from the `src/functionalTest` folder.
+
+### Running Individual Functional Tests from Intellij
+
+Just right-click the test class and select "Run".
+
 # Old Plugin Mode
 
 The old plugin mode can be enabled by running Gradle with the `-Dvaadin.enableOldPlugin=true` switch.
