@@ -103,6 +103,6 @@ open class VaadinFlowPluginExtension(project: Project) {
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =
-                project.extensions.getByName("vaadin") as VaadinFlowPluginExtension
+                project.extensions.getByType(VaadinFlowPluginExtension::class.java)
     }
 }

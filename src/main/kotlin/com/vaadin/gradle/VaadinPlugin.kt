@@ -13,7 +13,12 @@ class VaadinPlugin : Plugin<Project> {
         // we need Java Plugin conventions so that we can ensure the order of tasks
         project.pluginManager.apply(JavaPlugin::class.java)
         project.pluginManager.apply(NodePlugin::class.java)
-        project.extensions.create("vaadin", VaadinFlowPluginExtension::class.java, project)
+        var extensionName = "vaadin"
+        if (project.extensions.findByName(extensionName) != null) {
+            // fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/26
+            extensionName = "vaadin14"
+        }
+        project.extensions.create(extensionName, VaadinFlowPluginExtension::class.java, project)
 
         project.tasks.apply {
             findByPath("clean")!!.doLast {

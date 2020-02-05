@@ -153,7 +153,11 @@ That will run the `functionalTest` task which will run all tests from the `src/f
 
 ### Running Individual Functional Tests from Intellij
 
-Just right-click the test class and select "Run".
+Just right-click the test class and select "Run". If running the test fails, try one of the following:
+
+1. Use Intellij, Community edition is enough
+2. Go to "File / Settings / Build, Execution, Deployment / Build Tools / Gradle" and make sure that
+   "Run tests using" is set to "Gradle".
 
 # Old Plugin Mode
 

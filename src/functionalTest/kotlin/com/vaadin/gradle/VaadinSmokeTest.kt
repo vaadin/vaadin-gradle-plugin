@@ -103,4 +103,36 @@ class VaadinSmokeTest {
         expect(true, webcomponentsjs.toString()) { webcomponentsjs.isDirectory }
         expect(true) { webcomponentsjs.listFiles()!!.isNotEmpty() }
     }
+
+    /**
+     * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/26
+     */
+    @Test
+    fun testVaadin8Vaadin14MPRProject() {
+        buildFile.writeText("""
+            plugins {
+                id "com.devsoap.plugin.vaadin" version "1.4.1"
+                id 'com.vaadin'
+            }
+            repositories {
+                jcenter()
+            }
+            // test that we can configure both plugins
+            vaadin {
+                version = "8.9.4"
+            }
+            vaadin14 {
+                optimizeBundle = true
+            }
+        """)
+        // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
+        // extension would crash even this very simple build.
+        val result: BuildResult = GradleRunner.create()
+                .withProjectDir(testProjectDir)
+                .withArguments("tasks", "--stacktrace")
+                .withPluginClasspath()
+                .build()
+
+        expect(TaskOutcome.SUCCESS) { result.task(":tasks")!!.outcome }
+    }
 }
