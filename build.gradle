@@ -54,6 +54,9 @@ sourceSets {
         groovy {
             srcDir file('src/functionalTest/groovy')
         }
+        kotlin {
+            srcDir file('src/functionalTest/kotlin')
+        }
         resources {
             srcDir file('src/functionalTest/resources')
         }
