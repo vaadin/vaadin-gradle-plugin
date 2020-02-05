@@ -160,19 +160,6 @@ task functionalTest(type: Test) {
     dependsOn test, jar
     group = 'Verification'
 
-    systemProperties = System.properties as Map
-    if (!systemProperties['spock.configuration']) {
-        systemProperty 'spock.configuration', "${findProperty('TEST_CATEGORY') ?: 'AllTests' }Config.groovy"
-    }
-
-    if (!systemProperties['yarn.cache.dir']) {
-        systemProperty 'yarn.cache.dir', new File(project.rootProject.projectDir, 'yarn-cache').canonicalPath
-    }
-
-    if (!systemProperties['plugin.jar.path']) {
-        systemProperty 'plugin.jar.path', jar.archivePath.canonicalPath
-    }
-
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     maxParallelForks = 1
@@ -183,10 +170,6 @@ task functionalTest(type: Test) {
     }
 }
 check.dependsOn functionalTest
-
-pluginUnderTestMetadata {
-    pluginClasspath.from(files(jar.archivePath))
-}
 
 /***********************************************************************************************************************
  *
