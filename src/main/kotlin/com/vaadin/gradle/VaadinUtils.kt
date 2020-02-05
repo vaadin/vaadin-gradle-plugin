@@ -15,8 +15,6 @@ import java.net.URL
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 internal fun getClassFinder(project: Project): ClassFinder {
-    val runtimeJars: List<File> = project.configurations.getByName("runtime").toList()
-    // jar projects do not have "runtime" configuration - there's only runtimeClasspath
     val runtimeClasspathJars: List<File> = project.configurations.findByName("runtimeClasspath")
             ?.toList() ?: listOf()
 
@@ -33,7 +31,7 @@ internal fun getClassFinder(project: Project): ClassFinder {
             ?.toList()
             ?: listOf()
 
-    val apis: Set<File> = (runtimeJars + runtimeClasspathJars + classesDirs + servletJar).toSet()
+    val apis: Set<File> = (runtimeClasspathJars + classesDirs + servletJar).toSet()
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
     return ReflectionsClassFinder(*apiUrls.toTypedArray())
