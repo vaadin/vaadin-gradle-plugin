@@ -136,14 +136,18 @@ it's best to select the LTS release.
 
 # Developing The Plugin
 
-Open the project in Intellij.
+Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
+to understand how Gradle plugins are developed.
 
-TBD
+The main entry to the plugin is the `VaadinPlugin` class. When applied to the project, it will register
+all necessary tasks and extensions into the project.
+
+Simply use Intellij (Community is enough) to open the project.
 
 ## Running The IT/Functional Tests
 
 There is a comprehensive test suite which tests the plugin in various generated projects.
-To run the suite, simply run
+To run all tests from the suite, simply run
 
 ```bash
 ./gradlew check
@@ -159,59 +163,7 @@ Just right-click the test class and select "Run". If running the test fails, try
 2. Go to "File / Settings / Build, Execution, Deployment / Build Tools / Gradle" and make sure that
    "Run tests using" is set to "Gradle".
 
-# Old Plugin Mode
-
-The old plugin mode can be enabled by running Gradle with the `-Dvaadin.enableOldPlugin=true` switch.
-Please read on for the documentation on the old plugin mode.
-
-This is an experimental Vaadin Gradle Plugin for Vaadin 14 and newer.
-A stable version for older Vaadin versions can be found [here](https://devsoap.com/gradle-vaadin-flow-plugin/).
-
-Gradle 6 is not yet supported. Use version 5.6.4.
-
-Currently builds are available only from temporary pre-release repository. You can start with following build.gradle file (with final release the start will be simpler):
-
-```
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        maven {
-            url "https://repo.vaadin.com/nexus/content/repositories/vaadin-prereleases-201912/"
-        }
-    }
-    dependencies {
-        classpath "com.vaadin:vaadin-gradle-plugin:0.1.0"
-        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
-        classpath 'io.github.classgraph:classgraph:4.8.49'
-        classpath "gradle.plugin.org.gretty:gretty:3.0.1"
-    }
-}
-apply plugin: 'com.vaadin'
-apply plugin: "org.gretty"
-
-repositories {
-    maven {
-        url "https://repo.vaadin.com/nexus/content/repositories/vaadin-prereleases-201912/"
-    }
-}
-
-vaadin.autoconfigure()
-
-```
-
-[Preliminary documentation (targeting for final release)](https://github.com/vaadin-learning-center/learning-content/blob/author/magi/gradle-plugin/learn/tutorials/gradle-plugin/content.adoc)
-
-## Developing The Plugin
-
-Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
-to understand how Gradle plugins are developed.
-
-The main entry to the plugin is the `VaadinPlugin` class. When applied to the project, it will register
-all necessary tasks and extensions into the project.
-
-Launching all tests - TBD
-
-### Developing the plugin and testing it on-the-fly
+## Developing the plugin and testing it on-the-fly at the same time
 
 You can take advantage of [composite builds](https://docs.gradle.org/current/userguide/composite_builds.html),
 which will allow you to join together the plugin itself along with an example project using that plugin,
