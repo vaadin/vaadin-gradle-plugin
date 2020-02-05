@@ -147,7 +147,7 @@ Use Intellij (Community is enough) to open the project.
 ## Running The IT/Functional Tests
 
 There is a comprehensive test suite which tests the plugin in various generated projects.
-To run all tests from the suite, simply run
+To run all tests from the suite:
 
 ```bash
 ./gradlew check
