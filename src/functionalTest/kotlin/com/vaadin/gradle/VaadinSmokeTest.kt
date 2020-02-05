@@ -1,6 +1,5 @@
 package com.vaadin.gradle
 
-import org.junit.Assert.*
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -9,19 +8,22 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import kotlin.test.expect
 
 /**
  * @author mavi
  */
 class VaadinSmokeTest {
     @Rule @JvmField
-    val testProjectDir = TemporaryFolder()
+    val testProject = TemporaryFolder()
 
+    private lateinit var testProjectDir: File
     private lateinit var buildFile: File
 
     @Before
     fun setup() {
-        buildFile = testProjectDir.newFile("build.gradle")
+        testProjectDir = testProject.root
+        buildFile = File(testProjectDir, "build.gradle")
         buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
@@ -45,61 +47,60 @@ class VaadinSmokeTest {
     @Test
     fun smoke() {
         val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("vaadinClean", "--stacktrace")
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinClean")!!.outcome)
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinClean")!!.outcome }
     }
 
     @Test
     fun testPrepareNode() {
-        val result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        val result: BuildResult = GradleRunner.create()
+                .withProjectDir(testProjectDir)
                 .withArguments("vaadinPrepareNode", "--stacktrace")
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinPrepareNode")!!.outcome)
-        val nodejs = File(testProjectDir.root, "node")
-        assertTrue(nodejs.toString(), nodejs.exists())
-        assertTrue(nodejs.toString(), nodejs.isDirectory())
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareNode")!!.outcome }
+        val nodejs = File(testProjectDir, "node")
+        expect(true, nodejs.toString()) { nodejs.isDirectory }
     }
 
     @Test
     fun testPrepareFrontend() {
-        val result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        val result: BuildResult = GradleRunner.create()
+                .withProjectDir(testProjectDir)
                 .withArguments("vaadinPrepareNode", "vaadinPrepareFrontend", "--stacktrace")
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinPrepareNode")!!.outcome)
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinPrepareFrontend")!!.outcome)
-        val generatedPackageJson = File(testProjectDir.root, "target/frontend/package.json")
-        assertTrue(generatedPackageJson.toString(), generatedPackageJson.isFile())
-        val generatedFlowBuildInfoJson = File(testProjectDir.root, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
-        assertTrue(generatedFlowBuildInfoJson.toString(), generatedPackageJson.isFile())
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareNode")!!.outcome }
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareFrontend")!!.outcome }
+        val generatedPackageJson = File(testProjectDir, "target/frontend/package.json")
+        expect(true, generatedPackageJson.toString()) { generatedPackageJson.isFile }
+        val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
+        expect(true, generatedFlowBuildInfoJson.toString()) { generatedPackageJson.isFile }
     }
 
     @Test
     fun testBuildFrontend() {
-        val result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        val result: BuildResult = GradleRunner.create()
+                .withProjectDir(testProjectDir)
                 .withArguments("vaadinPrepareNode", "vaadinBuildFrontend", "--stacktrace")
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinPrepareNode")!!.outcome)
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareNode")!!.outcome }
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinPrepareFrontend")!!.outcome)
-        assertEquals(TaskOutcome.SUCCESS, result.task(":vaadinBuildFrontend")!!.outcome)
-        val build = File(testProjectDir.root, "build/vaadin-generated/META-INF/VAADIN/build")
-        assertTrue(build.toString(), build.isDirectory())
-        assertTrue(build.listFiles()!!.isNotEmpty())
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareFrontend")!!.outcome }
+        expect(TaskOutcome.SUCCESS) { result.task(":vaadinBuildFrontend")!!.outcome }
+        val build = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/build")
+        expect(true, build.toString()) { build.isDirectory }
+        expect(true) { build.listFiles()!!.isNotEmpty() }
         val webcomponentsjs = File(build, "webcomponentsjs")
-        assertTrue(webcomponentsjs.toString(), webcomponentsjs.isDirectory())
-        assertTrue(webcomponentsjs.listFiles()!!.isNotEmpty())
+        expect(true, webcomponentsjs.toString()) { webcomponentsjs.isDirectory }
+        expect(true) { webcomponentsjs.listFiles()!!.isNotEmpty() }
     }
 }
