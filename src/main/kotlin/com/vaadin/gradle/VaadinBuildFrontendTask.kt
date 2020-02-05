@@ -71,7 +71,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         buildInfo.writeToFile(tokenFile)
 
         // runNodeUpdater()
-        val jarFiles: Set<File> = project.configurations.getByName("runtime").filter { it.name.endsWith(".jar") }.toSet()
+        val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()
         NodeTasks.Builder(getClassFinder(project),
                 extension.npmFolder,
                 extension.generatedFolder,

@@ -1,17 +1,7 @@
 language: groovy
 jdk:
+  - openjdk8
   - openjdk11
-script: "./gradlew --stacktrace --info --parallel check -PTEST_CATEGORY=$TEST_CATEGORY"
-env:
-  - TEST_CATEGORY=SmokeTests
-  - TEST_CATEGORY=UncategorizedTests
-  - TEST_CATEGORY=ClientDependenciesTests
-  - TEST_CATEGORY=ClientProductionModeConfigTests
-  - TEST_CATEGORY=ClientProductionModeTests
-
-branches:
-  only:
-    - "master"
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -19,4 +9,4 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - ./yarn-cache
+script: "./gradlew --stacktrace --info check"
