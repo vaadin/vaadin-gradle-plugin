@@ -1,7 +1,6 @@
 package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Before
@@ -9,6 +8,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import java.nio.file.FileSystems
+import java.nio.file.PathMatcher
 import kotlin.test.expect
 import kotlin.test.fail
 
@@ -151,9 +152,9 @@ class VaadinSmokeTest {
             }
         """.trimIndent())
 
-        val build = build("clean", "vaadinPrepareNode", "vaadinBuildFrontend", "build")
+        val build: BuildResult = build("clean", "vaadinPrepareNode", "vaadinBuildFrontend", "build")
 
-        val war = File(testProjectDir, "build/libs/base-starter-gradle.war")
+        val war: File = testProjectDir.find("build/libs/*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
     }
 
@@ -211,7 +212,10 @@ class VaadinSmokeTest {
                 }
             }
         """)
-        build("vaadinPrepareNode", "vaadinBuildFrontend")
+        val build: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+
+        val jar: File = testProjectDir.find("build/libs/*.jar").first()
+        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
     }
 
     /**
@@ -231,16 +235,5 @@ class VaadinSmokeTest {
             result.expectTaskSucceded(task)
         }
         return result
-    }
-}
-
-/**
- * Expects that given task succeeded. If not, fails with an informative exception.
- * @param taskName the name of the task, e.g. `vaadinPrepareNode`
- */
-fun BuildResult.expectTaskSucceded(taskName: String) {
-    val task: BuildTask = task(":$taskName") ?: fail("Task $taskName was not ran\n$output")
-    expect(TaskOutcome.SUCCESS, "$taskName did not succeed: ${task.outcome}") {
-        task.outcome
     }
 }
