@@ -7,6 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import java.nio.file.Files
 import kotlin.test.expect
 
 /**
@@ -202,7 +203,30 @@ class VaadinSmokeTest {
                 }
             }
         """)
-        val build: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+
+        // need to create the Application.java file otherwise bootJar will fail
+        val appPkg = File(testProjectDir, "src/main/java/com/example/demo")
+        Files.createDirectories(appPkg.toPath())
+        File(appPkg, "DemoApplication.java").writeText("""
+            package com.example.demo;
+            
+            import org.springframework.boot.SpringApplication;
+            import org.springframework.boot.autoconfigure.SpringBootApplication;
+            
+            @SpringBootApplication
+            public class DemoApplication {
+            
+                public static void main(String[] args) {
+                    SpringApplication.run(DemoApplication.class, args);
+                }
+            
+            }
+        """.trimIndent())
+
+        val build: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend", "build")
+
+        val jar: File = testProjectDir.find("build/libs/*.jar").first()
+        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
     }
 
     /**
