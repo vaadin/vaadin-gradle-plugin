@@ -167,15 +167,15 @@ Just right-click the test class and select "Run". If running the test fails, try
 
 You can take advantage of [composite builds](https://docs.gradle.org/current/userguide/composite_builds.html),
 which will allow you to join together the plugin itself along with an example project using that plugin,
-into one composite project. The easiest way is to use the [Skeleton Starter Gradle](https://github.com/vaadin/skeleton-starter-gradle)
+into one composite project. The easiest way is to use the [Base Starter Gradle](https://github.com/vaadin/base-starter-gradle)
 example project.
 
-1. Clone the Skeleton Starter Gradle project and open it in Intellij
+1. Clone the Base Starter Gradle project and open it in Intellij
 2. Remove the entire `buildscript{}` block and the `apply plugin:"com.vaadin"` line and
    uncomment the `id("com.vaadin")` line.
 3. Create a `settings.gradle` file containing the following line: `includeBuild("/home/mavi/work/vaadin/vaadin-gradle-plugin")`
    (use full path on your system to the Gradle Plugin project)
-4. Reimport the Skeleton Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
+4. Reimport the Base Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
    should appear in your workspace.
 5. Open the terminal with Alt+F12.
 6. If you now type `./gradlew vaadinPrepareFronend` into the command line, Gradle will compile any changes done to
