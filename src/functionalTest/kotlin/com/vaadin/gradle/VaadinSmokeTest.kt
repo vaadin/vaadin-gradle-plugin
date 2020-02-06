@@ -2,16 +2,12 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
-import java.nio.file.FileSystems
-import java.nio.file.PathMatcher
 import kotlin.test.expect
-import kotlin.test.fail
 
 /**
  * @author mavi
@@ -62,14 +58,8 @@ class VaadinSmokeTest {
 
     @Test
     fun testPrepareFrontend() {
-        val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProjectDir)
-                .withArguments("vaadinPrepareNode", "vaadinPrepareFrontend", "--stacktrace")
-                .withPluginClasspath()
-                .build()
+        build("vaadinPrepareNode", "vaadinPrepareFrontend")
 
-        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareNode")!!.outcome }
-        expect(TaskOutcome.SUCCESS) { result.task(":vaadinPrepareFrontend")!!.outcome }
         val generatedPackageJson = File(testProjectDir, "target/frontend/package.json")
         expect(true, generatedPackageJson.toString()) { generatedPackageJson.isFile }
         val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
@@ -213,9 +203,6 @@ class VaadinSmokeTest {
             }
         """)
         val build: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
-
-        val jar: File = testProjectDir.find("build/libs/*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
     }
 
     /**
