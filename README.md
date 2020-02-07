@@ -7,10 +7,6 @@ Compared to Maven plugin, there are the following limitations:
 * Vaadin 14 Compatibility mode is not supported
 * Migration from Vaadin 13 to Vaadin 14 is not supported.
 
-> Features of the "old Vaadin gradle plugin" are currently behind a flag, and
->will be most likely removed from the final release. Please let us know if you
->find those essential! [See more...](#old-plugin-mode)
-
 Prerequisites:
 * Java 8 or higher
 * node.js and npm, either installed locally or automatically by the Vaadin Gradle Plugin via the `vaadinPrepareNode` task. To install locally:
