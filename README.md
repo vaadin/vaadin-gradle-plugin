@@ -18,8 +18,20 @@ projects any more. We plan to support Gradle projects via [vaadin.com/start](htt
 at some point. In the mean time, refer to project examples that you can use
 as a basis for your Vaadin modules:
 
+## Installation
+
+Check out the example project setups for basic WAR project and Spring Boot:
+
 * [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
+
+The actual plugin part is as follows (check the latest version!): 
+
+```
+plugins {
+    id 'com.vaadin' version '0.5.0'
+}
+```
 
 ## Tasks
 
