@@ -264,4 +264,65 @@ class VaadinSmokeTest {
         }
         return result
     }
+
+    /**
+     * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/42
+     */
+    @Test
+    fun testCircularDepsBug() {
+        buildFile.writeText("""
+            plugins {
+                id 'war'
+                id 'org.gretty' version '3.0.1'
+                id("com.vaadin")
+            }
+            repositories {
+                jcenter()
+            }
+            dependencies {
+                // Vaadin 14
+                compile("com.vaadin:vaadin-core:14.1.16") {
+            //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                            .forEach { group -> exclude(group: group) }
+                }
+                providedCompile("javax.servlet:javax.servlet-api:3.1.0")
+
+                // logging
+                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
+                compile("org.slf4j:slf4j-simple:1.7.30")
+            }
+            
+            sourceSets {
+              guiceConfig
+            }
+
+            configurations {
+              guiceConfigCompile.extendsFrom compile
+            }
+
+            dependencies {
+              // This seems to be a problem with the vaadin-gradle-plugin, but we need this
+              // to have access to classes of the main sourceSet in the guice sourceSet.
+              guiceConfigCompile sourceSets.main.output
+            }
+
+            compileGuiceConfigJava {
+              options.compilerArgs << "-Xlint:all"
+              options.compilerArgs << "-Xlint:-serial"
+            }
+
+            jar {
+              from sourceSets.guiceConfig.output
+            }
+        """.trimIndent())
+
+        val build: BuildResult = build("clean", "vaadinPrepareNode", "vaadinBuildFrontend", "build")
+
+        val war: File = testProjectDir.find("build/libs/*.war").first()
+        expect(true, "$war is missing\n${build.output}") { war.isFile }
+        expectArchiveContainsVaadinWebpackBundle(war)
+    }
 }
