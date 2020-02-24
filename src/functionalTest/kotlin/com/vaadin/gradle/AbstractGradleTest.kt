@@ -28,6 +28,7 @@ abstract class AbstractGradleTest {
      */
     protected val testProjectDir: File get() = testProject.root
     protected val buildFile: File get() = File(testProjectDir, "build.gradle")
+    protected val settingsFile: File get() = File(testProjectDir, "settings.gradle")
 
     /**
      * Runs build on [testProjectDir]; a `build.gradle` [buildFile] is expected
