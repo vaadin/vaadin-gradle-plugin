@@ -162,6 +162,7 @@ class VaadinSmokeTest {
 
         val war: File = testProjectDir.find("build/libs/*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
+        expectArchiveContainsVaadinWebpackBundle(war)
     }
 
     /**
@@ -242,6 +243,7 @@ class VaadinSmokeTest {
 
         val jar: File = testProjectDir.find("build/libs/*.jar").first()
         expect(true, "$jar is missing\n${build.output}") { jar.isFile }
+        expectArchiveContainsVaadinWebpackBundle(jar)
     }
 
     /**
