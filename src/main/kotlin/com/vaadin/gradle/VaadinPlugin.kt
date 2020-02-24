@@ -54,20 +54,6 @@ class VaadinPlugin : Plugin<Project> {
             // add a new source-set folder for generated stuff, by default vaadin-generated
             val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
             sourceSets.getByName("main").resources.srcDirs(extension.buildOutputDirectory)
-
-            // make sure files produced by vaadinPrepareFrontend and vaadinBuildFrontend
-            // will end up in the resulting jar/war file.
-            project.tasks.withType(Jar::class.java) { task: Jar ->
-                // make sure to copy the generated stuff into the resulting jar/war file.
-                val destPath: String = if (task is War) "WEB-INF/classes" else "/"
-                task.into(destPath) {
-                    it.from(extension.buildOutputDirectory)
-                    // there is flow-build-info.json packaged as a part of
-                    // processSources task, from the vaadin-generated folder.
-                    // don't add another copy.
-                    it.excludes.add("**/flow-build-info.json")
-                }
-            }
         }
     }
 }

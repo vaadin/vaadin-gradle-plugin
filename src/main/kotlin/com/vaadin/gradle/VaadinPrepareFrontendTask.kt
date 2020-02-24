@@ -54,13 +54,8 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
 
         Files.createDirectories(extension.frontendDirectory.toPath())
-
-        // make sure the buildOutputDirectory is clean. If there would be a stray
-        // file from META-INF/VAADIN/build/ and vaadinBuildFrontend task was invoked,
-        // those files would be packaged multiple times: once by the processResources task,
-        // and once by the jar/war file as configured by VaadinPlugin
-        project.delete(extension.buildOutputDirectory)
         Files.createDirectories(extension.buildOutputDirectory.toPath())
+        Files.createDirectories(extension.webpackOutputDirectory.toPath())
 
         // propagate build info
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")

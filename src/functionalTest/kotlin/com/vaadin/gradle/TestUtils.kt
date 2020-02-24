@@ -41,12 +41,12 @@ fun BuildResult.expectTaskSucceded(taskName: String) {
  * Finds all files matching given [glob] pattern, for example `build/libs/ *.war`
  * @param expectedCount expected number of files, defaults to 1.
  */
-fun File.find(glob: String, expectedCount: Int = 1): List<File> {
+fun File.find(glob: String, expectedCount: IntRange = 1..1): List<File> {
     val matcher: PathMatcher = FileSystems.getDefault().getPathMatcher("glob:$absolutePath/$glob")
     val found: List<File> = absoluteFile.walk()
             .filter { matcher.matches(it.toPath()) }
             .toList()
-    if (found.size != expectedCount) {
+    if (found.size !in expectedCount) {
         fail("Expected $expectedCount $glob but found ${found.size}: $found . Folder dump: ${absoluteFile.walk().joinToString("\n")}")
     }
     return found

@@ -86,14 +86,16 @@ class VaadinSmokeTest {
     fun testBuildFrontend() {
         val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
+        // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/build")
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
-        val webcomponentsjs = File(build, "webcomponentsjs")
-        expect(true, webcomponentsjs.toString()) { webcomponentsjs.isDirectory }
-        expect(true) { webcomponentsjs.listFiles()!!.isNotEmpty() }
+        build.find("*.gz", 5..7)
+        build.find("*.js", 5..7)
+        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
+        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
     }
 
     /**

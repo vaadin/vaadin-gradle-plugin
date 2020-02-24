@@ -22,6 +22,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.Jar
 import java.io.File
+import java.nio.file.Files
 
 /**
  * Task that builds the frontend bundle.
