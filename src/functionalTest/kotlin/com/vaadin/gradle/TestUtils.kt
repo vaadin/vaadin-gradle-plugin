@@ -47,7 +47,7 @@ fun File.find(glob: String, expectedCount: Int = 1): List<File> {
             .filter { matcher.matches(it.toPath()) }
             .toList()
     if (found.size != expectedCount) {
-        fail("Expected $expectedCount $glob but found ${found.size}: $found")
+        fail("Expected $expectedCount $glob but found ${found.size}: $found . Folder dump: ${absoluteFile.walk().joinToString("\n")}")
     }
     return found
 }
@@ -91,10 +91,27 @@ fun expectArchiveContains(vararg globs: String, archiveProvider: () -> File) {
  * Asserts that given archive (jar/war) contains the Vaadin webpack bundle:
  * the `META-INF/VAADIN/build/` directory.
  */
-fun expectArchiveContainsVaadinWebpackBundle(archive: File) {
-    expectArchiveContains("META-INF/VAADIN/build/*.gz",
-            "META-INF/VAADIN/build/*.js",
-            "META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
-            "META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
+fun expectArchiveContainsVaadinWebpackBundle(archive: File,
+                                             isSpringBootJar: Boolean) {
+    val isWar: Boolean = archive.name.endsWith(".war", true)
+    val isStandaloneJar: Boolean = !isWar && !isSpringBootJar
+    val vaadinPrefix: String = if (isWar) "WEB-INF/classes/" else ""
+    expectArchiveContains(
+            "${vaadinPrefix}META-INF/VAADIN/config/flow-build-info.json",
+            "${vaadinPrefix}META-INF/VAADIN/config/stats.json",
+            "${vaadinPrefix}META-INF/VAADIN/build/*.gz",
+            "${vaadinPrefix}META-INF/VAADIN/build/*.js",
+            "${vaadinPrefix}META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
+            "${vaadinPrefix}META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
     ) { archive }
+    if (!isStandaloneJar) {
+        val libPrefix: String = if (isSpringBootJar) "BOOT-INF/lib" else "WEB-INF/lib"
+        expectArchiveContains("$libPrefix/*.jar") { archive }
+    }
+
+    // make sure there is only one flow-build-info.json
+    val allFiles: List<String> = archive.zipListAllFiles()
+    expect(1, "Multiple flow-build-info.json found: ${allFiles.joinToString("\n")}") {
+        allFiles.count { it.contains("flow-build-info.json") }
+    }
 }

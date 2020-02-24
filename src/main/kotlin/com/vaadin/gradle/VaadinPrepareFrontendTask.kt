@@ -21,6 +21,7 @@ import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
+import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
@@ -39,7 +40,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
 
-        project.tasks.named("processResources") { task ->
+        project.tasks.named("processResources") { task: Task ->
             task.mustRunAfter("vaadinPrepareFrontend")
         }
 
@@ -51,7 +52,15 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
     @TaskAction
     fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+
         Files.createDirectories(extension.frontendDirectory.toPath())
+
+        // make sure the buildOutputDirectory is clean. If there would be a stray
+        // file from META-INF/VAADIN/build/ and vaadinBuildFrontend task was invoked,
+        // those files would be packaged multiple times: once by the processResources task,
+        // and once by the jar/war file as configured by VaadinPlugin
+        project.delete(extension.buildOutputDirectory)
+        Files.createDirectories(extension.buildOutputDirectory.toPath())
 
         // propagate build info
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
@@ -59,9 +68,13 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         val buildInfo: JsonObject = Json.createObject().apply {
             put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, false)
             put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
-            put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
-            put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
-            put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+            if (extension.productionMode) {
+                put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
+            } else {
+                put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
+                put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
+                put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+            }
         }
         buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
         // validateNodeAndNpmVersion()

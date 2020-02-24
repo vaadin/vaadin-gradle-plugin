@@ -18,8 +18,6 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
-import elemental.json.JsonObject
-import elemental.json.impl.JsonUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.Jar
@@ -66,19 +64,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     fun vaadinBuildFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
-
-        // update build file
         val tokenFile = File(configFolder, "flow-build-info.json")
-        val json: String = tokenFile.readText()
-        val buildInfo: JsonObject = JsonUtil.parse(json)
-        buildInfo.apply {
-            remove(Constants.NPM_TOKEN)
-            remove(Constants.GENERATED_TOKEN)
-            remove(Constants.FRONTEND_TOKEN)
-            put("productionMode", true)
-            put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
-        }
-        buildInfo.writeToFile(tokenFile)
+        check(tokenFile.isFile) { "$tokenFile is missing" }
 
         // runNodeUpdater()
         val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()

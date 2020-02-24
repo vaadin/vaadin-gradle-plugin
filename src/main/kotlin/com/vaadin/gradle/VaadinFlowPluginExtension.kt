@@ -18,14 +18,14 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
-import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
 
 open class VaadinFlowPluginExtension(project: Project) {
     /**
      * Whether or not we are running in productionMode.
      */
-    var productionMode = false
+    var productionMode: Boolean =
+            project.gradle.startParameter.taskNames.contains("vaadinBuildFrontend")
 
     /**
      * The plugin will generate additional resource files here. These files need
@@ -108,13 +108,6 @@ open class VaadinFlowPluginExtension(project: Project) {
      * When using the `vaadinPrepareNode` task, you can specify the node version to download here.
      */
     val nodeVersion: String = "12.14.1"
-
-    init {
-        project.afterEvaluate {
-            val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
-            sourceSets.getByName("main").resources.srcDirs(buildOutputDirectory)
-        }
-    }
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

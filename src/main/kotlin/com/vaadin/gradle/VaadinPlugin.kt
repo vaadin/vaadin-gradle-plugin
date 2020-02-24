@@ -19,7 +19,9 @@ import com.moowork.gradle.node.NodePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.api.tasks.bundling.War
 
 /**
  * @author mavi
@@ -47,12 +49,24 @@ class VaadinPlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
+            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+
+            // add a new source-set folder for generated stuff, by default vaadin-generated
+            val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
+            sourceSets.getByName("main").resources.srcDirs(extension.buildOutputDirectory)
+
             // make sure files produced by vaadinPrepareFrontend and vaadinBuildFrontend
             // will end up in the resulting jar/war file.
-            project.tasks.withType(Jar::class.java) { task ->
-                val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+            project.tasks.withType(Jar::class.java) { task: Jar ->
                 // make sure to copy the generated stuff into the resulting jar/war file.
-                task.from(extension.buildOutputDirectory)
+                val destPath: String = if (task is War) "WEB-INF/classes" else "/"
+                task.into(destPath) {
+                    it.from(extension.buildOutputDirectory)
+                    // there is flow-build-info.json packaged as a part of
+                    // processSources task, from the vaadin-generated folder.
+                    // don't add another copy.
+                    it.excludes.add("**/flow-build-info.json")
+                }
             }
         }
     }
