@@ -19,6 +19,7 @@ import com.moowork.gradle.node.NodePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.bundling.Jar
 
 /**
  * @author mavi
@@ -43,6 +44,16 @@ class VaadinPlugin : Plugin<Project> {
             register("vaadinPrepareFrontend", VaadinPrepareFrontendTask::class.java)
             register("vaadinBuildFrontend", VaadinBuildFrontendTask::class.java)
             register("vaadinPrepareNode", VaadinPrepareNodeTask::class.java)
+        }
+
+        project.afterEvaluate {
+            // make sure files produced by vaadinPrepareFrontend and vaadinBuildFrontend
+            // will end up in the resulting jar/war file.
+            project.tasks.withType(Jar::class.java) { task ->
+                val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+                // make sure to copy the generated stuff into the resulting jar/war file.
+                task.from(extension.buildOutputDirectory)
+            }
         }
     }
 }

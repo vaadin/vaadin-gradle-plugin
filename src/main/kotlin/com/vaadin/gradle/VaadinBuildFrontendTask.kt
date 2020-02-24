@@ -22,7 +22,7 @@ import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.compile.AbstractCompile
+import org.gradle.api.tasks.bundling.Jar
 import java.io.File
 
 /**
@@ -50,19 +50,14 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         dependsOn("vaadinPrepareFrontend")
         // Maven's task run in the LifecyclePhase.PREPARE_PACKAGE phase
 
-        // We need to run before 'processResources' which automatically packages
-        // the outcome of this task for us.
-        //
-        // However, we also need access to the produced classes, to be able to analyze e.g. @CssImport annotations used by the project.
-        // And we can't depend on the 'classes' task since that depends on 'processResources'
-        // which would create a circular reference.
-        //
-        // We will therefore depend on all non-test compile tasks in this "hacky" way.
-        // See https://stackoverflow.com/questions/27239028/how-to-depend-on-all-compile-and-testcompile-tasks-in-gradle for more info.
-        dependsOn(project.tasks.withType(AbstractCompile::class.java).matching { !it.name.toLowerCase().contains("test") })
+        // We need access to the produced classes, to be able to analyze e.g.
+        // @CssImport annotations used by the project.
+        dependsOn("classes")
 
-        // Make sure to run this task before the `processResources` task.
-        project.tasks.named("processResources") { task ->
+        // Make sure to run this task before the `war`/`jar` tasks, so that
+        // webpack bundle will end up packaged in the war/jar archive. The inclusion
+        // rule itself is configured in the VaadinPlugin class.
+        project.tasks.withType(Jar::class.java) { task: Jar ->
             task.mustRunAfter("vaadinBuildFrontend")
         }
     }
