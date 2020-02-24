@@ -21,7 +21,6 @@ import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
-import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
@@ -40,9 +39,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
 
-        project.tasks.named("processResources") { task: Task ->
-            task.mustRunAfter("vaadinPrepareFrontend")
-        }
+        project.tasks.getByName("processResources").mustRunAfter("vaadinPrepareFrontend")
 
         // if the vaadinPrepareNode task is going to be invoked, it needs to run before this task,
         // in order to prepare the local copy of node.js
