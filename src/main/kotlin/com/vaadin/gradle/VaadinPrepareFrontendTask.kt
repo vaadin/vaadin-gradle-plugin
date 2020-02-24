@@ -21,7 +21,6 @@ import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskAction
