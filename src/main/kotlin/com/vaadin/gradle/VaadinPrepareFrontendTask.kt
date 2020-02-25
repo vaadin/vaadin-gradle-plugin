@@ -66,7 +66,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         Files.createDirectories(extension.frontendDirectory.toPath())
         Files.createDirectories(extension.buildOutputDirectory.toPath())
-        Files.createDirectories(extension.webpackOutputDirectory.toPath())
+        Files.createDirectories(extension.webpackOutputDirectory!!.toPath())
 
         // propagate build info
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
@@ -91,7 +91,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         val builder: NodeTasks.Builder = NodeTasks.Builder(getClassFinder(project), extension.npmFolder,
                 extension.generatedFolder, extension.frontendDirectory)
-                .withWebpack(extension.webpackOutputDirectory, extension.webpackTemplate, extension.webpackGeneratedTemplate)
+                .withWebpack(extension.webpackOutputDirectory!!, extension.webpackTemplate, extension.webpackGeneratedTemplate)
                 .createMissingPackageJson(true)
                 .enableImportsUpdate(false)
                 .enablePackagesUpdate(false)
