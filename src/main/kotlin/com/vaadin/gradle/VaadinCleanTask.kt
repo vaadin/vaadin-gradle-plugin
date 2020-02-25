@@ -45,7 +45,8 @@ open class VaadinCleanTask : DefaultTask() {
         project.delete("${project.projectDir}/node_modules",
                 "${project.projectDir}/package.json",
                 "${project.projectDir}/package-lock.json",
-                "${project.projectDir}/webpack.config.js",
+                // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/issues/43
+//                "${project.projectDir}/webpack.config.js",
                 "${project.projectDir}/webpack.generated.js")
     }
 }
