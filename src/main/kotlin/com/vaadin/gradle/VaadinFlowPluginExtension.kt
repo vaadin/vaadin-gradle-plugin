@@ -40,7 +40,7 @@ open class VaadinFlowPluginExtension(project: Project) {
 
     /**
      * The folder where webpack should output index.js and other generated
-     * files. Defaults to `build/resources/main/`.
+     * files. Defaults to `build/resources/main/META-INF/VAADIN/`.
      */
     var webpackOutputDirectory = File(File(project.buildDir, "resources/main"), Constants.VAADIN_SERVLET_RESOURCES)
 

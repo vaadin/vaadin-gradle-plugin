@@ -79,11 +79,9 @@ All configuration options follow. Note that you **RARELY** need to change anythi
   The plugin will automatically register
   this as an additional resource folder, which should then be picked up by the IDE.
   That will allow the app to run for example in Intellij with Tomcat.
-  For example the `flow-build-info.json` goes here. See [webpackOutputDirectory]
-  for more details.
-* `webpackOutputDirectory = File(buildOutputDirectory, "META-INF/VAADIN/")`:
-  The folder where webpack should output index.js and other generated files.
-  In the dev mode, the `flow-build-info.json` file is generated here.
+  For example the `flow-build-info.json` goes here.
+* `webpackOutputDirectory`: The folder where webpack should output index.js and other generated
+  files. Defaults to `build/resources/main/META-INF/VAADIN/`.
 * `npmFolder: File = project.projectDir`: The folder where
   `package.json` file is located. Default is project root dir.
 * `webpackTemplate: String = "webpack.config.js"`:
