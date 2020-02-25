@@ -49,9 +49,9 @@ class VaadinPlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
-            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(it)
 
-            // add a new source-set folder for generated stuff, by default vaadin-generated
+            // add a new source-set folder for generated stuff, by default `vaadin-generated`
             val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
             sourceSets.getByName("main").resources.srcDirs(extension.buildOutputDirectory)
         }
