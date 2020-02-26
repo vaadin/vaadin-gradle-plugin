@@ -21,6 +21,8 @@ import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
+import org.gradle.api.Task
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
@@ -44,6 +46,18 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         // if the vaadinPrepareNode task is going to be invoked, it needs to run before this task,
         // in order to prepare the local copy of node.js
         mustRunAfter("vaadinPrepareNode")
+
+        // make sure all dependent projects have finished building their jars, otherwise
+        // the Vaadin classpath scanning will not work properly. See
+        // https://github.com/vaadin/vaadin-gradle-plugin/issues/38
+        // for more details.
+        val dependentProjectTasks: List<Task> = project.configurations.getByName("runtimeClasspath")
+                .allDependencies
+                .withType(ProjectDependency::class.java)
+                .toList()
+                .map { it.dependencyProject }
+                .mapNotNull { it.tasks.findByName("assemble") }
+        dependsOn(*dependentProjectTasks.toTypedArray())
     }
 
     @TaskAction
@@ -52,7 +66,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         Files.createDirectories(extension.frontendDirectory.toPath())
         Files.createDirectories(extension.buildOutputDirectory.toPath())
-        Files.createDirectories(extension.webpackOutputDirectory.toPath())
+        Files.createDirectories(extension.webpackOutputDirectory!!.toPath())
 
         // propagate build info
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
@@ -77,7 +91,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         val builder: NodeTasks.Builder = NodeTasks.Builder(getClassFinder(project), extension.npmFolder,
                 extension.generatedFolder, extension.frontendDirectory)
-                .withWebpack(extension.webpackOutputDirectory, extension.webpackTemplate, extension.webpackGeneratedTemplate)
+                .withWebpack(extension.webpackOutputDirectory!!, extension.webpackTemplate, extension.webpackGeneratedTemplate)
                 .createMissingPackageJson(true)
                 .enableImportsUpdate(false)
                 .enablePackagesUpdate(false)

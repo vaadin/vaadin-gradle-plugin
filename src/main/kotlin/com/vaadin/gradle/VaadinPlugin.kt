@@ -16,10 +16,13 @@
 package com.vaadin.gradle
 
 import com.moowork.gradle.node.NodePlugin
+import com.vaadin.flow.server.Constants
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
+import java.io.File
 
 /**
  * @author mavi
@@ -47,9 +50,15 @@ class VaadinPlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
-            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(it)
+            // calculate webpackOutputDirectory if not set by the user
+            if (extension.webpackOutputDirectory == null) {
+                val sourceSets: SourceSetContainer = it.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+                val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
+                extension.webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
+            }
 
-            // add a new source-set folder for generated stuff, by default vaadin-generated
+            // add a new source-set folder for generated stuff, by default `vaadin-generated`
             val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
             sourceSets.getByName("main").resources.srcDirs(extension.buildOutputDirectory)
         }

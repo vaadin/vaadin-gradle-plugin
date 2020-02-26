@@ -47,6 +47,13 @@ internal fun getClassFinder(project: Project): ClassFinder {
             ?: listOf()
 
     val apis: Set<File> = (runtimeClasspathJars + classesDirs + servletJar).toSet()
+
+    // eagerly check that all the files/folders exist, to avoid spamming the console later on
+    // see https://github.com/vaadin/vaadin-gradle-plugin/issues/38 for more details
+    apis.forEach {
+        check(it.exists()) { "$it doesn't exist" }
+    }
+
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
     return ReflectionsClassFinder(*apiUrls.toTypedArray())
