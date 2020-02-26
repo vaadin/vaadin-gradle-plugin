@@ -32,8 +32,8 @@ import kotlin.test.fail
 fun BuildResult.expectTaskSucceded(taskName: String) = expectTaskOutcome(taskName, TaskOutcome.SUCCESS)
 
 /**
- * Expects that given task succeeded. If not, fails with an informative exception.
- * @param taskName the name of the task, e.g. `vaadinPrepareNode`
+ * Expects that given task has [expectedOutcome]. If not, fails with an informative exception.
+ * @param taskName the name of the task, e.g. `vaadinPrepareNode` or `web:vaadinBuildFrontend`.
  */
 fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome) {
     val task: BuildTask = task(":$taskName")
