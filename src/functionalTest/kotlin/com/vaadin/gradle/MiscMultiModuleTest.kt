@@ -7,7 +7,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/38
      */
     @Test
-    fun testFileNotFoundException() {
+    fun `vaadinPrepareFrontend waits for artifacts from dependent projects`() {
         settingsFile.writeText("include 'lib', 'web'")
         buildFile.writeText("""
             plugins {
@@ -32,7 +32,8 @@ class MiscMultiModuleTest : AbstractGradleTest() {
         testProject.newFolder("lib")
         testProject.newFolder("web")
 
-        // the vaadinPrepareFrontend task would work erratically because of dependent jars not yet produced.
+        // the vaadinPrepareFrontend task would work erratically because of dependent jars not yet produced,
+        // or it would blow up with FileNotFoundException straight away.
         build("web:vaadinPrepareFrontend")
     }
 }
