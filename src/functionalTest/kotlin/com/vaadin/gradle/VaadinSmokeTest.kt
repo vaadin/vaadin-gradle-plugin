@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -73,8 +74,21 @@ class VaadinSmokeTest : AbstractGradleTest() {
     }
 
     @Test
-    fun testBuildFrontend() {
-        val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+    fun `vaadinBuildFrontend skipped in development mode`() {
+        val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend", checkTasksSuccessful = false)
+        // vaadinBuildFrontend depends on vaadinPrepareFrontend, however
+        // vaadinBuildFrontend is skipped.
+        // let's explicitly check that vaadinPrepareFrontend has been run.
+        result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
+        result.expectTaskOutcome("vaadinBuildFrontend", TaskOutcome.SKIPPED)
+
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        expect(false, build.toString()) { build.exists() }
+    }
+
+    @Test
+    fun testBuildFrontendInProductionMode() {
+        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinPrepareNode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")

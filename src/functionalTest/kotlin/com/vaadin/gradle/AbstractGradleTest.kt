@@ -34,17 +34,23 @@ abstract class AbstractGradleTest {
      * Runs build on [testProjectDir]; a `build.gradle` [buildFile] is expected
      * to be located there.
      *
-     * The function checks that all tasks have succeeded; if not, throws an informative exception.
+     * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
+     * You can suppress this functionality by setting [checkTasksSuccessful] to false.
      */
-    protected fun build(vararg tasks: String): BuildResult {
+    protected fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
         val result: BuildResult = GradleRunner.create()
                 .withProjectDir(testProjectDir)
-                .withArguments(tasks.toList() + "--stacktrace")
+                .withArguments(args.toList() + "--stacktrace")
                 .withPluginClasspath()
                 .build()
 
-        for (task: String in tasks) {
-            result.expectTaskSucceded(task)
+        if (checkTasksSuccessful) {
+            for (arg: String in args) {
+                val isTask: Boolean = !arg.startsWith("-")
+                if (isTask) {
+                    result.expectTaskSucceded(arg)
+                }
+            }
         }
         return result
     }

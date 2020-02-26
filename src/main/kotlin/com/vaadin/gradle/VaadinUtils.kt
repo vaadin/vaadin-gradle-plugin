@@ -56,7 +56,15 @@ internal fun getClassFinder(project: Project): ClassFinder {
 
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
-    return ReflectionsClassFinder(*apiUrls.toTypedArray())
+    val classFinder = ReflectionsClassFinder(*apiUrls.toTypedArray())
+
+    // sanity check that the project has flow-server.jar as a dependency
+    try {
+        classFinder.loadClass<Any>("com.vaadin.flow.server.webcomponent.WebComponentModulesWriter")
+    } catch (e: ClassNotFoundException) {
+        throw RuntimeException("Failed to find classes from flow-server.jar. The project '${project.name}' needs to have a dependency on flow-server.jar")
+    }
+    return classFinder
 }
 
 private fun ProcessExecutor.executeAndCheckOk(): ProcessResult {

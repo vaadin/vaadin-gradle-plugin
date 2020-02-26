@@ -29,10 +29,16 @@ import kotlin.test.fail
  * Expects that given task succeeded. If not, fails with an informative exception.
  * @param taskName the name of the task, e.g. `vaadinPrepareNode`
  */
-fun BuildResult.expectTaskSucceded(taskName: String) {
+fun BuildResult.expectTaskSucceded(taskName: String) = expectTaskOutcome(taskName, TaskOutcome.SUCCESS)
+
+/**
+ * Expects that given task succeeded. If not, fails with an informative exception.
+ * @param taskName the name of the task, e.g. `vaadinPrepareNode`
+ */
+fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome) {
     val task: BuildTask = task(":$taskName")
             ?: fail("Task $taskName was not ran\n$output")
-    expect(TaskOutcome.SUCCESS, "$taskName did not succeed: ${task.outcome}") {
+    expect(expectedOutcome, "$taskName did not succeed: ${task.outcome}") {
         task.outcome
     }
 }
@@ -88,6 +94,21 @@ fun expectArchiveContains(vararg globs: String, archiveProvider: () -> File) {
 }
 
 /**
+ * Expects that given archive contains at least one file matching every glob in the [globs] list.
+ * @param archiveProvider returns the zip file to examine.
+ */
+fun expectArchiveDoesntContain(vararg globs: String, archiveProvider: () -> File) {
+    val archive: File = archiveProvider()
+    val allFiles: List<String> = archive.zipListAllFiles()
+
+    globs.forEach { glob: String ->
+        val regex: Regex = glob.globToRegex()
+        val someFileMatch: Boolean = allFiles.any { it.matches(regex) }
+        expect(false, "Unexpected files $glob found in $archive, found ${allFiles.joinToString("\n")}") { someFileMatch }
+    }
+}
+
+/**
  * Asserts that given archive (jar/war) contains the Vaadin webpack bundle:
  * the `META-INF/VAADIN/build/` directory.
  */
@@ -108,6 +129,39 @@ fun expectArchiveContainsVaadinWebpackBundle(archive: File,
             "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
             "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
     ) { archive }
+    if (!isStandaloneJar) {
+        val libPrefix: String = if (isSpringBootJar) "BOOT-INF/lib" else "WEB-INF/lib"
+        expectArchiveContains("$libPrefix/*.jar") { archive }
+    }
+
+    // make sure there is only one flow-build-info.json
+    val allFiles: List<String> = archive.zipListAllFiles()
+    expect(1, "Multiple flow-build-info.json found: ${allFiles.joinToString("\n")}") {
+        allFiles.count { it.contains("flow-build-info.json") }
+    }
+}
+
+/**
+ * Asserts that given archive (jar/war) contains the Vaadin webpack bundle:
+ * the `META-INF/VAADIN/build/` directory.
+ */
+fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
+                                             isSpringBootJar: Boolean) {
+    val isWar: Boolean = archive.name.endsWith(".war", true)
+    val isStandaloneJar: Boolean = !isWar && !isSpringBootJar
+    val resourcePackaging: String = when {
+        isWar -> "WEB-INF/classes/"
+        isSpringBootJar -> "BOOT-INF/classes/"
+        else -> ""
+    }
+    expectArchiveContains("${resourcePackaging}META-INF/VAADIN/config/flow-build-info.json") { archive }
+    expectArchiveDoesntContain("${resourcePackaging}META-INF/VAADIN/config/stats.json",
+            "${resourcePackaging}META-INF/VAADIN/build/*.gz",
+            "${resourcePackaging}META-INF/VAADIN/build/*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
+    ) { archive }
+
     if (!isStandaloneJar) {
         val libPrefix: String = if (isSpringBootJar) "BOOT-INF/lib" else "WEB-INF/lib"
         expectArchiveContains("$libPrefix/*.jar") { archive }

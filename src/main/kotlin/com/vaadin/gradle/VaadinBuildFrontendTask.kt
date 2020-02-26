@@ -58,6 +58,14 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         project.tasks.withType(Jar::class.java) { task: Jar ->
             task.mustRunAfter("vaadinBuildFrontend")
         }
+
+        setOnlyIf {
+            val productionMode: Boolean = VaadinFlowPluginExtension.get(project).productionMode
+            if (!productionMode) {
+                logger.info("Skipping vaadinBuildFrontend since we're not in production mode")
+            }
+            productionMode
+        }
     }
 
     @TaskAction
