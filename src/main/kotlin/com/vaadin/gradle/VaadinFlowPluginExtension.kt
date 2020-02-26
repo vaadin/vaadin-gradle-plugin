@@ -18,14 +18,14 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
-import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
 
 open class VaadinFlowPluginExtension(project: Project) {
     /**
      * Whether or not we are running in productionMode.
      */
-    var productionMode = false
+    var productionMode: Boolean =
+            project.gradle.startParameter.taskNames.contains("vaadinBuildFrontend")
 
     /**
      * The plugin will generate additional resource files here. These files need
@@ -34,18 +34,15 @@ open class VaadinFlowPluginExtension(project: Project) {
      * this as an additional resource folder, which should then be picked up by the IDE.
      * That will allow the app to run for example in Intellij with Tomcat.
      *
-     * For example the `flow-build-info.json` goes here. See [webpackOutputDirectory]
-     * for more details.
+     * For example the `flow-build-info.json` goes here. Also see [webpackOutputDirectory].
      */
     var buildOutputDirectory = File(project.buildDir, "vaadin-generated")
 
     /**
      * The folder where webpack should output index.js and other generated
-     * files.
-     *
-     * In the dev mode, the `flow-build-info.json` file is generated here.
+     * files. Defaults to `build/resources/main/`.
      */
-    var webpackOutputDirectory = File(buildOutputDirectory, Constants.VAADIN_SERVLET_RESOURCES)
+    var webpackOutputDirectory = File(File(project.buildDir, "resources/main"), Constants.VAADIN_SERVLET_RESOURCES)
 
     /**
      * The folder where `package.json` file is located. Default is project root
@@ -63,7 +60,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      * template provided by this plugin. Set it to empty string to disable the
      * feature.
      */
-    var webpackGeneratedTemplate = FrontendUtils.WEBPACK_GENERATED
+    var webpackGeneratedTemplate: String = FrontendUtils.WEBPACK_GENERATED
     /**
      * The folder where flow will put generated files that will be used by
      * webpack.
@@ -108,13 +105,6 @@ open class VaadinFlowPluginExtension(project: Project) {
      * When using the `vaadinPrepareNode` task, you can specify the node version to download here.
      */
     val nodeVersion: String = "12.14.1"
-
-    init {
-        project.afterEvaluate {
-            val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
-            sourceSets.getByName("main").resources.srcDirs(buildOutputDirectory)
-        }
-    }
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

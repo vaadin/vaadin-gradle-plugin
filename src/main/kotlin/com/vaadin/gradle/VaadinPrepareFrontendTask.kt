@@ -23,7 +23,6 @@ import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
-import org.gradle.language.jvm.tasks.ProcessResources
 import java.io.File
 import java.nio.file.Files
 
@@ -40,12 +39,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
 
-        // This task generating stuff into build/vaadin-generated/ ; the `processResources` task
-        // then copies stuff into the build/ folder, which allows the war task to package
-        // it into the WAR archive. Therefore, make sure to run this task before the `processResources` task.
-        project.tasks.named("processResources") { task ->
-            task.mustRunAfter("vaadinPrepareFrontend")
-        }
+        project.tasks.getByName("processResources").mustRunAfter("vaadinPrepareFrontend")
 
         // if the vaadinPrepareNode task is going to be invoked, it needs to run before this task,
         // in order to prepare the local copy of node.js
@@ -55,7 +49,10 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
     @TaskAction
     fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+
         Files.createDirectories(extension.frontendDirectory.toPath())
+        Files.createDirectories(extension.buildOutputDirectory.toPath())
+        Files.createDirectories(extension.webpackOutputDirectory.toPath())
 
         // propagate build info
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
@@ -63,9 +60,13 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         val buildInfo: JsonObject = Json.createObject().apply {
             put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, false)
             put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
-            put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
-            put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
-            put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+            if (extension.productionMode) {
+                put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
+            } else {
+                put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
+                put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
+                put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+            }
         }
         buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
         // validateNodeAndNpmVersion()
@@ -86,7 +87,11 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         // not be able to read files from jar path.
         val isJarPackaging: Boolean = project.tasks.withType(War::class.java).isEmpty()
         if (isJarPackaging) {
-            val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()
+            val jarFiles: Set<File> = project.configurations
+                    .getByName("runtimeClasspath")
+                    .resolve()
+                    .filter { it.name.endsWith(".jar") }
+                    .toSet()
             builder.copyResources(jarFiles)
         }
 

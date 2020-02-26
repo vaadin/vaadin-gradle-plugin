@@ -19,6 +19,7 @@ import com.moowork.gradle.node.NodePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.SourceSetContainer
 
 /**
  * @author mavi
@@ -43,6 +44,14 @@ class VaadinPlugin : Plugin<Project> {
             register("vaadinPrepareFrontend", VaadinPrepareFrontendTask::class.java)
             register("vaadinBuildFrontend", VaadinBuildFrontendTask::class.java)
             register("vaadinPrepareNode", VaadinPrepareNodeTask::class.java)
+        }
+
+        project.afterEvaluate {
+            val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+
+            // add a new source-set folder for generated stuff, by default vaadin-generated
+            val sourceSets: SourceSetContainer = it.properties["sourceSets"] as SourceSetContainer
+            sourceSets.getByName("main").resources.srcDirs(extension.buildOutputDirectory)
         }
     }
 }
