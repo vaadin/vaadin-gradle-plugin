@@ -25,10 +25,15 @@ import org.gradle.api.tasks.TaskAction
  * * `node_modules`
  * * `package.json`
  * * `package-lock.json`
- * * `webpack.config.js`
  * * `webpack.generated.js`
+ * * `package-lock.yaml` (used by Vaadin 14.2+ pnpm)
+ * * `pnpm-file.js` (used by Vaadin 14.2+ pnpm)
  *
- * Afterwards, run the `vaadinPrepareFrontend` task to re-create some of the files;
+ * Doesn't delete `webpack.config.js` since it is intended to contain
+ * user-specific code. See https://github.com/vaadin/vaadin-gradle-plugin/issues/43
+ * for more details.
+ *
+ * After this task is run, remember to run the `vaadinPrepareFrontend` task to re-create some of the files;
  * the rest of the files will be re-created by Vaadin Servlet, simply by running the application
  * in the development mode.
  */
@@ -45,8 +50,9 @@ open class VaadinCleanTask : DefaultTask() {
         project.delete("${project.projectDir}/node_modules",
                 "${project.projectDir}/package.json",
                 "${project.projectDir}/package-lock.json",
-                // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/issues/43
-//                "${project.projectDir}/webpack.config.js",
-                "${project.projectDir}/webpack.generated.js")
+                "${project.projectDir}/webpack.generated.js",
+                "${project.projectDir}/package-lock.yaml", // used by Vaadin 14.2+ pnpm
+                "${project.projectDir}/pnpm-file.js" // used by Vaadin 14.2+ pnpm
+        )
     }
 }
