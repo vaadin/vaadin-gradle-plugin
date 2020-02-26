@@ -94,7 +94,7 @@ fun expectArchiveContains(vararg globs: String, archiveProvider: () -> File) {
 }
 
 /**
- * Expects that given archive contains at least one file matching every glob in the [globs] list.
+ * Expects that given archive doesn't contain any file matching any glob in the [globs] list.
  * @param archiveProvider returns the zip file to examine.
  */
 fun expectArchiveDoesntContain(vararg globs: String, archiveProvider: () -> File) {
@@ -142,7 +142,7 @@ fun expectArchiveContainsVaadinWebpackBundle(archive: File,
 }
 
 /**
- * Asserts that given archive (jar/war) contains the Vaadin webpack bundle:
+ * Asserts that given archive (jar/war) doesn't contain the Vaadin webpack bundle:
  * the `META-INF/VAADIN/build/` directory.
  */
 fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
