@@ -28,7 +28,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                     compile project(':lib')
                 }
             }
-        """)
+        """.trimIndent())
         testProject.newFolder("lib")
         testProject.newFolder("web")
 
