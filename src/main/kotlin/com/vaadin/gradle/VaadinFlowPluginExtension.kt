@@ -42,6 +42,8 @@ open class VaadinFlowPluginExtension(project: Project) {
      * The folder where webpack should output index.js and other generated
      * files. Defaults to `null` which will use the auto-detected value of
      * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/`.
+     *
+     * In the dev mode, the `flow-build-info.json` file is generated here.
      */
     var webpackOutputDirectory: File? = null
 
