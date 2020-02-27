@@ -48,14 +48,14 @@ There are the following tasks:
   and will place that by default into the `build/vaadin-generated` folder. The folder is
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
-  need to be invoked explicitly. WARNING: this task will be skipped if `productionMode` is set to false.
+  need to be invoked explicitly. Note: this task will not be triggered automatically if `productionMode` is set to false.
 * `vaadinPrepareNode` will download a local distribution of node.js and npm into the `node/` folder for use by Vaadin.
   Please see below for more information.
 
 Most common commands for all projects:
 
 * `./gradlew clean build` - builds the project and prepares the project for development. Automatically
-  calls the `vaadinPrepareFrontend` task.
+  calls the `vaadinPrepareFrontend` task, but doesn't call the `vaadinBuildFrontend` task by default.
 * `./gradlew clean vaadinPrepareFrontend` - quickly prepares the project for development.
 * `./gradlew clean build -Pvaadin.productionMode` - will compile Vaadin in production mode,
    then packages everything into the war/jar archive. Automatically calls the
@@ -81,7 +81,7 @@ All configuration options follow. Note that you **RARELY** need to change anythi
 * `productionMode = false`: Whether or not the plugin should run in productionMode. Defaults to false.
   Responds to the `-Pvaadin.productionMode` property. You need to set this to `true` if you wish
   to build a production-ready war/jar artifact. If this is false, the `vaadinBuildFrontend`
-  task is automatically skipped.
+  task is not triggered automatically by the build.
 * `buildOutputDirectory = File(project.buildDir, "vaadin-generated")`: 
   The plugin will generate additional resource files here. These files need
   to be present on the classpath, in order for Vaadin to be
@@ -133,10 +133,11 @@ In your development environment, just run:
 to download and prepare a local distribution of node.js. You only need to run this once,
 in order to populate the folder `node/`.
 
-In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
+In your CI, don't forget to call the `vaadinPrepareNode` along with setting the production mode to true:
 ```bash
-./gradlew clean vaadinPrepareNode vaadinBuildFrontend build
+./gradlew clean vaadinPrepareNode build -Pvaadin.productionMode
 ```
+That will automatically download node and run `vaadinPrepareFrontend` and `vaadinBuildFrontend` tasks.
 
 If you wish to override the node version which will be downloaded, simply specify
 the node.js version in the `vaadin {}` block:

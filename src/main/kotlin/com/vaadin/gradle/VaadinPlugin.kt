@@ -58,6 +58,7 @@ class VaadinPlugin : Plugin<Project> {
             // auto-activate tasks: https://github.com/vaadin/vaadin-gradle-plugin/issues/48
             project.tasks.getByPath("processResources").dependsOn("vaadinPrepareFrontend")
             if (extension.productionMode) {
+                // this will also catch the War task since it extends from Jar
                 project.tasks.withType(Jar::class.java) { task: Jar ->
                     task.dependsOn("vaadinBuildFrontend")
                 }

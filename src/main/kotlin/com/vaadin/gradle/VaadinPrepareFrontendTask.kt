@@ -68,22 +68,10 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         Files.createDirectories(extension.buildOutputDirectory.toPath())
         Files.createDirectories(extension.webpackOutputDirectory!!.toPath())
 
-        // propagate build info
-        val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
-        Files.createDirectories(configFolder.toPath())
-        val buildInfo: JsonObject = Json.createObject().apply {
-            put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, false)
-            put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
-            if (extension.productionMode) {
-                put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
-            } else {
-                put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
-                put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
-                put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
-            }
-        }
-        buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
-        // validateNodeAndNpmVersion()
+        propagateBuildInfo(extension)
+
+        FrontendUtils.getNodeExecutable(extension.npmFolder.absolutePath)
+        FrontendUtils.getNpmExecutable(extension.npmFolder.absolutePath)
         FrontendUtils.validateNodeAndNpmVersion(extension.npmFolder.absolutePath)
 
         // produce target/frontend/package.json
@@ -111,5 +99,17 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         builder.build().execute()
     }
-}
 
+    private fun propagateBuildInfo(extension: VaadinFlowPluginExtension) {
+        val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
+        Files.createDirectories(configFolder.toPath())
+        val buildInfo: JsonObject = Json.createObject().apply {
+            put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, false)
+            put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
+            put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
+            put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
+            put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+        }
+        buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
+    }
+}
