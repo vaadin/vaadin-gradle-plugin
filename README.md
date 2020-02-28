@@ -29,9 +29,11 @@ The actual plugin part is as follows (check the latest version!):
 
 ```
 plugins {
-    id 'com.vaadin' version '0.5.0'
+    id 'com.vaadin' version '0.5.1'
 }
 ```
+
+> Note: please find the newest version of the plugin at the [Gradle Plugin site for com.vaadin](https://plugins.gradle.org/plugin/com.vaadin).
 
 ## Tasks
 
