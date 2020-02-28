@@ -48,14 +48,22 @@ There are the following tasks:
   and will place that by default into the `build/vaadin-generated` folder. The folder is
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
-  need to be invoked explicitly.
+  need to be invoked explicitly. Note: this task will not be triggered automatically if `productionMode` is set to false.
 * `vaadinPrepareNode` will download a local distribution of node.js and npm into the `node/` folder for use by Vaadin.
   Please see below for more information.
 
 Most common commands for all projects:
 
-* `./gradlew clean vaadinPrepareFrontend` - prepares the project for development
-* `./gradlew clean vaadinBuildFrontend build` - will compile Vaadin in production mode, then packages everything into the WAR archive.
+* `./gradlew clean build` - builds the project and prepares the project for development. Automatically
+  calls the `vaadinPrepareFrontend` task, but doesn't call the `vaadinBuildFrontend` task by default.
+* `./gradlew clean vaadinPrepareFrontend` - quickly prepares the project for development.
+* `./gradlew clean build -Pvaadin.productionMode` - will compile Vaadin in production mode,
+   then packages everything into the war/jar archive. Automatically calls the
+   `vaadinPrepareFrontend` and `vaadinBuildFrontend` tasks.
+
+*Note* (after you built the project in production mode): In order to prepare the project
+setup back to development mode, you must run `./gradlew vaadinPrepareFrontend`
+with the `productionMode` effectively set to false (e.g. by ommitting the `-Pvaadin.productionMode` flag).
 
 ## Configuration
 
@@ -70,8 +78,10 @@ vaadin {
 
 All configuration options follow. Note that you **RARELY** need to change anything of the below.
 
-* `productionMode = false`: Whether or not we are running in productionMode.
-  The `vaadinBuildFrontend` task will automatically switch this to true, there is no need for you to configure anything.
+* `productionMode = false`: Whether or not the plugin should run in productionMode. Defaults to false.
+  Responds to the `-Pvaadin.productionMode` property. You need to set this to `true` if you wish
+  to build a production-ready war/jar artifact. If this is false, the `vaadinBuildFrontend`
+  task is not triggered automatically by the build.
 * `buildOutputDirectory = File(project.buildDir, "vaadin-generated")`: 
   The plugin will generate additional resource files here. These files need
   to be present on the classpath, in order for Vaadin to be
@@ -123,10 +133,11 @@ In your development environment, just run:
 to download and prepare a local distribution of node.js. You only need to run this once,
 in order to populate the folder `node/`.
 
-In your CI, don't forget to call the `vaadinPrepareNode` before the `vaadinPrepareFrontend` task:
+In your CI, don't forget to call the `vaadinPrepareNode` along with setting the production mode to true:
 ```bash
-./gradlew clean vaadinPrepareNode vaadinBuildFrontend build
+./gradlew clean vaadinPrepareNode build -Pvaadin.productionMode
 ```
+That will automatically download node and run `vaadinPrepareFrontend` and `vaadinBuildFrontend` tasks.
 
 If you wish to override the node version which will be downloaded, simply specify
 the node.js version in the `vaadin {}` block:
@@ -139,6 +150,30 @@ vaadin {
 
 Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
 it's best to select the LTS release.
+
+## Multi-project builds
+
+It is important to apply this plugin only to projects building the final war/jar artifact. You can
+achieve that by having the `com.vaadin` plugin in the `plugins{}` block not applied by default, then
+applying the plugin only in the war project:
+
+```groovy
+plugins {
+  id 'java'
+  id "com.vaadin" version "0.5.1" apply false
+}
+
+project("lib") {
+  apply plugin: 'java'
+}
+project("web") {
+  apply plugin: 'war'
+  apply plugin: "com.vaadin"
+  dependencies {
+    compile project(':lib')
+  }
+}
+```
 
 # Developing The Plugin
 

@@ -18,14 +18,16 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
 
 open class VaadinFlowPluginExtension(project: Project) {
     /**
-     * Whether or not we are running in productionMode.
+     * Whether or not we are running in productionMode. Defaults to false.
+     * Responds to the `-Pvaadin.productionMode` property.
      */
-    var productionMode: Boolean =
-            project.gradle.startParameter.taskNames.contains("vaadinBuildFrontend")
+    var productionMode: Boolean = false
 
     /**
      * The plugin will generate additional resource files here. These files need
@@ -112,5 +114,23 @@ open class VaadinFlowPluginExtension(project: Project) {
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =
                 project.extensions.getByType(VaadinFlowPluginExtension::class.java)
+    }
+
+    internal fun autoconfigure(project: Project) {
+        // calculate webpackOutputDirectory if not set by the user
+        if (webpackOutputDirectory == null) {
+            val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+            val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
+            webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
+        }
+
+        if (System.getProperty("vaadin.productionMode") != null) {
+            val pm: String = System.getProperty("vaadin.productionMode")
+            productionMode = pm.isBlank() || pm.toBoolean()
+        }
+        if (project.hasProperty("vaadin.productionMode")) {
+            val pm: String = project.property("vaadin.productionMode") as String
+            productionMode = pm.isBlank() || pm.toBoolean()
+        }
     }
 }

@@ -15,7 +15,11 @@
  */
 package com.vaadin.gradle
 
+import com.vaadin.flow.server.Constants
+import elemental.json.JsonObject
+import elemental.json.impl.JsonUtil
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -73,8 +77,37 @@ class VaadinSmokeTest : AbstractGradleTest() {
     }
 
     @Test
-    fun testBuildFrontend() {
+    fun `vaadinBuildFrontend not ran by default in development mode`() {
+        val result: BuildResult = build("vaadinPrepareNode", "build")
+        // let's explicitly check that vaadinPrepareFrontend has been run.
+        result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
+        expect(null) { result.task(":vaadinBuildFrontend") }
+
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        expect(false, build.toString()) { build.exists() }
+    }
+
+    @Test
+    fun `vaadinBuildFrontend can be run manually in development mode`() {
         val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+        // let's explicitly check that vaadinPrepareFrontend has been run.
+        result.expectTaskSucceded("vaadinPrepareFrontend")
+
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        expect(true, build.toString()) { build.exists() }
+        build.find("*.gz", 5..7)
+        build.find("*.js", 5..7)
+        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
+        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+
+        val tokenFile = File(build, "../config/flow-build-info.json")
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
+    }
+
+    @Test
+    fun testBuildFrontendInProductionMode() {
+        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinPrepareNode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")

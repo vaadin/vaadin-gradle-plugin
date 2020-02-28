@@ -18,6 +18,8 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
+import elemental.json.JsonObject
+import elemental.json.impl.JsonUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.Jar
@@ -63,12 +65,31 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     @TaskAction
     fun vaadinBuildFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
-        val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
-        val tokenFile = File(configFolder, "flow-build-info.json")
-        check(tokenFile.isFile) { "$tokenFile is missing" }
+        val tokenFile = File(extension.webpackOutputDirectory, FrontendUtils.TOKEN_FILE)
 
-        // runNodeUpdater()
-        val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath").resolve().filter { it.name.endsWith(".jar") }.toSet()
+        updateBuildFile(tokenFile)
+
+        runNodeUpdater(extension, tokenFile)
+
+        if (extension.generateBundle) {
+            runWebpack(extension)
+        }
+    }
+
+    private fun runWebpack(extension: VaadinFlowPluginExtension) {
+        val webpackCommand = "webpack/bin/webpack.js"
+        val webpackExecutable = File(extension.npmFolder, FrontendUtils.NODE_MODULES + webpackCommand)
+        check(webpackExecutable.isFile) { "Unable to locate webpack executable by path '${webpackExecutable.absolutePath}'. Double check that the plugin is executed correctly" }
+        val nodePath: String = FrontendUtils.getNodeExecutable(extension.npmFolder.absolutePath)
+        exec(project.logger, project.projectDir, nodePath, webpackExecutable.absolutePath)
+    }
+
+    private fun runNodeUpdater(extension: VaadinFlowPluginExtension, tokenFile: File) {
+        val jarFiles: Set<File> = project.configurations.getByName("runtimeClasspath")
+                .resolve()
+                .filter { it.name.endsWith(".jar") }
+                .toSet()
+
         NodeTasks.Builder(getClassFinder(project),
                 extension.npmFolder,
                 extension.generatedFolder,
@@ -82,14 +103,23 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .withEmbeddableWebComponents(extension.generateEmbeddableWebComponents)
                 .withTokenFile(tokenFile)
                 .build().execute()
+    }
 
-        if (extension.generateBundle) {
-            // runWebpack()
-            val webpackCommand = "webpack/bin/webpack.js"
-            val webpackExecutable = File(extension.npmFolder, FrontendUtils.NODE_MODULES + webpackCommand)
-            check(webpackExecutable.isFile) { "Unable to locate webpack executable by path '${webpackExecutable.absolutePath}'. Double check that the plugin is executed correctly" }
-            val nodePath: String = FrontendUtils.getNodeExecutable(extension.npmFolder.absolutePath)
-            exec(project.logger, project.projectDir, nodePath, webpackExecutable.absolutePath)
+    /**
+     * Add the devMode token to build token file so we don't try to start the
+     * dev server. Remove the abstract folder paths as they should not be used
+     * for prebuilt bundles.
+     */
+    private fun updateBuildFile(tokenFile: File) {
+        check(tokenFile.isFile) { "$tokenFile is missing" }
+
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        buildInfo.apply {
+            remove(Constants.NPM_TOKEN)
+            remove(Constants.GENERATED_TOKEN)
+            remove(Constants.FRONTEND_TOKEN)
+            put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
         }
+        buildInfo.writeToFile(tokenFile)
     }
 }
