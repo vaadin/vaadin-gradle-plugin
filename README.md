@@ -1,7 +1,8 @@
 # Vaadin Gradle Plugin
 
 This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14
-and newer. The implementation is now mostly based on the similar Maven plugin.
+(Vaadin 15 is not supported at the moment, please see [#50](https://github.com/vaadin/vaadin-gradle-plugin/issues/50) for more details).
+The implementation is now mostly based on the similar Maven plugin.
 Compared to Maven plugin, there are the following limitations:
 
 * Vaadin 14 Compatibility mode is not supported
@@ -29,9 +30,11 @@ The actual plugin part is as follows (check the latest version!):
 
 ```
 plugins {
-    id 'com.vaadin' version '0.5.0'
+    id 'com.vaadin' version '0.6.0'
 }
 ```
+
+> Note: please find the newest version of the plugin at the [Gradle Plugin site for com.vaadin](https://plugins.gradle.org/plugin/com.vaadin).
 
 ## Tasks
 
@@ -160,7 +163,7 @@ applying the plugin only in the war project:
 ```groovy
 plugins {
   id 'java'
-  id "com.vaadin" version "0.5.1" apply false
+  id "com.vaadin" version "0.6.0" apply false
 }
 
 project("lib") {
