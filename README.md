@@ -30,7 +30,7 @@ The actual plugin part is as follows (check the latest version!):
 
 ```
 plugins {
-    id 'com.vaadin' version '0.5.1'
+    id 'com.vaadin' version '0.6.0'
 }
 ```
 
@@ -163,7 +163,7 @@ applying the plugin only in the war project:
 ```groovy
 plugins {
   id 'java'
-  id "com.vaadin" version "0.5.1" apply false
+  id "com.vaadin" version "0.6.0" apply false
 }
 
 project("lib") {
