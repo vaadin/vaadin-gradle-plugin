@@ -109,7 +109,7 @@ open class VaadinFlowPluginExtension(project: Project) {
     /**
      * When using the `vaadinPrepareNode` task, you can specify the node version to download here.
      */
-    val nodeVersion: String = "12.14.1"
+    var nodeVersion: String = "12.14.1"
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =
