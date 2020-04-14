@@ -41,7 +41,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     fun testSettingNodeVersion() {
         buildFile.writeText("""
             plugins {
-                id 'com.vaadin' version '0.6.0'
+                id 'com.vaadin'
             }
 
             vaadin {
