@@ -27,13 +27,29 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin14 {
                 optimizeBundle = true
             }
-        """)
+        """.trimIndent())
 
         // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
         // extension would crash even this very simple build.
         build("tasks")
     }
 
+    /**
+     * https://github.com/vaadin/vaadin-gradle-plugin/issues/57
+     */
+    @Test
+    fun testSettingNodeVersion() {
+        buildFile.writeText("""
+            plugins {
+                id 'com.vaadin' version '0.6.0'
+            }
+
+            vaadin {
+                nodeVersion = "10.19.0"
+            }
+        """.trimIndent())
+        build("tasks")
+    }
 
     /**
      * This test covers the [Base Starter Gradle](https://github.com/vaadin/base-starter-gradle)
