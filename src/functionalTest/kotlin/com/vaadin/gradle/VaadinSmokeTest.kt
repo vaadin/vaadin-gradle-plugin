@@ -39,10 +39,11 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:14.2.0.beta1") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -62,10 +63,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
     fun testPrepareFrontend() {
         build("vaadinPrepareFrontend")
 
-        val generatedPackageJson = File(testProjectDir, "target/frontend/package.json")
-        expect(true, generatedPackageJson.toString()) { generatedPackageJson.isFile }
         val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
-        expect(true, generatedFlowBuildInfoJson.toString()) { generatedPackageJson.isFile }
+        expect(true, generatedFlowBuildInfoJson.toString()) { generatedFlowBuildInfoJson.isFile }
     }
 
     @Test
