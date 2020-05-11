@@ -16,7 +16,6 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
-import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
@@ -109,6 +108,19 @@ open class VaadinFlowPluginExtension(project: Project) {
 
     @Deprecated("The vaadinPrepareNode task has been removed. Now Vaadin auto-downloads the node.js if need be, and the version is fixed to FrontendTools.DEFAULT_NODE_VERSION")
     var nodeVersion: String = "v12.16.0"
+
+    /**
+     * Instructs to use pnpm for installing npm frontend resources.
+     */
+    var pnpmEnable = false
+
+    /**
+     * Whether vaadin home node executable usage is forced. If it's set to
+     * `true` then vaadin home 'node' is checked and installed if it's
+     * absent. Then it will be used instead of globally 'node' or locally
+     * installed installed 'node'.
+     */
+    var requireHomeNodeExec = false
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

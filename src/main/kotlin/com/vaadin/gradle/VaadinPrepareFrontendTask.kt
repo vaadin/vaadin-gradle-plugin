@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
@@ -27,6 +28,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
 import java.nio.file.Files
+import java.util.function.Supplier
 
 /**
  * This task checks that node and npm tools are installed, copies frontend
@@ -42,10 +44,6 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
 
         project.tasks.getByName("processResources").mustRunAfter("vaadinPrepareFrontend")
-
-        // if the vaadinPrepareNode task is going to be invoked, it needs to run before this task,
-        // in order to prepare the local copy of node.js
-        mustRunAfter("vaadinPrepareNode")
 
         // make sure all dependent projects have finished building their jars, otherwise
         // the Vaadin classpath scanning will not work properly. See
@@ -70,9 +68,9 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         propagateBuildInfo(extension)
 
-        FrontendUtils.getNodeExecutable(extension.npmFolder.absolutePath)
-        FrontendUtils.getNpmExecutable(extension.npmFolder.absolutePath)
-        FrontendUtils.validateNodeAndNpmVersion(extension.npmFolder.absolutePath)
+        val tools = FrontendTools(extension.npmFolder.getAbsolutePath(),
+                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        tools.validateNodeAndNpmVersion()
 
         // produce target/frontend/package.json
         Files.createDirectories(extension.generatedFolder.toPath())
@@ -109,6 +107,8 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
             put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
             put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
             put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
+            put(Constants.SERVLET_PARAMETER_ENABLE_PNPM, extension.pnpmEnable)
+            put(Constants.REQUIRE_HOME_NODE_EXECUTABLE, extension.requireHomeNodeExec)
         }
         buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
     }

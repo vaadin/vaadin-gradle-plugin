@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.JsonObject
@@ -24,6 +25,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.Jar
 import java.io.File
+import java.util.function.Supplier
 
 /**
  * Task that builds the frontend bundle.
@@ -79,8 +81,16 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     private fun runWebpack(extension: VaadinFlowPluginExtension) {
         val webpackCommand = "webpack/bin/webpack.js"
         val webpackExecutable = File(extension.npmFolder, FrontendUtils.NODE_MODULES + webpackCommand)
-        check(webpackExecutable.isFile) { "Unable to locate webpack executable by path '${webpackExecutable.absolutePath}'. Double check that the plugin is executed correctly" }
-        val nodePath: String = FrontendUtils.getNodeExecutable(extension.npmFolder.absolutePath)
+        check(webpackExecutable.isFile) {
+            "Unable to locate webpack executable by path '${webpackExecutable.absolutePath}'. Double check that the plugin is executed correctly"
+        }
+        val tools = FrontendTools(extension.npmFolder.absolutePath,
+                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        val nodePath: String = if (extension.requireHomeNodeExec) {
+            tools.forceAlternativeNodeExecutable()
+        } else {
+            tools.nodeExecutable
+        }
         exec(project.logger, project.projectDir, nodePath, webpackExecutable.absolutePath)
     }
 
@@ -102,6 +112,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .enableImportsUpdate(true)
                 .withEmbeddableWebComponents(extension.generateEmbeddableWebComponents)
                 .withTokenFile(tokenFile)
+                .enablePnpm(extension.pnpmEnable)
+                .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
     }
 
@@ -118,6 +130,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
             remove(Constants.NPM_TOKEN)
             remove(Constants.GENERATED_TOKEN)
             remove(Constants.FRONTEND_TOKEN)
+            remove(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
+            remove(Constants.REQUIRE_HOME_NODE_EXECUTABLE)
             put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
         }
         buildInfo.writeToFile(tokenFile)

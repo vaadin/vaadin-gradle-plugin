@@ -59,16 +59,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
     }
 
     @Test
-    fun testPrepareNode() {
-        build("vaadinPrepareNode")
-
-        val nodejs = File(testProjectDir, "node")
-        expect(true, nodejs.toString()) { nodejs.isDirectory }
-    }
-
-    @Test
     fun testPrepareFrontend() {
-        build("vaadinPrepareNode", "vaadinPrepareFrontend")
+        build("vaadinPrepareFrontend")
 
         val generatedPackageJson = File(testProjectDir, "target/frontend/package.json")
         expect(true, generatedPackageJson.toString()) { generatedPackageJson.isFile }
@@ -78,7 +70,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun `vaadinBuildFrontend not ran by default in development mode`() {
-        val result: BuildResult = build("vaadinPrepareNode", "build")
+        val result: BuildResult = build("build")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
         expect(null) { result.task(":vaadinBuildFrontend") }
@@ -89,7 +81,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun `vaadinBuildFrontend can be run manually in development mode`() {
-        val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+        val result: BuildResult = build("vaadinBuildFrontend")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
@@ -107,7 +99,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun testBuildFrontendInProductionMode() {
-        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinPrepareNode", "vaadinBuildFrontend")
+        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
