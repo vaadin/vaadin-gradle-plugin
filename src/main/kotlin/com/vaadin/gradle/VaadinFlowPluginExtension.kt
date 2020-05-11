@@ -106,7 +106,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      */
     var optimizeBundle = true
 
-    @Deprecated("The vaadinPrepareNode task has been removed. Now Vaadin auto-downloads the node.js if need be, and the version is fixed to FrontendTools.DEFAULT_NODE_VERSION")
+    @Deprecated("The vaadinPrepareNode task has been removed. Now Vaadin auto-downloads the node.js if need be, and the version is fixed to FrontendTools.DEFAULT_NODE_VERSION. This setting currently does nothing.")
     var nodeVersion: String = "v12.16.0"
 
     /**
