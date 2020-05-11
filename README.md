@@ -30,7 +30,7 @@ The actual plugin part is as follows (check the latest version at the [plugins.g
 
 ```
 plugins {
-    id 'com.vaadin' version '0.6.0'
+    id 'com.vaadin' version '0.7.0'
 }
 ```
 
@@ -120,7 +120,8 @@ All configuration options follow. Note that you **RARELY** need to change anythi
 
 ## Automatic Download of node.js and npm
 
-You do not need to have node.js nor npm installed in your system, in order to use Vaadin.
+Since Vaadin Gradle Plugin 0.7.0, you no longer need to have node.js nor
+npm installed in your system in order to use Vaadin.
 Vaadin will download the node.js+npm distribution and will place it
 into the `$HOME/.vaadin` folder.
 
