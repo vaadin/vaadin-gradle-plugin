@@ -43,7 +43,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.2.0.beta1") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",

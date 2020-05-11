@@ -48,10 +48,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -89,13 +90,14 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             vaadin {
                 optimizeBundle = true
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -131,6 +133,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
@@ -138,7 +141,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -181,6 +184,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
@@ -188,7 +192,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -240,10 +244,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             
             repositories {
                 mavenCentral()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             
             ext {
-                set('vaadinVersion', "14.1.16")
+                set('vaadinVersion', "$vaadin14Version")
             }
             
             configurations {
@@ -315,10 +320,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
