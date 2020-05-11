@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
@@ -106,10 +107,8 @@ open class VaadinFlowPluginExtension(project: Project) {
      */
     var optimizeBundle = true
 
-    /**
-     * When using the `vaadinPrepareNode` task, you can specify the node version to download here.
-     */
-    var nodeVersion: String = "12.14.1"
+    @Deprecated("The vaadinPrepareNode task has been removed. Now Vaadin auto-downloads the node.js if need be, and the version is fixed to FrontendTools.DEFAULT_NODE_VERSION")
+    var nodeVersion: String = "v12.16.0"
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

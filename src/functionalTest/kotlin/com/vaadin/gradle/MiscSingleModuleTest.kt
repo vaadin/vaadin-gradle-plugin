@@ -35,23 +35,6 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     }
 
     /**
-     * https://github.com/vaadin/vaadin-gradle-plugin/issues/57
-     */
-    @Test
-    fun testSettingNodeVersion() {
-        buildFile.writeText("""
-            plugins {
-                id 'com.vaadin'
-            }
-
-            vaadin {
-                nodeVersion = "10.19.0"
-            }
-        """.trimIndent())
-        build("tasks")
-    }
-
-    /**
      * This test covers the [Base Starter Gradle](https://github.com/vaadin/base-starter-gradle)
      * example project.
      */
@@ -83,7 +66,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
@@ -127,7 +110,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
         // vaadinBuildFrontend should have been executed automatically
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -177,7 +160,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
@@ -227,7 +210,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -310,7 +293,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("-Pvaadin.productionMode", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -373,7 +356,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Dvaadin.productionMode", "clean", "vaadinPrepareNode", "build")
+        val build: BuildResult = build("-Dvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
