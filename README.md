@@ -10,13 +10,13 @@ Compared to Maven plugin, there are the following limitations:
 
 Prerequisites:
 * Java 8 or higher
-* node.js and npm, either installed locally or automatically by the Vaadin Gradle Plugin via the `vaadinPrepareNode` task. To install locally:
+* node.js and npm. Vaadin will now automatically install node.js and npm, but you can also install those locally:
   * Windows/Mac: [node.js Download site](https://nodejs.org/en/download/)
   * Linux: Use package manager e.g. `sudo apt install npm` 
 
 As opposed to the older version of Gradle plugin, the new plugin doesn't create
 projects any more. We plan to support Gradle projects via [vaadin.com/start](https://vaadin.com/start)
-at some point. In the mean time, refer to project examples that you can use
+at some point. In the meantime, refer to project examples that you can use
 as a basis for your Vaadin modules:
 
 ## Installation
@@ -26,15 +26,13 @@ Check out the example project setups for basic WAR project and Spring Boot:
 * [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 
-The actual plugin part is as follows (check the latest version!): 
+The actual plugin part is as follows (check the latest version at the [plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)!): 
 
 ```
 plugins {
-    id 'com.vaadin' version '0.6.0'
+    id 'com.vaadin' version '0.7.0'
 }
 ```
-
-> Note: please find the newest version of the plugin at the [Gradle Plugin site for com.vaadin](https://plugins.gradle.org/plugin/com.vaadin).
 
 ## Tasks
 
@@ -52,8 +50,6 @@ There are the following tasks:
   then later picked up by `jar` and `war` tasks which then package the folder contents properly
   onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
   need to be invoked explicitly. Note: this task will not be triggered automatically if `productionMode` is set to false.
-* `vaadinPrepareNode` will download a local distribution of node.js and npm into the `node/` folder for use by Vaadin.
-  Please see below for more information.
 
 Most common commands for all projects:
 
@@ -119,40 +115,18 @@ All configuration options follow. Note that you **RARELY** need to change anythi
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
-* `nodeVersion = "12.14.1"`: When using the `vaadinPrepareNode` task, this property
-  specifies which node version to download. Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
-  it's best to select the LTS release.
+* `nodeVersion = "v12.16.0"`: (ignored, do not use, will be removed) which node.js version
+  to download when Vaadin auto-downloads node.js.
 
 ## Automatic Download of node.js and npm
 
-You do not need to have node.js nor npm installed in your system, in order to use Vaadin.
-The `vaadinPrepareNode` task will download the node.js+npm distribution and will place it
-into the `node/` folder which will then be picked automatically by Vaadin.
+Since Vaadin Gradle Plugin 0.7.0, you no longer need to have node.js nor
+npm installed in your system in order to use Vaadin.
+Vaadin will download the node.js+npm distribution and will place it
+into the `$HOME/.vaadin` folder.
 
-In your development environment, just run:
-```bash
-./gradlew vaadinPrepareNode
-```
-to download and prepare a local distribution of node.js. You only need to run this once,
-in order to populate the folder `node/`.
-
-In your CI, don't forget to call the `vaadinPrepareNode` along with setting the production mode to true:
-```bash
-./gradlew clean vaadinPrepareNode build -Pvaadin.productionMode
-```
-That will automatically download node and run `vaadinPrepareFrontend` and `vaadinBuildFrontend` tasks.
-
-If you wish to override the node version which will be downloaded, simply specify
-the node.js version in the `vaadin {}` block:
-
-```groovy
-vaadin {
-    nodeVersion = "10.15.2"
-}
-```
-
-Please see the [list of all node.js releases](https://nodejs.org/en/download/releases/). Usually
-it's best to select the LTS release.
+This functionality is triggered automatically,
+you do not need to call a Gradle task nor configure your CI environment in a special way.
 
 ## Multi-project builds
 

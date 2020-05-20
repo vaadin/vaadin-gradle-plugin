@@ -39,10 +39,11 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:14.1.16") {
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -59,26 +60,16 @@ class VaadinSmokeTest : AbstractGradleTest() {
     }
 
     @Test
-    fun testPrepareNode() {
-        build("vaadinPrepareNode")
-
-        val nodejs = File(testProjectDir, "node")
-        expect(true, nodejs.toString()) { nodejs.isDirectory }
-    }
-
-    @Test
     fun testPrepareFrontend() {
-        build("vaadinPrepareNode", "vaadinPrepareFrontend")
+        build("vaadinPrepareFrontend")
 
-        val generatedPackageJson = File(testProjectDir, "target/frontend/package.json")
-        expect(true, generatedPackageJson.toString()) { generatedPackageJson.isFile }
         val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
-        expect(true, generatedFlowBuildInfoJson.toString()) { generatedPackageJson.isFile }
+        expect(true, generatedFlowBuildInfoJson.toString()) { generatedFlowBuildInfoJson.isFile }
     }
 
     @Test
     fun `vaadinBuildFrontend not ran by default in development mode`() {
-        val result: BuildResult = build("vaadinPrepareNode", "build")
+        val result: BuildResult = build("build")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
         expect(null) { result.task(":vaadinBuildFrontend") }
@@ -89,7 +80,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun `vaadinBuildFrontend can be run manually in development mode`() {
-        val result: BuildResult = build("vaadinPrepareNode", "vaadinBuildFrontend")
+        val result: BuildResult = build("vaadinBuildFrontend")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
@@ -107,7 +98,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun testBuildFrontendInProductionMode() {
-        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinPrepareNode", "vaadinBuildFrontend")
+        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
