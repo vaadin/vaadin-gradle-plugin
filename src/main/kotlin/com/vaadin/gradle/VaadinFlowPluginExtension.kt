@@ -106,11 +106,13 @@ open class VaadinFlowPluginExtension(project: Project) {
      */
     var optimizeBundle = true
 
-    @Deprecated("The vaadinPrepareNode task has been removed. Now Vaadin auto-downloads the node.js if need be, and the version is fixed to FrontendTools.DEFAULT_NODE_VERSION. This setting currently does nothing.")
-    var nodeVersion: String = "v12.16.0"
-
     /**
      * Instructs to use pnpm for installing npm frontend resources.
+     *
+     * pnpm, a.k.a. performant npm, is a better front-end dependency management option.
+     * With pnpm, packages are cached locally by default and linked (instead of
+     * downloaded) for every project. This results in reduced disk space usage
+     * and faster recurring builds when compared to npm.
      */
     var pnpmEnable = false
 

@@ -71,7 +71,7 @@ To configure the plugin, you can use the following snippet in your `build.gradle
 `build.gradle` in Groovy:
 ```groovy
 vaadin {
-  optimizeBundle = false
+  pnpmEnable = true
 }
 ```
 
@@ -115,14 +115,17 @@ All configuration options follow. Note that you **RARELY** need to change anythi
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
-* `nodeVersion = "v12.16.0"`: (ignored, do not use, will be removed) which node.js version
-  to download when Vaadin auto-downloads node.js.
+* `pnpmEnable = false`: Instructs to use pnpm for installing npm frontend resources.
+  pnpm, a.k.a. performant npm, is a better front-end dependency management option.
+  With pnpm, packages are cached locally by default and linked (instead of
+  downloaded) for every project. This results in reduced disk space usage
+  and faster recurring builds when compared to npm.
 
-## Automatic Download of node.js and npm
+## Automatic Download of node.js and npm/pnpm
 
 Since Vaadin Gradle Plugin 0.7.0, you no longer need to have node.js nor
 npm installed in your system in order to use Vaadin.
-Vaadin will download the node.js+npm distribution and will place it
+Vaadin will download the node.js and npm (and pnpm if `pnpmEnable` is true) and will place it
 into the `$HOME/.vaadin` folder.
 
 This functionality is triggered automatically,
