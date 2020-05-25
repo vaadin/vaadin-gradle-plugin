@@ -137,7 +137,7 @@ applying the plugin only in the war project:
 ```groovy
 plugins {
   id 'java'
-  id "com.vaadin" version "0.6.0" apply false
+  id "com.vaadin" version "0.7.0" apply false
 }
 
 project("lib") {
