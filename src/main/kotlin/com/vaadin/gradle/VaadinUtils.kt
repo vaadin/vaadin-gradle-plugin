@@ -64,6 +64,9 @@ internal fun getClassFinder(project: Project): ClassFinder {
     } catch (e: ClassNotFoundException) {
         throw RuntimeException("Failed to find classes from flow-server.jar. The project '${project.name}' needs to have a dependency on flow-server.jar")
     }
+
+    project.logger.info("Passing this classpath to NodeTasks.Builder: ${apis.toPrettyFormat()}")
+
     return classFinder
 }
 
@@ -83,6 +86,7 @@ private fun ProcessExecutor.executeAndCheckOk(): ProcessResult {
  * @param args the program to run, including the arguments.
  */
 internal fun exec(logger: Logger, cwd: File, vararg args: String) {
+    logger.info("Running in '$cwd': ${args.joinToString(separator = "' '", prefix = "'", postfix = "'")}")
     val result: ProcessResult = ProcessExecutor()
             .command(*args)
             .directory(cwd)
@@ -92,8 +96,11 @@ internal fun exec(logger: Logger, cwd: File, vararg args: String) {
     logger.info(result.outputUTF8())
 }
 
-internal fun JsonObject.writeToFile(file: File) {
-    file.writeText(JsonUtil.stringify(this, 2) + "\n")
+/**
+ * Writes JSON to a file, nicely formatted with default [indentation] of 2.
+ */
+internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
+    file.writeText(JsonUtil.stringify(this, indentation) + "\n")
 }
 
 /**
@@ -106,3 +113,5 @@ internal fun JsonObject.writeToFile(file: File) {
  */
 fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) =
         convention.findByType(VaadinFlowPluginExtension::class.java)!!.apply(block)
+
+internal fun Collection<File>.toPrettyFormat(): String = joinToString(prefix = "[", postfix = "]") { if (it.isFile) it.name else it.absolutePath }

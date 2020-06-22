@@ -61,6 +61,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
     @TaskAction
     fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
+        logger.info("Running the vaadinPrepareFrontend task with effective configuration $extension")
 
         Files.createDirectories(extension.frontendDirectory.toPath())
         Files.createDirectories(extension.buildOutputDirectory.toPath())
@@ -70,11 +71,17 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         val tools = FrontendTools(extension.npmFolder.getAbsolutePath(),
                 Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        logger.info("validating node and npm version")
         tools.validateNodeAndNpmVersion()
 
         // produce target/frontend/package.json
         Files.createDirectories(extension.generatedFolder.toPath())
 
+        logger.info("Running NodeTasks")
+        logger.info("runNodeUpdater: npmFolder=${extension.npmFolder}, generatedPath=${extension.generatedFolder}, frontendDirectory=${extension.frontendDirectory}")
+        logger.info("runNodeUpdater: withWebpack(${extension.webpackOutputDirectory}, ${extension.webpackTemplate}, ${extension.webpackGeneratedTemplate})")
+        logger.info("runNodeUpdater: createMissingPackageJson(true), enableImportsUpdate(false), enablePackagesUpdate(false)")
+        logger.info("runNodeUpdater: not running npm install: it's supposed to be run either by Vaadin Servlet in development mode, or by the `vaadinBuildFrontend` task.")
         val builder: NodeTasks.Builder = NodeTasks.Builder(getClassFinder(project), extension.npmFolder,
                 extension.generatedFolder, extension.frontendDirectory)
                 .withWebpack(extension.webpackOutputDirectory!!, extension.webpackTemplate, extension.webpackGeneratedTemplate)
@@ -90,12 +97,16 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
             val jarFiles: Set<File> = project.configurations
                     .getByName("runtimeClasspath")
                     .resolve()
-                    .filter { it.name.endsWith(".jar") }
+                    .filter { it.name.endsWith(".jar", true) }
                     .toSet()
+            logger.info("runNodeUpdater: using JAR packaging, copyResources=${jarFiles.toPrettyFormat()}")
             builder.copyResources(jarFiles)
+        } else {
+            logger.info("Not copying resources since we're not using JAR packaging")
         }
 
         builder.build().execute()
+        logger.info("runNodeUpdater: done!")
     }
 
     private fun propagateBuildInfo(extension: VaadinFlowPluginExtension) {
@@ -110,6 +121,8 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
             put(Constants.SERVLET_PARAMETER_ENABLE_PNPM, extension.pnpmEnable)
             put(Constants.REQUIRE_HOME_NODE_EXECUTABLE, extension.requireHomeNodeExec)
         }
-        buildInfo.writeToFile(File(configFolder, "flow-build-info.json"))
+        val tokenFile = File(configFolder, "flow-build-info.json")
+        buildInfo.writeToFile(tokenFile)
+        logger.info("Wrote token file $tokenFile: $buildInfo")
     }
 }
