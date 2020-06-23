@@ -192,7 +192,7 @@ into one composite project. The easiest way is to use the [Base Starter Gradle](
 example project.
 
 1. Clone the Base Starter Gradle project and open it in Intellij
-2. Create a `settings.gradle` file containing the following line: `includeBuild("/home/mavi/work/vaadin/vaadin-gradle-plugin")`
+2. Create a `settings.gradle` file containing the following line: `includeBuild("/path/to/your/plugin/project/vaadin-gradle-plugin")`
    (use full path on your system to the Gradle Plugin project)
 3. Reimport the Base Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
    should appear in your workspace.
