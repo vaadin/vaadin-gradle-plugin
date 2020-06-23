@@ -51,6 +51,9 @@ class VaadinSmokeTest : AbstractGradleTest() {
                             .forEach { group -> exclude(group: group) }
                 }
             }
+            vaadin {
+                pnpmEnable = true
+            }
         """)
     }
 

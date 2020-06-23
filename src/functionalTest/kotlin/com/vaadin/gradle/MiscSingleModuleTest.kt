@@ -71,7 +71,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
-        val war: File = testProjectDir.find("build/libs/*.war").first()
+        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
         expectArchiveDoesntContainVaadinWebpackBundle(war, false)
     }
@@ -116,7 +116,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // vaadinBuildFrontend should have been executed automatically
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = testProjectDir.find("build/libs/*.war").first()
+        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
         expectArchiveContainsVaadinWebpackBundle(war, false)
     }
@@ -167,7 +167,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
-        val jar: File = testProjectDir.find("build/libs/*.jar").first()
+        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
         expect(true, "$jar is missing\n${build.output}") { jar.isFile }
         expectArchiveDoesntContainVaadinWebpackBundle(jar, false)
     }
@@ -218,7 +218,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = testProjectDir.find("build/libs/*.jar").first()
+        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
         expect(true, "$jar is missing\n${build.output}") { jar.isFile }
         expectArchiveContainsVaadinWebpackBundle(jar, false)
     }
@@ -302,7 +302,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = testProjectDir.find("build/libs/*.jar").first()
+        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
         expect(true, "$jar is missing\n${build.output}") { jar.isFile }
         expectArchiveContainsVaadinWebpackBundle(jar, true)
     }
@@ -366,7 +366,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = testProjectDir.find("build/libs/*.war").first()
+        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
         expectArchiveContainsVaadinWebpackBundle(war, false)
     }
