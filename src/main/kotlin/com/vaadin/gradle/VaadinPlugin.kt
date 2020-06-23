@@ -22,7 +22,8 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.bundling.Jar
 
 /**
- * @author mavi
+ * The main class of the Vaadin Gradle Plugin.
+ * @author mavi@vaadin.com
  */
 class VaadinPlugin : Plugin<Project> {
     override fun apply(project: Project) {

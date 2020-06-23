@@ -68,6 +68,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     fun vaadinBuildFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         val tokenFile = File(extension.webpackOutputDirectory, FrontendUtils.TOKEN_FILE)
+        logger.info("Running the vaadinBuildFrontend task with effective configuration $extension")
 
         updateBuildFile(tokenFile)
 
@@ -75,6 +76,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
 
         if (extension.generateBundle) {
             runWebpack(extension)
+        } else {
+            logger.info("Not running webpack since generateBundle is false")
         }
     }
 
@@ -91,6 +94,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         } else {
             tools.nodeExecutable
         }
+
+        logger.info("Running webpack")
         exec(project.logger, project.projectDir, nodePath, webpackExecutable.absolutePath)
     }
 
@@ -99,6 +104,13 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .resolve()
                 .filter { it.name.endsWith(".jar") }
                 .toSet()
+
+        logger.info("runNodeUpdater: npmFolder=${extension.npmFolder}, generatedPath=${extension.generatedFolder}, frontendDirectory=${extension.frontendDirectory}")
+        logger.info("runNodeUpdater: runNpmInstall=${extension.runNpmInstall}, enablePackagesUpdate=true, useByteCodeScranner=${extension.optimizeBundle}")
+        logger.info("runNodeUpdater: copyResources=${jarFiles.toPrettyFormat()}")
+        logger.info("runNodeUpdater: copyLocalResources=${extension.frontendResourcesDirectory}")
+        logger.info("runNodeUpdater: enableImportsUpdate=true, embeddableWebComponents=${extension.generateEmbeddableWebComponents}, tokenFile=${tokenFile}")
+        logger.info("runNodeUpdater: pnpm=${extension.pnpmEnable}, requireHomeNodeExec=${extension.requireHomeNodeExec}")
 
         NodeTasks.Builder(getClassFinder(project),
                 extension.npmFolder,
@@ -115,6 +127,8 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .enablePnpm(extension.pnpmEnable)
                 .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
+
+        logger.info("runNodeUpdater: done!")
     }
 
     /**
@@ -135,5 +149,6 @@ open class VaadinBuildFrontendTask : DefaultTask() {
             put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
         }
         buildInfo.writeToFile(tokenFile)
+        logger.info("Updated token file $tokenFile to $buildInfo")
     }
 }
