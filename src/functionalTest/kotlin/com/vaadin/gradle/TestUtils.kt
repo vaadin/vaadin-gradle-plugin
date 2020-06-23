@@ -46,7 +46,7 @@ fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome
 }
 
 /**
- * Finds all files matching given [glob] pattern, for example `build/libs/ *.war`
+ * Finds all files matching given [glob] pattern, for example `libs/ *.war`
  * Always pass in forward slashes as path separators, even on Windows.
  * @param expectedCount expected number of files, defaults to 1.
  */
