@@ -146,4 +146,21 @@ open class VaadinFlowPluginExtension(project: Project) {
             productionMode = pm.isBlank() || pm.toBoolean()
         }
     }
+
+    override fun toString(): String = "VaadinFlowPluginExtension(" +
+            "productionMode=$productionMode, " +
+            "buildOutputDirectory=$buildOutputDirectory, " +
+            "webpackOutputDirectory=$webpackOutputDirectory, " +
+            "npmFolder=$npmFolder, " +
+            "webpackTemplate='$webpackTemplate', " +
+            "webpackGeneratedTemplate='$webpackGeneratedTemplate', " +
+            "generatedFolder=$generatedFolder, " +
+            "frontendDirectory=$frontendDirectory, " +
+            "generateBundle=$generateBundle, " +
+            "runNpmInstall=$runNpmInstall, " +
+            "generateEmbeddableWebComponents=$generateEmbeddableWebComponents, " +
+            "frontendResourcesDirectory=$frontendResourcesDirectory, " +
+            "optimizeBundle=$optimizeBundle, " +
+            "pnpmEnable=$pnpmEnable, " +
+            "requireHomeNodeExec=$requireHomeNodeExec)"
 }

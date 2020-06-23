@@ -192,14 +192,12 @@ into one composite project. The easiest way is to use the [Base Starter Gradle](
 example project.
 
 1. Clone the Base Starter Gradle project and open it in Intellij
-2. Remove the entire `buildscript{}` block and the `apply plugin:"com.vaadin"` line and
-   uncomment the `id("com.vaadin")` line.
-3. Create a `settings.gradle` file containing the following line: `includeBuild("/home/mavi/work/vaadin/vaadin-gradle-plugin")`
+2. Create a `settings.gradle` file containing the following line: `includeBuild("/path/to/your/plugin/project/vaadin-gradle-plugin")`
    (use full path on your system to the Gradle Plugin project)
-4. Reimport the Base Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
+3. Reimport the Base Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
    should appear in your workspace.
-5. Open the terminal with Alt+F12.
-6. If you now type `./gradlew vaadinPrepareFronend` into the command line, Gradle will compile any changes done to
+4. Open the terminal with Alt+F12.
+5. If you now type `./gradlew vaadinPrepareFronend` into the command line, Gradle will compile any changes done to
    the Gradle plugin and will run updated code. You can verify that by adding `println()` statements
    into the `VaadinPrepareFrontendTask` class.
 

@@ -29,7 +29,9 @@ import kotlin.test.fail
  * Expects that given task succeeded. If not, fails with an informative exception.
  * @param taskName the name of the task, e.g. `vaadinPrepareNode`
  */
-fun BuildResult.expectTaskSucceded(taskName: String) = expectTaskOutcome(taskName, TaskOutcome.SUCCESS)
+fun BuildResult.expectTaskSucceded(taskName: String) {
+    expectTaskOutcome(taskName, TaskOutcome.SUCCESS)
+}
 
 /**
  * Expects that given task has [expectedOutcome]. If not, fails with an informative exception.
@@ -44,11 +46,18 @@ fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome
 }
 
 /**
- * Finds all files matching given [glob] pattern, for example `build/libs/ *.war`
+ * Finds all files matching given [glob] pattern, for example `libs/ *.war`
+ * Always pass in forward slashes as path separators, even on Windows.
  * @param expectedCount expected number of files, defaults to 1.
  */
 fun File.find(glob: String, expectedCount: IntRange = 1..1): List<File> {
-    val matcher: PathMatcher = FileSystems.getDefault().getPathMatcher("glob:$absolutePath/$glob")
+    val pattern: String = if (OsUtils.isWindows) {
+        // replace \ with \\ to avoid collapsing; replace forward slashes in glob with \\
+        "glob:$absolutePath".replace("""\""", """\\""") + """\\""" + glob.replace("/", """\\""")
+    } else {
+        "glob:$absolutePath/$glob"
+    }
+    val matcher: PathMatcher = FileSystems.getDefault().getPathMatcher(pattern)
     val found: List<File> = absoluteFile.walk()
             .filter { matcher.matches(it.toPath()) }
             .toList()
@@ -59,13 +68,15 @@ fun File.find(glob: String, expectedCount: IntRange = 1..1): List<File> {
 }
 
 /**
- * Converts glob such as `*.jar` into a Regex which matches such files.
+ * Converts glob such as `*.jar` into a Regex which matches such files. Always
+ * pass in forward slashes as path separators, even on Windows.
  */
 private fun String.globToRegex(): Regex =
         Regex(this.replace("?", "[^/]?").replace("*", "[^/]*"))
 
 /**
  * Lists all files in this zip archive, e.g. `META-INF/VAADIN/config/stats.json`.
+ * Always returns forward slashes as path separators, even on Windows.
  */
 private fun ZipInputStream.fileNameSequence(): Sequence<String> =
         generateSequence { nextEntry?.name }
@@ -182,4 +193,16 @@ fun File.touch(name: String): File {
         file.writeText("")
     }
     return file
+}
+
+/**
+ * Operating system-related utilities.
+ */
+object OsUtils {
+    val osName: String = System.getProperty("os.name")
+
+    /**
+     * True if we're running on Windows, false on Linux, Mac and others.
+     */
+    val isWindows: Boolean get() = osName.startsWith("Windows")
 }
