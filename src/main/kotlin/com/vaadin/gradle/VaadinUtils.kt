@@ -15,6 +15,9 @@
  */
 package com.vaadin.gradle
 
+import com.vaadin.flow.server.frontend.FrontendTools
+import com.vaadin.flow.server.frontend.FrontendUtils
+import com.vaadin.flow.server.frontend.NodeTasks
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
 import com.vaadin.flow.server.scanner.ReflectionsClassFinder
 import elemental.json.JsonObject
@@ -27,6 +30,7 @@ import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.io.File
 import java.net.URL
+import java.util.function.Supplier
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 internal fun getClassFinder(project: Project): ClassFinder {
@@ -115,3 +119,9 @@ fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) =
         convention.findByType(VaadinFlowPluginExtension::class.java)!!.apply(block)
 
 internal fun Collection<File>.toPrettyFormat(): String = joinToString(prefix = "[", postfix = "]") { if (it.isFile) it.name else it.absolutePath }
+
+internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
+        FrontendTools(npmFolder.absolutePath, Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+
+internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project): NodeTasks.Builder =
+        NodeTasks.Builder(getClassFinder(project), npmFolder, generatedFolder, frontendDirectory)
