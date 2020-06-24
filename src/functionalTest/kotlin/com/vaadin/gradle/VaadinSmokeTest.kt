@@ -126,6 +126,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         build("vaadinClean")
         expect(false) { pnpmLockYaml.exists() }
         expect(false) { pnpmFileJs.exists() }
-        expect(false) { webpackConfigJs.exists() }
+        // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
+        expect(true) { webpackConfigJs.exists() }
     }
 }
