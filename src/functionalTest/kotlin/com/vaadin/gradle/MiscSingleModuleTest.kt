@@ -1,8 +1,12 @@
 package com.vaadin.gradle
 
+import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
+import java.io.IOException
 import java.nio.file.Files
 import kotlin.test.expect
 
@@ -369,5 +373,47 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
         expectArchiveContainsVaadinWebpackBundle(war, false)
+    }
+
+    /**
+     * https://github.com/vaadin/vaadin-gradle-plugin/issues/76
+     */
+    @Test
+    fun testNodeDownload() {
+        // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
+        if (!FrontendUtils.getVaadinHomeDirectory().deleteRecursively()) {
+            throw IOException("Failed to delete ${FrontendUtils.getVaadinHomeDirectory()}")
+        }
+
+        buildFile.writeText("""
+            plugins {
+                id 'com.vaadin'
+            }
+            repositories {
+                jcenter()
+            }
+            dependencies {
+                // Vaadin 14
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+            //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                            .forEach { group -> exclude(group: group) }
+                }
+            }
+            vaadin {
+                pnpmEnable = true
+                nodeDownloadRoot = "http://localhost:8080/non-existent"
+            }
+        """)
+
+        val result: BuildResult = GradleRunner.create()
+                .withProjectDir(testProjectDir)
+                .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
+                .withPluginClasspath()
+                .build()
+        // the task should fail download the node.js
+        result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
     }
 }
