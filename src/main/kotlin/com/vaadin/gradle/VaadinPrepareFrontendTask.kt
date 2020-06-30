@@ -68,6 +68,9 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         propagateBuildInfo(extension)
 
         val tools: FrontendTools = extension.createFrontendTools()
+        if (extension.requireHomeNodeExec) {
+            tools.forceAlternativeNodeExecutable()
+        }
         logger.info("validating node and npm version")
         tools.validateNodeAndNpmVersion()
 

@@ -404,6 +404,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             vaadin {
                 pnpmEnable = true
+                requireHomeNodeExec = true
                 nodeVersion = "v12.10.0"
                 nodeDownloadRoot = "http://localhost:8080/non-existent"
             }

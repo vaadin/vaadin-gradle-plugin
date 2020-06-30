@@ -129,5 +129,6 @@ internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
 
 internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project): NodeTasks.Builder =
         NodeTasks.Builder(getClassFinder(project), npmFolder, generatedFolder, frontendDirectory)
+                .withHomeNodeExecRequired(requireHomeNodeExec)
                 .withNodeVersion(nodeVersion)
                 .withNodeDownloadRoot(URI.create(nodeDownloadRoot))

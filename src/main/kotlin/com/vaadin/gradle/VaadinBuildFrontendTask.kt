@@ -120,7 +120,6 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .withEmbeddableWebComponents(extension.generateEmbeddableWebComponents)
                 .withTokenFile(tokenFile)
                 .enablePnpm(extension.pnpmEnable)
-                .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
 
         logger.info("runNodeUpdater: done!")
