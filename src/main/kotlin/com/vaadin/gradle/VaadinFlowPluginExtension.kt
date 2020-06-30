@@ -128,16 +128,14 @@ open class VaadinFlowPluginExtension(project: Project) {
 
     /**
      * The node.js version to be used when node.js is installed automatically by
-     * Vaadin, for example `"v12.16.0"`. Defaults to null which uses the
-     * Vaadin-default node version - see [FrontendTools] for details.
+     * Vaadin, for example `"v12.16.0"`. Defaults to [FrontendTools.DEFAULT_NODE_VERSION].
      */
     var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
 
     /**
      * Download node.js from this URL. Handy in heavily firewalled corporate
      * environments where the node.js download can be provided from an intranet
-     * mirror. Defaults to null which will cause the downloader to use
-     * [NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT].
+     * mirror. Defaults to [NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT].
      *
      * Example: `"https://nodejs.org/dist/"`.
      */
