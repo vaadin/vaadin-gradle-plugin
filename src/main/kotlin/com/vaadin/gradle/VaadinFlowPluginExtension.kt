@@ -131,7 +131,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      * Vaadin, for example `"v12.16.0"`. Defaults to null which uses the
      * Vaadin-default node version - see [FrontendTools] for details.
      */
-    var nodeVersion: String? = null
+    var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
 
     /**
      * Download node.js from this URL. Handy in heavily firewalled corporate
@@ -141,7 +141,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      *
      * Example: `"https://nodejs.org/dist/"`.
      */
-    var nodeDownloadRoot: String? = null
+    var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

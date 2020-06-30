@@ -404,6 +404,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             vaadin {
                 pnpmEnable = true
+                nodeVersion = "v12.10.0"
                 nodeDownloadRoot = "http://localhost:8080/non-existent"
             }
         """)
@@ -412,8 +413,10 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 .withProjectDir(testProjectDir)
                 .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
                 .withPluginClasspath()
-                .build()
+                .buildAndFail()
         // the task should fail download the node.js
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
+        expect(true, result.output) { result.output.contains("Could not download http://localhost:8080/v12.10.0/") }
+        expect(true, result.output) { result.output.contains("Could not download Node.js") }
     }
 }

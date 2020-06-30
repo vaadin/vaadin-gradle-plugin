@@ -29,6 +29,7 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.io.File
+import java.net.URI
 import java.net.URL
 import java.util.function.Supplier
 
@@ -121,7 +122,12 @@ fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) =
 internal fun Collection<File>.toPrettyFormat(): String = joinToString(prefix = "[", postfix = "]") { if (it.isFile) it.name else it.absolutePath }
 
 internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
-        FrontendTools(npmFolder.absolutePath, Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        FrontendTools(npmFolder.absolutePath,
+                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath },
+                nodeVersion,
+                URI.create(nodeDownloadRoot))
 
 internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project): NodeTasks.Builder =
         NodeTasks.Builder(getClassFinder(project), npmFolder, generatedFolder, frontendDirectory)
+                .withNodeVersion(nodeVersion)
+                .withNodeDownloadRoot(URI.create(nodeDownloadRoot))
