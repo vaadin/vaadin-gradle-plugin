@@ -185,6 +185,16 @@ fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
     }
 }
 
+fun File.touch(name: String): File {
+    check(exists()) { "$this doesn't exist" }
+    check(isDirectory) { "$this isn't a directory" }
+    val file = File(this, name)
+    if (!file.exists()) {
+        file.writeText("")
+    }
+    return file
+}
+
 /**
  * Operating system-related utilities.
  */
