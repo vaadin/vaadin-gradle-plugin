@@ -26,13 +26,24 @@ Check out the example project setups for basic WAR project and Spring Boot:
 * [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 
-The actual plugin part is as follows (check the latest version at the [plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)!): 
+The actual plugin part is as follows (please check the latest version at
+[plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)): 
 
 ```
 plugins {
     id 'com.vaadin' version '0.7.0'
 }
 ```
+
+Compatibility chart:
+
+| Vaadin Gradle Plugin version | Supports |
+|------------------------------|----------|
+| -                            | Vaadin 13 and lower are unsupported |
+| 0.6.0 and lower              | Vaadin 14.1.x and lower |
+| 0.7.0                        | Vaadin 14.2.x |
+| 0.8.0                        | Vaadin 14.3.x and higher |
+| -                            | Vaadin 15 and higher are currently unsupported |
 
 ## Tasks
 
