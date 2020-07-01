@@ -51,8 +51,8 @@ open class VaadinCleanTask : DefaultTask() {
                 "${project.projectDir}/package.json",
                 "${project.projectDir}/package-lock.json",
                 "${project.projectDir}/webpack.generated.js",
-                "${project.projectDir}/package-lock.yaml", // used by Vaadin 14.2+ pnpm
-                "${project.projectDir}/pnpm-file.js" // used by Vaadin 14.2+ pnpm
+                "${project.projectDir}/pnpm-lock.yaml", // used by Vaadin 14.2+ pnpm
+                "${project.projectDir}/pnpmfile.js" // used by Vaadin 14.2+ pnpm
         )
     }
 }
