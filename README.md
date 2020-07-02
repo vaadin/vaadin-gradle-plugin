@@ -126,18 +126,18 @@ All configuration options follow. Note that you **RARELY** need to change anythi
   copied from for use with webpack.
 * `optimizeBundle = true`: Whether to use byte code scanner strategy to discover frontend
   components.
-* `pnpmEnable = false`: Instructs to use pnpm for installing npm frontend resources.
+* `pnpmEnable = false` (since 0.7.0): Instructs to use pnpm for installing npm frontend resources.
   pnpm, a.k.a. performant npm, is a better front-end dependency management option.
   With pnpm, packages are cached locally by default and linked (instead of
   downloaded) for every project. This results in reduced disk space usage
   and faster recurring builds when compared to npm.
-* `requireHomeNodeExec = false`: Whether vaadin home node executable usage is forced. If it's set to
+* `requireHomeNodeExec = false` (since 0.7.0): Whether vaadin home node executable usage is forced. If it's set to
   `true` then vaadin home 'node' is checked and installed if it's
   absent. Then it will be used instead of globally 'node' or locally
   installed installed 'node'.
-* `nodeVersion = "v12.16.0"`: The node.js version to be used when node.js is
+* `nodeVersion = "v12.16.0"` (since 0.8.0): The node.js version to be used when node.js is
   installed automatically by Vaadin
-* `nodeDownloadRoot = "https://nodejs.org/dist/"`: Download node.js from this URL.
+* `nodeDownloadRoot = "https://nodejs.org/dist/"` (since 0.8.0): Download node.js from this URL.
   Handy in heavily firewalled corporate environments where the node.js
   download can be provided from an intranet mirror.
 
