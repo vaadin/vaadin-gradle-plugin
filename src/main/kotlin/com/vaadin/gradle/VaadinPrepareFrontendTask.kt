@@ -17,7 +17,6 @@ package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendTools
-import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
@@ -28,7 +27,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
 import java.nio.file.Files
-import java.util.function.Supplier
 
 /**
  * This task checks that node and npm tools are installed, copies frontend
@@ -69,8 +67,10 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
 
         propagateBuildInfo(extension)
 
-        val tools = FrontendTools(extension.npmFolder.getAbsolutePath(),
-                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        val tools: FrontendTools = extension.createFrontendTools()
+        if (extension.requireHomeNodeExec) {
+            tools.forceAlternativeNodeExecutable()
+        }
         logger.info("validating node and npm version")
         tools.validateNodeAndNpmVersion()
 
@@ -82,8 +82,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         logger.info("runNodeUpdater: withWebpack(${extension.webpackOutputDirectory}, ${extension.webpackTemplate}, ${extension.webpackGeneratedTemplate})")
         logger.info("runNodeUpdater: createMissingPackageJson(true), enableImportsUpdate(false), enablePackagesUpdate(false)")
         logger.info("runNodeUpdater: not running npm install: it's supposed to be run either by Vaadin Servlet in development mode, or by the `vaadinBuildFrontend` task.")
-        val builder: NodeTasks.Builder = NodeTasks.Builder(getClassFinder(project), extension.npmFolder,
-                extension.generatedFolder, extension.frontendDirectory)
+        val builder: NodeTasks.Builder = extension.createNodeTasksBuilder(project)
                 .withWebpack(extension.webpackOutputDirectory!!, extension.webpackTemplate, extension.webpackGeneratedTemplate)
                 .createMissingPackageJson(true)
                 .enableImportsUpdate(false)

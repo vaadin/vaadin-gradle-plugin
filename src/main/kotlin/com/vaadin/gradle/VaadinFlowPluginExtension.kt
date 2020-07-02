@@ -16,7 +16,9 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
+import com.vaadin.flow.server.frontend.installer.NodeInstaller
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
@@ -123,6 +125,21 @@ open class VaadinFlowPluginExtension(project: Project) {
      * installed installed 'node'.
      */
     var requireHomeNodeExec = false
+
+    /**
+     * The node.js version to be used when node.js is installed automatically by
+     * Vaadin, for example `"v12.16.0"`. Defaults to [FrontendTools.DEFAULT_NODE_VERSION].
+     */
+    var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
+
+    /**
+     * Download node.js from this URL. Handy in heavily firewalled corporate
+     * environments where the node.js download can be provided from an intranet
+     * mirror. Defaults to [NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT].
+     *
+     * Example: `"https://nodejs.org/dist/"`.
+     */
+    var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =

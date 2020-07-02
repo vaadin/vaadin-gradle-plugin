@@ -25,7 +25,6 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.Jar
 import java.io.File
-import java.util.function.Supplier
 
 /**
  * Task that builds the frontend bundle.
@@ -87,8 +86,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         check(webpackExecutable.isFile) {
             "Unable to locate webpack executable by path '${webpackExecutable.absolutePath}'. Double check that the plugin is executed correctly"
         }
-        val tools = FrontendTools(extension.npmFolder.absolutePath,
-                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+        val tools: FrontendTools = extension.createFrontendTools()
         val nodePath: String = if (extension.requireHomeNodeExec) {
             tools.forceAlternativeNodeExecutable()
         } else {
@@ -112,10 +110,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         logger.info("runNodeUpdater: enableImportsUpdate=true, embeddableWebComponents=${extension.generateEmbeddableWebComponents}, tokenFile=${tokenFile}")
         logger.info("runNodeUpdater: pnpm=${extension.pnpmEnable}, requireHomeNodeExec=${extension.requireHomeNodeExec}")
 
-        NodeTasks.Builder(getClassFinder(project),
-                extension.npmFolder,
-                extension.generatedFolder,
-                extension.frontendDirectory)
+        extension.createNodeTasksBuilder(project)
                 .runNpmInstall(extension.runNpmInstall)
                 .enablePackagesUpdate(true)
                 .useByteCodeScanner(extension.optimizeBundle)
@@ -125,7 +120,6 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .withEmbeddableWebComponents(extension.generateEmbeddableWebComponents)
                 .withTokenFile(tokenFile)
                 .enablePnpm(extension.pnpmEnable)
-                .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
 
         logger.info("runNodeUpdater: done!")

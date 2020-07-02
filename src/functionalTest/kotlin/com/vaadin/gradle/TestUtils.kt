@@ -40,7 +40,7 @@ fun BuildResult.expectTaskSucceded(taskName: String) {
 fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome) {
     val task: BuildTask = task(":$taskName")
             ?: fail("Task $taskName was not ran\n$output")
-    expect(expectedOutcome, "$taskName did not succeed: ${task.outcome}") {
+    expect(expectedOutcome, "$taskName outcome was ${task.outcome}: $output") {
         task.outcome
     }
 }
