@@ -41,8 +41,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
                 jcenter()
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -88,10 +88,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("*.gz", 5..8)
+        build.find("*.js", 5..8)
 
         val tokenFile = File(build, "../config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
@@ -108,10 +106,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("*.gz", 5..8)
+        build.find("*.js", 5..8)
     }
 
     /**

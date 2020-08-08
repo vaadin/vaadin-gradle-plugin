@@ -18,7 +18,7 @@ package com.vaadin.gradle
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
-import com.vaadin.flow.server.frontend.NodeTasks
+import com.vaadin.flow.server.frontend.FrontendUtils.DEAULT_FLOW_RESOURCES_FOLDER
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.DefaultTask
@@ -110,16 +110,25 @@ open class VaadinBuildFrontendTask : DefaultTask() {
         logger.info("runNodeUpdater: enableImportsUpdate=true, embeddableWebComponents=${extension.generateEmbeddableWebComponents}, tokenFile=${tokenFile}")
         logger.info("runNodeUpdater: pnpm=${extension.pnpmEnable}, requireHomeNodeExec=${extension.requireHomeNodeExec}")
 
+        val flowResourcesFolder = File(extension.npmFolder, DEAULT_FLOW_RESOURCES_FOLDER)
+        // @formatter:off
         extension.createNodeTasksBuilder(project)
                 .runNpmInstall(extension.runNpmInstall)
+                .useV14Bootstrap(extension.useDeprecatedV14Bootstrapping)
                 .enablePackagesUpdate(true)
                 .useByteCodeScanner(extension.optimizeBundle)
+                .withFlowResourcesFolder(flowResourcesFolder)
                 .copyResources(jarFiles)
                 .copyLocalResources(extension.frontendResourcesDirectory)
                 .enableImportsUpdate(true)
                 .withEmbeddableWebComponents(extension.generateEmbeddableWebComponents)
                 .withTokenFile(tokenFile)
                 .enablePnpm(extension.pnpmEnable)
+                .withConnectApplicationProperties(extension.applicationProperties)
+                .withConnectJavaSourceFolder(extension.javaSourceFolder)
+                .withConnectGeneratedOpenApiJson(extension.openApiJsonFile)
+                .withConnectClientTsApiFolder(extension.generatedTsFolder)
+                .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
 
         logger.info("runNodeUpdater: done!")
@@ -140,6 +149,13 @@ open class VaadinBuildFrontendTask : DefaultTask() {
             remove(Constants.FRONTEND_TOKEN)
             remove(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
             remove(Constants.REQUIRE_HOME_NODE_EXECUTABLE)
+            remove(Constants.SERVLET_PARAMETER_DEVMODE_OPTIMIZE_BUNDLE);
+            remove(Constants.CONNECT_JAVA_SOURCE_FOLDER_TOKEN);
+            remove(Constants.CONNECT_APPLICATION_PROPERTIES_TOKEN);
+            remove(Constants.CONNECT_JAVA_SOURCE_FOLDER_TOKEN);
+            remove(Constants.CONNECT_OPEN_API_FILE_TOKEN);
+            remove(Constants.CONNECT_GENERATED_TS_DIR_TOKEN);
+
             put(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER, false)
         }
         buildInfo.writeToFile(tokenFile)

@@ -4,6 +4,7 @@ import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.io.IOException
@@ -55,8 +56,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -100,8 +101,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 optimizeBundle = true
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -144,8 +145,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 optimizeBundle = true
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -195,8 +196,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 optimizeBundle = true
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -237,7 +238,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      * This build script covers the [Spring Boot example](https://github.com/vaadin/base-starter-spring-gradle)
      */
     @Test
-    fun testVaadin14SpringProjectProductionMode() {
+    fun testVaadin16SpringProjectProductionMode() {
         buildFile.writeText("""
             plugins {
                 id 'org.springframework.boot' version '2.2.4.RELEASE'
@@ -252,7 +253,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             
             ext {
-                set('vaadinVersion', "$vaadin14Version")
+                set('vaadinVersion', "$vaadin16Version")
             }
             
             configurations {
@@ -286,6 +287,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // need to create the Application.java file otherwise bootJar will fail
         val appPkg = File(testProjectDir, "src/main/java/com/example/demo")
         Files.createDirectories(appPkg.toPath())
+
+        // DemoApplication.java file creation
         File(appPkg, "DemoApplication.java").writeText("""
             package com.example.demo;
             
@@ -299,6 +302,18 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                     SpringApplication.run(DemoApplication.class, args);
                 }
             
+            }
+        """.trimIndent())
+
+        // AppShell.java file creation
+        File(appPkg, "AppShell.java").writeText("""
+            package com.example.demo;
+            
+            import com.vaadin.flow.component.page.AppShellConfigurator;
+            import com.vaadin.flow.server.PWA;
+
+            @PWA(name = "Demo application", shortName = "Demo", enableInstallPrompt = false)
+            public class AppShell implements AppShellConfigurator {
             }
         """.trimIndent())
 
@@ -327,8 +342,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 16
+                compile("com.vaadin:vaadin-core:$vaadin16Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -379,6 +394,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      * https://github.com/vaadin/vaadin-gradle-plugin/issues/76
      */
     @Test
+    @Ignore("nodeVersion and nodeDownloadRoot options are not supported in flow 3.1")
     fun testNodeDownload() {
         // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
         if (!FrontendUtils.getVaadinHomeDirectory().deleteRecursively()) {

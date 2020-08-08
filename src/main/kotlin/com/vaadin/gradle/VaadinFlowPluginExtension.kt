@@ -16,9 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
-import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
-import com.vaadin.flow.server.frontend.installer.NodeInstaller
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
@@ -109,14 +107,15 @@ open class VaadinFlowPluginExtension(project: Project) {
     var optimizeBundle = true
 
     /**
-     * Instructs to use pnpm for installing npm frontend resources.
+     * Instructs to use pnpm for installing npm frontend resources. Default is [Constants.ENABLE_PNPM_DEFAULT_STRING]
+     * Responds to the `-Pvaadin.useDeprecatedV14Bootstrapping` property.
      *
      * pnpm, a.k.a. performant npm, is a better front-end dependency management option.
      * With pnpm, packages are cached locally by default and linked (instead of
      * downloaded) for every project. This results in reduced disk space usage
      * and faster recurring builds when compared to npm.
      */
-    var pnpmEnable = false
+    var pnpmEnable = Constants.ENABLE_PNPM_DEFAULT_STRING.toBoolean()
 
     /**
      * Whether vaadin home node executable usage is forced. If it's set to
@@ -127,19 +126,36 @@ open class VaadinFlowPluginExtension(project: Project) {
     var requireHomeNodeExec = false
 
     /**
-     * The node.js version to be used when node.js is installed automatically by
-     * Vaadin, for example `"v12.16.0"`. Defaults to [FrontendTools.DEFAULT_NODE_VERSION].
+     * Whether or not we are running in legacy V14 bootstrap mode. Defaults to false.
+     * Responds to the `-Pvaadin.useDeprecatedV14Bootstrapping` property.
      */
-    var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
+    var useDeprecatedV14Bootstrapping = false
 
     /**
-     * Download node.js from this URL. Handy in heavily firewalled corporate
-     * environments where the node.js download can be provided from an intranet
-     * mirror. Defaults to [NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT].
-     *
-     * Example: `"https://nodejs.org/dist/"`.
+     * Whether or not insert the initial Uidl object in the bootstrap index.html. Defaults to false.
+     * Responds to the `-Pvaadin.eagerServerLoad` property.
      */
-    var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
+    var eagerServerLoad = false
+
+    /**
+     * Application properties file in Spring project.
+     */
+    var applicationProperties = File(project.projectDir, "src/main/resources/application.properties")
+
+    /**
+     * Default generated path of the OpenAPI json.
+     */
+    var openApiJsonFile = File(project.buildDir, "generated-resources/openapi.json")
+
+    /**
+     * Java source folders for connect scanning.
+     */
+    var javaSourceFolder = File(project.projectDir, "src/main/java")
+
+    /**
+     * The folder where flow will put TS API files for client projects.
+     */
+    var generatedTsFolder = File(project.projectDir, "frontend/generated")
 
     companion object {
         fun get(project: Project): VaadinFlowPluginExtension =
@@ -154,13 +170,24 @@ open class VaadinFlowPluginExtension(project: Project) {
             webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
         }
 
-        if (System.getProperty("vaadin.productionMode") != null) {
-            val pm: String = System.getProperty("vaadin.productionMode")
-            productionMode = pm.isBlank() || pm.toBoolean()
+        val productionModeProperty = project.getBooleanProperty("vaadin.productionMode")
+        if(productionModeProperty != null) {
+            productionMode = productionModeProperty
         }
-        if (project.hasProperty("vaadin.productionMode")) {
-            val pm: String = project.property("vaadin.productionMode") as String
-            productionMode = pm.isBlank() || pm.toBoolean()
+
+        val eagerServerLoadProperty = project.getBooleanProperty("vaadin.eagerServerLoad")
+        if(eagerServerLoadProperty != null) {
+            eagerServerLoad = eagerServerLoadProperty
+        }
+
+        val useDeprecatedV14BootstrappingProperty = project.getBooleanProperty("vaadin.useDeprecatedV14Bootstrapping")
+        if(useDeprecatedV14BootstrappingProperty != null) {
+            useDeprecatedV14Bootstrapping = useDeprecatedV14BootstrappingProperty
+        }
+
+        val pnpmEnableProperty = project.getBooleanProperty(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
+        if(pnpmEnableProperty != null) {
+            pnpmEnable = pnpmEnableProperty
         }
     }
 
