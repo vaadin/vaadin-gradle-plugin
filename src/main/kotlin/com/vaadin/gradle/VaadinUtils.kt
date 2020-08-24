@@ -145,7 +145,12 @@ internal fun Collection<File>.toPrettyFormat(): String = joinToString(prefix = "
 
 internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
         FrontendTools(npmFolder.absolutePath,
-                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath })
+                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath },
+                nodeVersion,
+                URI(nodeDownloadRoot))
 
 internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project): NodeTasks.Builder =
         NodeTasks.Builder(getClassFinder(project), npmFolder, generatedFolder, frontendDirectory)
+                .withHomeNodeExecRequired(requireHomeNodeExec)
+                .withNodeVersion(nodeVersion)
+                .withNodeDownloadRoot(URI(nodeDownloadRoot))

@@ -128,7 +128,6 @@ open class VaadinBuildFrontendTask : DefaultTask() {
                 .withConnectJavaSourceFolder(extension.javaSourceFolder)
                 .withConnectGeneratedOpenApiJson(extension.openApiJsonFile)
                 .withConnectClientTsApiFolder(extension.generatedTsFolder)
-                .withHomeNodeExecRequired(extension.requireHomeNodeExec)
                 .build().execute()
 
         logger.info("runNodeUpdater: done!")
