@@ -151,7 +151,7 @@ Vaadin will download the node.js and npm (and pnpm if `pnpmEnable` is true) and 
 into the `$HOME/.vaadin` folder.
 
 This functionality is triggered automatically,
-you do not need to call a Gradle task nor configure your CI environment in a special way.
+you do not need to call a Gradle task nor configure your CI environment in any special way.
 
 ## Multi-project builds
 
