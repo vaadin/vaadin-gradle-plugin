@@ -177,6 +177,25 @@ project("web") {
 }
 ```
 
+## FAQ
+
+Q: Why the `flow-server-production-mode.jar` file is missing in the WAR artifact built for production?
+
+A: That jar file is actually not really needed. Its sole purpose is to set the `productionMode` `web.xml` context-param, however
+   we're telling this information to Vaadin in a different way. Please see next question for more details.
+
+Q: How is Vaadin configured for production mode?
+
+A: Vaadin is configured via the `META-INF/VAADIN/config/flow-build-info.json` file.
+   When the Plugin is set for production mode, either via `-Pvaadin.productionMode` or via `vaadin { productionMode = true }`,
+   it will set the `productionMode` JSON property to true in the `flow-build-info.json` file.
+   That will then tell Vaadin to run in production mode.
+
+Q: How can I verify that the WAR file has been built correctly for production mode?
+
+A: Please read the [Development vs production mode](https://mvysny.github.io/Vaadin-the-missing-guide/)
+   guide to find the list of files which need to be present in a production-mode artifact.
+
 # Developing The Plugin
 
 Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
