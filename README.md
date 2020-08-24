@@ -48,21 +48,6 @@ Compatibility chart:
 
 ## Tasks
 
-There are the following tasks:
-
-* `vaadinClean` will clean the project completely and removes `node_modules`, `package*.json` and `webpack.*.js`.
-  You can use this task to clean up your project in case Vaadin throws mysterious exceptions,
-  especially after you upgraded Vaadin to a newer version.
-* `vaadinPrepareFrontend` will prepare your project for development. Calling this task
-  will allow you to run the project e.g. in Tomcat with Intellij Ultimate.
-  The task checks that node and npm tools are installed, copies frontend resources available inside
-  `.jar` dependencies to `node_modules`, and creates or updates `package.json` and `webpack.config.json` files.
-* `vaadinBuildFrontend` will use webpack to compile all JavaScript and CSS files into one huge bundle in production mode,
-  and will place that by default into the `build/vaadin-generated` folder. The folder is
-  then later picked up by `jar` and `war` tasks which then package the folder contents properly
-  onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
-  need to be invoked explicitly. Note: this task will not be triggered automatically if `productionMode` is set to false.
-
 Most common commands for all projects:
 
 * `./gradlew clean build` - builds the project and prepares the project for development. Automatically
@@ -76,9 +61,25 @@ Most common commands for all projects:
 setup back to development mode, you must run `./gradlew vaadinPrepareFrontend`
 with the `productionMode` effectively set to false (e.g. by ommitting the `-Pvaadin.productionMode` flag).
 
+There are the following tasks:
+
+* `vaadinClean` will clean the project completely and removes JavaScript packaging-related
+  files such as `node_modules`, `package*.json`, `webpack.generated.js`, `pnpm-lock.yaml` and `pnpmfile.js`.
+  You can use this task to clean up your project in case Vaadin throws mysterious exceptions,
+  especially after you upgraded Vaadin to a newer version.
+* `vaadinPrepareFrontend` will prepare your project for development. Calling this task
+  will allow you to run the project e.g. in Tomcat with Intellij Ultimate.
+  The task checks that node and npm tools are installed, copies frontend resources available inside
+  `.jar` dependencies to `node_modules`, and creates or updates `package.json`/`pnpmfile.js` and `webpack.config.json` files.
+* `vaadinBuildFrontend` will use webpack to compile all JavaScript and CSS files into one huge bundle in production mode,
+  and will place that by default into the `build/vaadin-generated` folder. The folder is
+  then later picked up by `jar` and `war` tasks which then package the folder contents properly
+  onto the classpath. Note that this task is not automatically hooked into `war`/`jar`/`assemble`/`build` and
+  need to be invoked explicitly. Note: this task is only triggered automatically if `productionMode` is set to true.
+
 ## Configuration
 
-To configure the plugin, you can use the following snippet in your `build.gradle` file:
+To configure the plugin, you can use the following snippet in your `build.gradle(.kts)` file:
 
 `build.gradle` in Groovy:
 ```groovy
