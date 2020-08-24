@@ -24,8 +24,6 @@ as a basis for your Vaadin modules:
 
 ## Installation
 
-Check out the example project setups above for basic WAR project and Spring Boot:
-
 You need to add the following lines to your `build.gradle(.kts)` file
 (please check the latest version at
 [plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)): 
