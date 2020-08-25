@@ -89,8 +89,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
-        build.find("*.gz", 5..8)
-        build.find("*.js", 5..8)
+        build.find("*.gz", 5..10)
+        build.find("*.js", 5..10)
 
         val tokenFile = File(build, "../config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
@@ -107,8 +107,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
-        build.find("*.gz", 5..8)
-        build.find("*.js", 5..8)
+        build.find("*.gz", 5..10)
+        build.find("*.js", 5..10)
     }
 
     /**
