@@ -125,4 +125,16 @@ class VaadinSmokeTest : AbstractGradleTest() {
         // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
         expect(true) { webpackConfigJs.exists() }
     }
+
+    /**
+     * Tests that VaadinClean task removes TS-related files.
+     */
+    @Test
+    fun vaadinCleanDeleteTsFiles() {
+        val tsconfigJson = testProjectDir.touch("tsconfig.json")
+        val typesDTs = testProjectDir.touch("types.d.ts")
+        build("vaadinClean")
+        expect(false) { tsconfigJson.exists() }
+        expect(false) { typesDTs.exists() }
+    }
 }

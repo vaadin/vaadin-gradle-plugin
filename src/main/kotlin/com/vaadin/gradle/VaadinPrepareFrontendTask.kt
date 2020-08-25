@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.InitParameters
 import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
@@ -117,9 +118,9 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
         val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
         Files.createDirectories(configFolder.toPath())
         val buildInfo: JsonObject = Json.createObject().apply {
-            put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
-            put(Constants.SERVLET_PARAMETER_USE_V14_BOOTSTRAP, extension.useDeprecatedV14Bootstrapping);
-            put(Constants.SERVLET_PARAMETER_INITIAL_UIDL, extension.eagerServerLoad);
+            put(InitParameters.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
+            put(InitParameters.SERVLET_PARAMETER_USE_V14_BOOTSTRAP, extension.useDeprecatedV14Bootstrapping);
+            put(InitParameters.SERVLET_PARAMETER_INITIAL_UIDL, extension.eagerServerLoad);
             put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
             put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
             put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
@@ -127,8 +128,8 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
             put(Constants.CONNECT_APPLICATION_PROPERTIES_TOKEN, extension.applicationProperties.absolutePath);
             put(Constants.CONNECT_OPEN_API_FILE_TOKEN, extension.openApiJsonFile.absolutePath);
             put(Constants.CONNECT_GENERATED_TS_DIR_TOKEN, extension.generatedTsFolder.absolutePath);
-            put(Constants.SERVLET_PARAMETER_ENABLE_PNPM, extension.pnpmEnable)
-            put(Constants.REQUIRE_HOME_NODE_EXECUTABLE, extension.requireHomeNodeExec)
+            put(InitParameters.SERVLET_PARAMETER_ENABLE_PNPM, extension.pnpmEnable)
+            put(InitParameters.REQUIRE_HOME_NODE_EXECUTABLE, extension.requireHomeNodeExec)
         }
         val tokenFile = File(configFolder, "flow-build-info.json")
         buildInfo.writeToFile(tokenFile)

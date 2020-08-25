@@ -114,7 +114,7 @@ internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
  *
  * @param propertyName the property name
  *
- * @return `null` if the property is not present, `true` it's defined or if it's set to "true"
+ * @return `null` if the property is not present, `true` if it's defined or if it's set to "true"
  * and `false` otherwise.
  */
 fun Project.getBooleanProperty(propertyName: String) : Boolean? {
