@@ -42,7 +42,7 @@ Compatibility chart:
 | 0.6.0 and lower              | Vaadin 14.1.x and lower |
 | 0.7.0                        | Vaadin 14.2.x |
 | 0.8.0                        | All other Vaadin 14 versions |
-| -                            | Vaadin 17 |
+| -                            | Vaadin 17 and higher |
 
 ## Tasks
 
