@@ -41,8 +41,8 @@ Compatibility chart:
 | -                            | Vaadin 13 and lower are unsupported |
 | 0.6.0 and lower              | Vaadin 14.1.x and lower |
 | 0.7.0                        | Vaadin 14.2.x |
-| 0.8.0                        | Vaadin 14.3.x and higher |
-| -                            | Vaadin 15 and higher |
+| 0.8.0                        | All other Vaadin 14 versions |
+| -                            | Vaadin 17 |
 
 ## Tasks
 
