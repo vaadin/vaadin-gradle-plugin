@@ -43,13 +43,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
             }
             vaadin {
                 pnpmEnable = true

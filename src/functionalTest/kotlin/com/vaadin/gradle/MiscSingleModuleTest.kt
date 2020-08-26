@@ -56,13 +56,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -104,13 +98,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -148,13 +136,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
             
                 compile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
@@ -199,13 +181,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
             
                 compile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
@@ -266,13 +242,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             
             dependencies {
-                implementation('com.vaadin:vaadin-spring-boot-starter') {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                implementation('com.vaadin:vaadin-spring-boot-starter')
                 developmentOnly 'org.springframework.boot:spring-boot-devtools'
                 testImplementation('org.springframework.boot:spring-boot-starter-test') {
                     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -349,13 +319,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -419,13 +383,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version") {
-            //         Webjars are only needed when running in Vaadin 13 compatibility mode
-                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
-                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
-                            .forEach { group -> exclude(group: group) }
-                }
+                compile("com.vaadin:vaadin-core:$vaadin17Version")
             }
             vaadin {
                 pnpmEnable = true
