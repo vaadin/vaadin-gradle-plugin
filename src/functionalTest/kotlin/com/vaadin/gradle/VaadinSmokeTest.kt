@@ -39,10 +39,11 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                // Vaadin 17
+                compile("com.vaadin:vaadin-core:$vaadin17Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -88,10 +89,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("*.gz", 5..10)
+        build.find("*.js", 5..10)
 
         val tokenFile = File(build, "../config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
@@ -108,10 +107,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("*.gz", 5..10)
+        build.find("*.js", 5..10)
     }
 
     /**
@@ -127,5 +124,17 @@ class VaadinSmokeTest : AbstractGradleTest() {
         expect(false) { pnpmFileJs.exists() }
         // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
         expect(true) { webpackConfigJs.exists() }
+    }
+
+    /**
+     * Tests that VaadinClean task removes TS-related files.
+     */
+    @Test
+    fun vaadinCleanDeleteTsFiles() {
+        val tsconfigJson = testProjectDir.touch("tsconfig.json")
+        val typesDTs = testProjectDir.touch("types.d.ts")
+        build("vaadinClean")
+        expect(false) { tsconfigJson.exists() }
+        expect(false) { typesDTs.exists() }
     }
 }
