@@ -2,6 +2,7 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import java.io.File
@@ -44,6 +45,9 @@ abstract class AbstractGradleTest {
                 .withProjectDir(testProjectDir)
                 .withArguments(args.toList() + "--stacktrace")
                 .withPluginClasspath()
+                .withDebug(true)
+                .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
+                .withGradleVersion("5.0")
                 .build()
 
         if (checkTasksSuccessful) {
@@ -55,5 +59,10 @@ abstract class AbstractGradleTest {
             }
         }
         return result
+    }
+
+    @Before
+    fun dumpEnvironment() {
+        println("Test project directory: $testProjectDir")
     }
 }
