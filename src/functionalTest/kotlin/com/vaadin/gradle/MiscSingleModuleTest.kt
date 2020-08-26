@@ -69,6 +69,9 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
+            vaadin {
+                pnpmEnable = true
+            }
         """.trimIndent())
 
         val build: BuildResult = build("clean", "build")
@@ -97,7 +100,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 14
@@ -141,7 +144,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 14
@@ -192,7 +195,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 14
@@ -281,6 +284,10 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                     mavenBom "com.vaadin:vaadin-bom:${"$"}{vaadinVersion}"
                 }
             }
+
+            vaadin {
+                pnpmEnable = true
+            }
         """)
 
         // need to create the Application.java file otherwise bootJar will fail
@@ -363,6 +370,10 @@ class MiscSingleModuleTest : AbstractGradleTest() {
 
             jar {
               from sourceSets.guiceConfig.output
+            }
+
+            vaadin {
+                pnpmEnable = true
             }
         """.trimIndent())
 

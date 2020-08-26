@@ -39,6 +39,10 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                                 .forEach { group -> exclude(group: group) }
                     }
                 }
+
+                vaadin {
+                    pnpmEnable = true
+                }
             }
         """.trimIndent())
         testProject.newFolder("lib")
@@ -83,6 +87,10 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                          "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
                                 .forEach { group -> exclude(group: group) }
                     }
+                }
+
+                vaadin {
+                    pnpmEnable = true
                 }
             }
         """.trimIndent())
