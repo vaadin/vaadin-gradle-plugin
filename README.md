@@ -204,6 +204,14 @@ all necessary tasks and extensions into the project.
 
 Use Intellij (Community is enough) to open the project.
 
+## Branches
+
+Individual branches contain plugin targeting different Vaadin versions:
+
+* `master` plugin targets newest Vaadin version (Vaadin 17 at the moment of writing). Plugin versions released
+  from this branch: 0.17.0.0 etc.
+* `14.x` plugin targets Vaadin 14.x; plugin versions released from this branch: 0.14.3.4 etc.
+
 ## Running The IT/Functional Tests
 
 There is a comprehensive test suite which tests the plugin in various generated projects.
