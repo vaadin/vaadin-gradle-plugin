@@ -19,7 +19,6 @@ import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
-import com.vaadin.flow.server.scanner.ReflectionsClassFinder
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
@@ -106,6 +105,28 @@ internal fun exec(logger: Logger, cwd: File, vararg args: String) {
  */
 internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
     file.writeText(JsonUtil.stringify(this, indentation) + "\n")
+}
+
+/**
+ * Finds the value of a boolean property. It searches in gradle and system properties.
+ *
+ * If the property is defined in both gradle and system properties, then the gradle property is taken.
+ *
+ * @param propertyName the property name
+ *
+ * @return `null` if the property is not present, `true` if it's defined or if it's set to "true"
+ * and `false` otherwise.
+ */
+fun Project.getBooleanProperty(propertyName: String) : Boolean? {
+    if (project.hasProperty(propertyName)) {
+        val property: String = project.property(propertyName) as String
+        return property.isBlank() || property.toBoolean()
+    }
+    if (System.getProperty(propertyName) != null) {
+        val property: String = System.getProperty(propertyName)
+        return property.isBlank() || property.toBoolean()
+    }
+    return null
 }
 
 /**
