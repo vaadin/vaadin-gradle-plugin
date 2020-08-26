@@ -109,6 +109,32 @@ internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
 }
 
 /**
+ * Finds the value of a boolean property. It searches in gradle and system properties.
+ *
+ * If the property is defined in both gradle and system properties, then the gradle property is taken.
+ *
+ * @param propertyName the property name
+ *
+ * @return `null` if the property is not present, `true` if it's defined or if it's set to "true"
+ * and `false` otherwise.
+ */
+fun Project.getBooleanProperty(propertyName: String) : Boolean? {
+    if (System.getProperty(propertyName) != null) {
+        val value: String = System.getProperty(propertyName)
+        val valueBoolean: Boolean = value.isBlank() || value.toBoolean()
+        logger.info("Set $propertyName to $valueBoolean because of System property $propertyName='$value'")
+        return valueBoolean
+    }
+    if (project.hasProperty(propertyName)) {
+        val value: String = project.property(propertyName) as String
+        val valueBoolean: Boolean = value.isBlank() || value.toBoolean()
+        logger.info("Set $propertyName to $valueBoolean because of Gradle project property $propertyName='$value'")
+        return valueBoolean
+    }
+    return null
+}
+
+/**
  * Allows Kotlin-based gradle scripts to be configured via
  * ```
  * vaadin {
