@@ -377,7 +377,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Dvaadin.productionMode", "clean", "build")
+        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 

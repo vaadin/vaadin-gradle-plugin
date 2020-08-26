@@ -44,7 +44,7 @@ abstract class AbstractGradleTest {
         println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
         val result: BuildResult = GradleRunner.create()
                 .withProjectDir(testProjectDir)
-                .withArguments(args.toList() + "--stacktrace")
+                .withArguments(args.toList() + "--stacktrace" + "--info")
                 .withPluginClasspath()
                 .withDebug(true)
                 .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!

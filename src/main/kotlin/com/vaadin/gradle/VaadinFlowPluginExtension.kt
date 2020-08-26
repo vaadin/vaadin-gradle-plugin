@@ -157,10 +157,12 @@ open class VaadinFlowPluginExtension(project: Project) {
         if (System.getProperty("vaadin.productionMode") != null) {
             val pm: String = System.getProperty("vaadin.productionMode")
             productionMode = pm.isBlank() || pm.toBoolean()
+            project.logger.info("Set productionMode to $productionMode because of System property vaadin.productionMode=$pm")
         }
         if (project.hasProperty("vaadin.productionMode")) {
             val pm: String = project.property("vaadin.productionMode") as String
             productionMode = pm.isBlank() || pm.toBoolean()
+            project.logger.info("Set productionMode to $productionMode because of Gradle project property vaadin.productionMode=$pm")
         }
     }
 
