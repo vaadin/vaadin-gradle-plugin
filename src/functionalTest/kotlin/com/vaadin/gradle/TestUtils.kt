@@ -39,9 +39,20 @@ fun BuildResult.expectTaskSucceded(taskName: String) {
  */
 fun BuildResult.expectTaskOutcome(taskName: String, expectedOutcome: TaskOutcome) {
     val task: BuildTask = task(":$taskName")
-            ?: fail("Task $taskName was not ran\n$output")
-    expect(expectedOutcome, "$taskName outcome was ${task.outcome}: $output") {
+            ?: fail("Task $taskName was not ran. Executed tasks: ${tasks}. Stdout:\n$output")
+    expect(expectedOutcome, "$taskName outcome was ${task.outcome}. Stdout:\n$output") {
         task.outcome
+    }
+}
+
+/**
+ * Expects that given task was not executed. If it was, fails with an informative exception.
+ * @param taskName the name of the task, e.g. `vaadinPrepareNode` or `web:vaadinBuildFrontend`.
+ */
+fun BuildResult.expectTaskNotRan(taskName: String) {
+    val task: BuildTask? = task(":$taskName")
+    expect(null, "$taskName was not expected to be run. Executed tasks: $tasks. Stdout:\n$output") {
+        task
     }
 }
 

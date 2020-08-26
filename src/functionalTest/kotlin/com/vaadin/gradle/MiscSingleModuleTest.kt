@@ -72,9 +72,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """.trimIndent())
 
         val build: BuildResult = build("clean", "build")
-        expect(null, "vaadinBuildFrontend should NOT have been executed automatically; tasks executed: ${build.tasks}") {
-            build.task(":vaadinBuildFrontend")
-        }
+        // vaadinBuildFrontend should NOT have been executed automatically
+        build.expectTaskNotRan("vaadinBuildFrontend")
 
         val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
