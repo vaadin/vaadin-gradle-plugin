@@ -2,6 +2,7 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import java.io.File
@@ -40,10 +41,14 @@ abstract class AbstractGradleTest {
      * You can suppress this functionality by setting [checkTasksSuccessful] to false.
      */
     protected fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
+        println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
         val result: BuildResult = GradleRunner.create()
                 .withProjectDir(testProjectDir)
-                .withArguments(args.toList() + "--stacktrace")
+                .withArguments(args.toList() + "--stacktrace" + "--info")
                 .withPluginClasspath()
+                .withDebug(true)
+                .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
+                .withGradleVersion("5.0")
                 .build()
 
         if (checkTasksSuccessful) {
@@ -55,5 +60,10 @@ abstract class AbstractGradleTest {
             }
         }
         return result
+    }
+
+    @Before
+    fun dumpEnvironment() {
+        println("Test project directory: $testProjectDir")
     }
 }

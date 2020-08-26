@@ -187,23 +187,23 @@ open class VaadinFlowPluginExtension(project: Project) {
             webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
         }
 
-        val productionModeProperty = project.getBooleanProperty("vaadin.productionMode")
-        if(productionModeProperty != null) {
+        val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
+        if (productionModeProperty != null) {
             productionMode = productionModeProperty
         }
 
-        val eagerServerLoadProperty = project.getBooleanProperty("vaadin.eagerServerLoad")
-        if(eagerServerLoadProperty != null) {
+        val eagerServerLoadProperty: Boolean? = project.getBooleanProperty("vaadin.eagerServerLoad")
+        if (eagerServerLoadProperty != null) {
             eagerServerLoad = eagerServerLoadProperty
         }
 
-        val useDeprecatedV14BootstrappingProperty = project.getBooleanProperty("vaadin.useDeprecatedV14Bootstrapping")
-        if(useDeprecatedV14BootstrappingProperty != null) {
+        val useDeprecatedV14BootstrappingProperty: Boolean? = project.getBooleanProperty("vaadin.useDeprecatedV14Bootstrapping")
+        if (useDeprecatedV14BootstrappingProperty != null) {
             useDeprecatedV14Bootstrapping = useDeprecatedV14BootstrappingProperty
         }
 
-        val pnpmEnableProperty = project.getBooleanProperty(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
-        if(pnpmEnableProperty != null) {
+        val pnpmEnableProperty: Boolean? = project.getBooleanProperty(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
+        if (pnpmEnableProperty != null) {
             pnpmEnable = pnpmEnableProperty
         }
     }
