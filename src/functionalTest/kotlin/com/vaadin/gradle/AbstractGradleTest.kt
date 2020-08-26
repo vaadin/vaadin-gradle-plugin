@@ -41,6 +41,7 @@ abstract class AbstractGradleTest {
      * You can suppress this functionality by setting [checkTasksSuccessful] to false.
      */
     protected fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
+        println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
         val result: BuildResult = GradleRunner.create()
                 .withProjectDir(testProjectDir)
                 .withArguments(args.toList() + "--stacktrace")
