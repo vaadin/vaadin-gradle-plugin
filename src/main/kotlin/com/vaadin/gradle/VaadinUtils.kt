@@ -118,13 +118,17 @@ internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
  * and `false` otherwise.
  */
 fun Project.getBooleanProperty(propertyName: String) : Boolean? {
-    if (project.hasProperty(propertyName)) {
-        val property: String = project.property(propertyName) as String
-        return property.isBlank() || property.toBoolean()
-    }
     if (System.getProperty(propertyName) != null) {
-        val property: String = System.getProperty(propertyName)
-        return property.isBlank() || property.toBoolean()
+        val value: String = System.getProperty(propertyName)
+        val valueBoolean: Boolean = value.isBlank() || value.toBoolean()
+        logger.info("Set $propertyName to $valueBoolean because of System property $propertyName='$value'")
+        return valueBoolean
+    }
+    if (project.hasProperty(propertyName)) {
+        val value: String = project.property(propertyName) as String
+        val valueBoolean: Boolean = value.isBlank() || value.toBoolean()
+        logger.info("Set $propertyName to $valueBoolean because of Gradle project property $propertyName='$value'")
+        return valueBoolean
     }
     return null
 }
