@@ -69,11 +69,14 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
+            vaadin {
+                pnpmEnable = true
+            }
         """.trimIndent())
 
         val build: BuildResult = build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
-        expect(null) { build.task(":vaadinBuildFrontend") }
+        build.expectTaskNotRan("vaadinBuildFrontend")
 
         val war: File = File(testProjectDir, "build/libs").find("*.war").first()
         expect(true, "$war is missing\n${build.output}") { war.isFile }
@@ -97,7 +100,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 17
@@ -141,7 +144,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 17
@@ -192,7 +195,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                optimizeBundle = true
+                pnpmEnable = true
             }
             dependencies {
                 // Vaadin 17
@@ -280,6 +283,10 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 imports {
                     mavenBom "com.vaadin:vaadin-bom:${"$"}{vaadinVersion}"
                 }
+            }
+
+            vaadin {
+                pnpmEnable = true
             }
         """)
 
@@ -378,9 +385,13 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             jar {
               from sourceSets.guiceConfig.output
             }
+
+            vaadin {
+                pnpmEnable = true
+            }
         """.trimIndent())
 
-        val build: BuildResult = build("-Dvaadin.productionMode", "clean", "build")
+        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
