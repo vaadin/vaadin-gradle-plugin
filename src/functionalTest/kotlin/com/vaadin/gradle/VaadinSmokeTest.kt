@@ -74,7 +74,9 @@ class VaadinSmokeTest : AbstractGradleTest() {
         val result: BuildResult = build("build")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
-        expect(null) { result.task(":vaadinBuildFrontend") }
+        expect(null, "vaadinBuildFrontend should NOT have been executed automatically; tasks executed: ${result.tasks}") {
+            result.task(":vaadinBuildFrontend")
+        }
 
         val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
         expect(false, build.toString()) { build.exists() }
