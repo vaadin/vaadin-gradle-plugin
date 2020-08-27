@@ -243,9 +243,20 @@ example project.
 3. Reimport the Base Starter project: Gradle / Reimport. A new project named `vaadin-gradle-plugin`
    should appear in your workspace.
 4. Open the terminal with Alt+F12.
-5. If you now type `./gradlew vaadinPrepareFronend` into the command line, Gradle will compile any changes done to
-   the Gradle plugin and will run updated code. You can verify that by adding `println()` statements
+5. If you now type `./gradlew vaadinPrepareFrontend` into the command line, Gradle will compile any changes done to
+   the Gradle plugin and will run the updated plugin code. You can verify that by adding `println()` statements
    into the `VaadinPrepareFrontendTask` class.
+
+If Gradle would complain that it can't download `beta` or `rc` artifacts (e.g. `flow-server-4.0.0.rc1`), just
+add this to your app's `build.gradle(.kts)` file:
+
+```groovy
+buildscript {
+    repositories {
+        maven { setUrl("https://maven.vaadin.com/vaadin-prereleases") }
+    }
+}
+```
 
 ## License
 
