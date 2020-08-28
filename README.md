@@ -23,7 +23,7 @@ as a basis for your Vaadin modules:
 
 ## Installation
 
-You need to add the following lines to your `build.gradle(.kts)` file
+You need to add the following lines to your `build.gradle` file
 (please check the latest version at
 [plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)): 
 
@@ -76,7 +76,7 @@ There are the following tasks:
 
 ## Configuration
 
-To configure the plugin, you can use the following snippet in your `build.gradle(.kts)` file:
+To configure the plugin, you can use the following snippet in your `build.gradle` file:
 
 `build.gradle` in Groovy:
 ```groovy
