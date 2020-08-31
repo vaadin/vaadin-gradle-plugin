@@ -249,7 +249,7 @@ example project.
    into the `VaadinPrepareFrontendTask` class.
 
 If Gradle would complain that it can't download `beta` or `rc` artifacts (e.g. `flow-server-4.0.0.rc1`), just
-add this to your app's `build.gradle(.kts)` file:
+add this to your app's `build.gradle` file:
 
 ```groovy
 buildscript {
