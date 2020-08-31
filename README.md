@@ -58,7 +58,7 @@ Most common commands for all projects:
 setup back to development mode, you must run `./gradlew vaadinPrepareFrontend`
 with the `productionMode` effectively set to false (e.g. by ommitting the `-Pvaadin.productionMode` flag).
 
-There are the following tasks:
+All tasks provided by the plugin:
 
 * `vaadinClean` will clean the project completely and removes JavaScript packaging-related
   files such as `node_modules`, `package*.json`, `webpack.generated.js`, `pnpm-lock.yaml` and `pnpmfile.js`.
