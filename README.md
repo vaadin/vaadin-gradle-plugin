@@ -211,6 +211,7 @@ Individual branches contain plugin targeting different Vaadin versions:
   from this branch: 0.17.0.0 etc.
 * `14.x` plugin targets Vaadin 14.x; plugin versions released from this branch: 0.14.3.4 etc.
 
+When the Gradle plugin becomes a supported part of Vaadin platform (covering e.g. paid bug prioritisation), we'll drop the `0.´part from the version numbers.
 ## Running The IT/Functional Tests
 
 There is a comprehensive test suite which tests the plugin in various generated projects.
