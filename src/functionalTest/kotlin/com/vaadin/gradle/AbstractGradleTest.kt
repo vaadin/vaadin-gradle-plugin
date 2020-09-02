@@ -17,7 +17,8 @@ import java.io.File
  */
 abstract class AbstractGradleTest {
 
-    val vaadin17Version = "17.0.0.beta3"
+    // find the newest Vaadin version here: https://github.com/vaadin/platform/tags
+    val vaadin17Version = "17.0.0"
 
     /**
      * The testing Gradle project. Automatically deleted after every test.
