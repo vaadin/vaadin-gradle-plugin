@@ -161,9 +161,9 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://vaadin.com'
+    website = 'https://github.com/vaadin/vaadin-gradle-plugin'
     vcsUrl = 'https://github.com/vaadin/vaadin-gradle-plugin'
-    description = 'Build Vaadin 14 applications with Gradle'
+    description = 'Build Vaadin 14 applications with Gradle. Please follow the link below to learn which Plugin version to use with which Vaadin version.'
     tags = ['vaadin']
     plugins {
         vaadinPlugin {
