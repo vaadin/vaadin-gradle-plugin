@@ -39,10 +39,13 @@ Compatibility chart:
 | Vaadin Gradle Plugin version | Supports |
 |------------------------------|----------|
 | -                            | Vaadin 13 and lower are unsupported |
-| 0.6.0 and lower              | Vaadin 14.1.x and lower |
-| 0.7.0                        | Vaadin 14.2.x |
-| 0.8.0                        | All other Vaadin 14 versions |
-| -                            | Vaadin 17 and higher |
+| 0.6.0 and lower              | Vaadin 14.1.x LTS and lower |
+| 0.7.0                        | Vaadin 14.2.x LTS |
+| 0.8.0                        | All other Vaadin 14 LTS versions (recommended) |
+| -                            | Vaadin 15 and 16 are unsupported |
+| 0.17.0.0 (to be released)    | Vaadin 17 and higher |
+
+Vaadin recommends using the latest Vaadin LTS version.
 
 ## Tasks
 
