@@ -37,7 +37,7 @@ plugins {
 ### Compatibility chart
 
 Please follow this chart to learn which Plugin version to use with particular Vaadin version.
-Vaadin recommends using the latest Vaadin LTS version.
+Vaadin recommends using the latest Vaadin LTS (Long-Term Support) version.
 
 | Vaadin Gradle Plugin version | Supports |
 |------------------------------|----------|
