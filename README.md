@@ -34,7 +34,7 @@ plugins {
 }
 ```
 
-## Compatibility chart:
+### Compatibility chart
 
 Please follow this chart to learn which Plugin version to use with particular Vaadin version.
 Vaadin recommends using the latest Vaadin LTS version.
