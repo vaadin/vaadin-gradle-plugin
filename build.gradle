@@ -36,7 +36,7 @@ plugins {
 
 defaultTasks 'jar'
 group 'com.vaadin'
-version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.5.1-SNAPSHOT'
+version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.17.0-SNAPSHOT'
 archivesBaseName = 'vaadin-gradle-plugin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
