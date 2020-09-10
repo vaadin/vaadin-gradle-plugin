@@ -37,7 +37,7 @@ import org.gradle.api.tasks.TaskAction
  * the rest of the files will be re-created by Vaadin Servlet, simply by running the application
  * in the development mode.
  */
-open class VaadinCleanTask : DefaultTask() {
+public open class VaadinCleanTask : DefaultTask() {
     init {
         group = "Vaadin"
         description = "Cleans the project completely and removes node_modules, package*.json and webpack.*.js"
@@ -46,7 +46,7 @@ open class VaadinCleanTask : DefaultTask() {
     }
 
     @TaskAction
-    fun clean() {
+    public fun clean() {
         project.delete("${project.projectDir}/node_modules",
                 "${project.projectDir}/package.json",
                 "${project.projectDir}/package-lock.json",
