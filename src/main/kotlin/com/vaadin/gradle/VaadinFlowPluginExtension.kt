@@ -24,12 +24,12 @@ import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
 
-open class VaadinFlowPluginExtension(project: Project) {
+public open class VaadinFlowPluginExtension(project: Project) {
     /**
      * Whether or not we are running in productionMode. Defaults to false.
      * Responds to the `-Pvaadin.productionMode` property.
      */
-    var productionMode: Boolean = false
+    public var productionMode: Boolean = false
 
     /**
      * The plugin will generate additional resource files here. These files need
@@ -40,7 +40,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      *
      * For example the `flow-build-info.json` goes here. Also see [webpackOutputDirectory].
      */
-    var buildOutputDirectory = File(project.buildDir, "vaadin-generated")
+    public var buildOutputDirectory: File = File(project.buildDir, "vaadin-generated")
 
     /**
      * The folder where webpack should output index.js and other generated
@@ -49,64 +49,64 @@ open class VaadinFlowPluginExtension(project: Project) {
      *
      * In the dev mode, the `flow-build-info.json` file is generated here.
      */
-    var webpackOutputDirectory: File? = null
+    public var webpackOutputDirectory: File? = null
 
     /**
      * The folder where `package.json` file is located. Default is project root
      * dir.
      */
-    var npmFolder: File = project.projectDir
+    public var npmFolder: File = project.projectDir
     /**
      * Copy the `webapp.config.js` from the specified URL if missing. Default is
      * the template provided by this plugin. Set it to empty string to disable
      * the feature.
      */
-    var webpackTemplate: String = FrontendUtils.WEBPACK_CONFIG
+    public var webpackTemplate: String = FrontendUtils.WEBPACK_CONFIG
     /**
      * Copy the `webapp.generated.js` from the specified URL. Default is the
      * template provided by this plugin. Set it to empty string to disable the
      * feature.
      */
-    var webpackGeneratedTemplate: String = FrontendUtils.WEBPACK_GENERATED
+    public var webpackGeneratedTemplate: String = FrontendUtils.WEBPACK_GENERATED
     /**
      * The folder where flow will put generated files that will be used by
      * webpack.
      *
      * @todo mavi we should move this to `build/frontend/` but in order to do that we need Flow 2.2 or higher. Leaving as-is for now.
      */
-    var generatedFolder = File(project.projectDir, "target/frontend")
+    public var generatedFolder: File = File(project.projectDir, "target/frontend")
     /**
      * A directory with project's frontend source files.
      */
-    var frontendDirectory = File(project.projectDir, "frontend")
+    public var frontendDirectory: File = File(project.projectDir, "frontend")
 
     /**
      * Whether to generate a bundle from the project frontend sources or not.
      */
-    var generateBundle = true
+    public var generateBundle: Boolean = true
 
     /**
      * Whether to run `npm install` after updating dependencies.
      */
-    var runNpmInstall = true
+    public var runNpmInstall: Boolean = true
 
     /**
      * Whether to generate embeddable web components from WebComponentExporter
      * inheritors.
      */
-    var generateEmbeddableWebComponents = true
+    public var generateEmbeddableWebComponents: Boolean = true
 
     /**
      * Defines the project frontend directory from where resources should be
      * copied from for use with webpack.
      */
-    var frontendResourcesDirectory = File(project.projectDir, Constants.LOCAL_FRONTEND_RESOURCES_PATH)
+    public var frontendResourcesDirectory: File = File(project.projectDir, Constants.LOCAL_FRONTEND_RESOURCES_PATH)
 
     /**
      * Whether to use byte code scanner strategy to discover frontend
      * components.
      */
-    var optimizeBundle = true
+    public var optimizeBundle: Boolean = true
 
     /**
      * Instructs to use pnpm for installing npm frontend resources.
@@ -116,7 +116,7 @@ open class VaadinFlowPluginExtension(project: Project) {
      * downloaded) for every project. This results in reduced disk space usage
      * and faster recurring builds when compared to npm.
      */
-    var pnpmEnable = false
+    public var pnpmEnable: Boolean = false
 
     /**
      * Whether vaadin home node executable usage is forced. If it's set to
@@ -124,13 +124,13 @@ open class VaadinFlowPluginExtension(project: Project) {
      * absent. Then it will be used instead of globally 'node' or locally
      * installed installed 'node'.
      */
-    var requireHomeNodeExec = false
+    public var requireHomeNodeExec: Boolean = false
 
     /**
      * The node.js version to be used when node.js is installed automatically by
      * Vaadin, for example `"v12.16.0"`. Defaults to [FrontendTools.DEFAULT_NODE_VERSION].
      */
-    var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
+    public var nodeVersion: String = FrontendTools.DEFAULT_NODE_VERSION
 
     /**
      * Download node.js from this URL. Handy in heavily firewalled corporate
@@ -139,10 +139,10 @@ open class VaadinFlowPluginExtension(project: Project) {
      *
      * Example: `"https://nodejs.org/dist/"`.
      */
-    var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
+    public var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
 
-    companion object {
-        fun get(project: Project): VaadinFlowPluginExtension =
+    public companion object {
+        public fun get(project: Project): VaadinFlowPluginExtension =
                 project.extensions.getByType(VaadinFlowPluginExtension::class.java)
     }
 

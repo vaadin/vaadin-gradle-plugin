@@ -118,7 +118,7 @@ internal fun JsonObject.writeToFile(file: File, indentation: Int = 2) {
  * @return `null` if the property is not present, `true` if it's defined or if it's set to "true"
  * and `false` otherwise.
  */
-fun Project.getBooleanProperty(propertyName: String) : Boolean? {
+public fun Project.getBooleanProperty(propertyName: String) : Boolean? {
     if (System.getProperty(propertyName) != null) {
         val value: String = System.getProperty(propertyName)
         val valueBoolean: Boolean = value.isBlank() || value.toBoolean()
@@ -142,7 +142,7 @@ fun Project.getBooleanProperty(propertyName: String) : Boolean? {
  * }
  * ```
  */
-fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) {
+public fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) {
     convention.findByType(VaadinFlowPluginExtension::class.java)!!.apply(block)
 }
 

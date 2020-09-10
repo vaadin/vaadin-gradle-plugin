@@ -33,7 +33,7 @@ import java.nio.file.Files
  * resources available inside `.jar` dependencies to `node_modules`, and creates
  * or updates `package.json` and `webpack.config.json` files.
  */
-open class VaadinPrepareFrontendTask : DefaultTask() {
+public open class VaadinPrepareFrontendTask : DefaultTask() {
 
     init {
         group = "Vaadin"
@@ -57,7 +57,7 @@ open class VaadinPrepareFrontendTask : DefaultTask() {
     }
 
     @TaskAction
-    fun vaadinPrepareFrontend() {
+    public fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         logger.info("Running the vaadinPrepareFrontend task with effective configuration $extension")
 

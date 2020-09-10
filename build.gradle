@@ -206,3 +206,7 @@ functionalTest {
         info.events "passed", "skipped", "failed"
     }
 }
+
+kotlin {
+    explicitApi()
+}
