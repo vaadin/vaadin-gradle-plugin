@@ -31,7 +31,7 @@ import java.net.URLClassLoader
  *
  * @since 2.0
  */
-class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
+public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
     @Transient
     private val classLoader: ClassLoader
 
