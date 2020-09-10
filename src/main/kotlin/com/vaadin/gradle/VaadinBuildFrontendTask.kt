@@ -43,7 +43,7 @@ import java.io.File
  *
  * @since 2.0
  */
-open class VaadinBuildFrontendTask : DefaultTask() {
+public open class VaadinBuildFrontendTask : DefaultTask() {
     init {
         group = "Vaadin"
         description = "Builds the frontend bundle with webpack"
@@ -65,7 +65,7 @@ open class VaadinBuildFrontendTask : DefaultTask() {
     }
 
     @TaskAction
-    fun vaadinBuildFrontend() {
+    public fun vaadinBuildFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         val tokenFile = File(extension.webpackOutputDirectory, FrontendUtils.TOKEN_FILE)
         logger.info("Running the vaadinBuildFrontend task with effective configuration $extension")
