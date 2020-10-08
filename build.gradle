@@ -77,7 +77,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
     compile("com.vaadin:flow-server:4.0.2")
     compile("org.reflections:reflections:0.9.11")
-    compile("org.zeroturnaround:zt-exec:1.11")
+    compile("org.zeroturnaround:zt-exec:1.12")
 
     testCompile("junit:junit:4.12")
     testCompile("org.jetbrains.kotlin:kotlin-test:1.4.10")
