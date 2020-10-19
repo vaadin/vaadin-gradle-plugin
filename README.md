@@ -175,6 +175,16 @@ project("web") {
 }
 ```
 
+## IDE Support
+
+Intellij support for projects using Gradle and Vaadin Gradle Plugin is excellent.
+
+There's a known issue with Eclipse and VSCode. Eclipse+BuildShip may need a workaround
+in order for Gradle projects to work, please see [https://vaadin.com/forum/thread/18241436](https://vaadin.com/forum/thread/18241436) for more info.
+This applies to Visual Studio Code (VSCode) as well since it also uses Eclipse bits and BuildShip
+underneath - see [https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4](https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4)
+for more details.
+
 # Developing The Plugin
 
 Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
