@@ -188,6 +188,12 @@ This applies to Visual Studio Code (VSCode) as well since it also uses Eclipse b
 underneath - see [https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4](https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4)
 for more details.
 
+In order to run your project in production mode from your IDE, simply compile the
+project in production mode, e.g. by using `-Pvaadin.productionMode`. The plugin will
+then produce the `META-INF/VAADIN/config/flow-build-info.json` file with the `"productionMode": true` setting,
+which will then cause Vaadin to start in production mode at runtime. To revert this setting
+back to false, simply recompile your project without the `-Pvaadin.productionMode` switch.
+
 # Developing The Plugin
 
 Please read the Gradle Tutorial on [Developing Custom Gradle Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
