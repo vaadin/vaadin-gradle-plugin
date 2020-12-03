@@ -109,14 +109,15 @@ public open class VaadinFlowPluginExtension(project: Project) {
     public var optimizeBundle: Boolean = true
 
     /**
-     * Instructs to use pnpm for installing npm frontend resources.
+     * Instructs to use pnpm for installing npm frontend resources. Default is [Constants.ENABLE_PNPM_DEFAULT_STRING]
+     * Responds to the `-Pvaadin.useDeprecatedV14Bootstrapping` property.
      *
      * pnpm, a.k.a. performant npm, is a better front-end dependency management option.
      * With pnpm, packages are cached locally by default and linked (instead of
      * downloaded) for every project. This results in reduced disk space usage
      * and faster recurring builds when compared to npm.
      */
-    public var pnpmEnable: Boolean = false
+    public var pnpmEnable: Boolean = Constants.ENABLE_PNPM_DEFAULT_STRING.toBoolean()
 
     /**
      * Whether vaadin home node executable usage is forced. If it's set to
@@ -125,6 +126,38 @@ public open class VaadinFlowPluginExtension(project: Project) {
      * installed installed 'node'.
      */
     public var requireHomeNodeExec: Boolean = false
+
+    /**
+     * Whether or not we are running in legacy V14 bootstrap mode. Defaults to false.
+     * Responds to the `-Pvaadin.useDeprecatedV14Bootstrapping` property.
+     */
+    public var useDeprecatedV14Bootstrapping: Boolean = false
+
+    /**
+     * Whether or not insert the initial Uidl object in the bootstrap index.html. Defaults to false.
+     * Responds to the `-Pvaadin.eagerServerLoad` property.
+     */
+    public var eagerServerLoad: Boolean = false
+
+    /**
+     * Application properties file in Spring project.
+     */
+    public var applicationProperties: File = File(project.projectDir, "src/main/resources/application.properties")
+
+    /**
+     * Default generated path of the OpenAPI json.
+     */
+    public var openApiJsonFile: File = File(project.buildDir, "generated-resources/openapi.json")
+
+    /**
+     * Java source folders for connect scanning.
+     */
+    public var javaSourceFolder: File = File(project.projectDir, "src/main/java")
+
+    /**
+     * The folder where flow will put TS API files for client projects.
+     */
+    public var generatedTsFolder: File = File(project.projectDir, "frontend/generated")
 
     /**
      * The node.js version to be used when node.js is installed automatically by
@@ -157,6 +190,21 @@ public open class VaadinFlowPluginExtension(project: Project) {
         val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
         if (productionModeProperty != null) {
             productionMode = productionModeProperty
+        }
+
+        val eagerServerLoadProperty: Boolean? = project.getBooleanProperty("vaadin.eagerServerLoad")
+        if (eagerServerLoadProperty != null) {
+            eagerServerLoad = eagerServerLoadProperty
+        }
+
+        val useDeprecatedV14BootstrappingProperty: Boolean? = project.getBooleanProperty("vaadin.useDeprecatedV14Bootstrapping")
+        if (useDeprecatedV14BootstrappingProperty != null) {
+            useDeprecatedV14Bootstrapping = useDeprecatedV14BootstrappingProperty
+        }
+
+        val pnpmEnableProperty: Boolean? = project.getBooleanProperty(Constants.SERVLET_PARAMETER_ENABLE_PNPM)
+        if (pnpmEnableProperty != null) {
+            pnpmEnable = pnpmEnableProperty
         }
     }
 

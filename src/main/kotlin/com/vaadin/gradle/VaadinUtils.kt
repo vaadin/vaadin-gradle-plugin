@@ -19,7 +19,6 @@ import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
-import com.vaadin.flow.server.scanner.ReflectionsClassFinder
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
