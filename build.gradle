@@ -25,7 +25,7 @@ plugins {
 	id 'maven-publish'
     id 'idea'
     id 'com.gradle.plugin-publish' version '0.11.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
 }
 
 /***********************************************************************************************************************
@@ -36,7 +36,7 @@ plugins {
 
 defaultTasks 'jar'
 group 'com.vaadin'
-version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.5.1-SNAPSHOT'
+version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.17.0-SNAPSHOT'
 archivesBaseName = 'vaadin-gradle-plugin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -74,13 +74,13 @@ repositories {
 }
 
 dependencies {
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0")
-    compile("com.vaadin:flow-server:4.0.0")
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
+    compile("com.vaadin:flow-server:4.0.2")
     compile("org.reflections:reflections:0.9.11")
-    compile("org.zeroturnaround:zt-exec:1.11")
+    compile("org.zeroturnaround:zt-exec:1.12")
 
     testCompile("junit:junit:4.12")
-    testCompile("org.jetbrains.kotlin:kotlin-test:1.4.0")
+    testCompile("org.jetbrains.kotlin:kotlin-test:1.4.10")
 }
 
 idea {
@@ -163,9 +163,9 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://vaadin.com'
+    website = 'https://github.com/vaadin/vaadin-gradle-plugin'
     vcsUrl = 'https://github.com/vaadin/vaadin-gradle-plugin'
-    description = 'Build Vaadin 14 applications with Gradle'
+    description = 'Build Vaadin applications with Gradle. Please follow the link below to learn which Plugin version to use with particular Vaadin version. Vaadin recommends using the latest Vaadin LTS version.'
     tags = ['vaadin']
     plugins {
         vaadinPlugin {
@@ -207,4 +207,8 @@ functionalTest {
     testLogging {
         info.events "passed", "skipped", "failed"
     }
+}
+
+kotlin {
+    explicitApi()
 }

@@ -25,7 +25,7 @@ import org.gradle.api.tasks.bundling.Jar
  * The main class of the Vaadin Gradle Plugin.
  * @author mavi@vaadin.com
  */
-class VaadinPlugin : Plugin<Project> {
+public class VaadinPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         // we need Java Plugin conventions so that we can ensure the order of tasks
         project.pluginManager.apply(JavaPlugin::class.java)

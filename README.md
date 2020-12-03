@@ -33,15 +33,19 @@ plugins {
 }
 ```
 
-Compatibility chart:
+### Compatibility chart
+
+Please follow this chart to learn which Plugin version to use with particular Vaadin version.
+Vaadin recommends using the latest Vaadin LTS (Long-Term Support) version.
 
 | Vaadin Gradle Plugin version | Supports |
 |------------------------------|----------|
 | -                            | Vaadin 13 and lower are unsupported |
-| 0.6.0 and lower              | Vaadin 14.1.x and lower |
-| 0.7.0                        | Vaadin 14.2.x |
-| 0.8.0                        | All other Vaadin 14 versions |
-| -                            | Vaadin 17 and higher |
+| 0.6.0 and lower              | Vaadin 14.1.x LTS and lower |
+| 0.7.0                        | Vaadin 14.2.x LTS |
+| 0.14.3.7                     | All other Vaadin 14 LTS versions (recommended) |
+| -                            | Vaadin 15 and 16 are unsupported |
+| 0.17.0.1                     | Vaadin 17 and higher |
 
 ## Tasks
 
@@ -192,6 +196,22 @@ Q: How can I verify that the WAR file has been built correctly for production mo
 
 A: Please read the [Development vs production mode](https://mvysny.github.io/Vaadin-the-missing-guide/)
    guide to find the list of files which need to be present in a production-mode artifact.
+
+## IDE Support
+
+Intellij support for projects using Gradle and Vaadin Gradle Plugin is excellent.
+
+There's a known issue with Eclipse and VSCode. Eclipse+BuildShip may need a workaround
+in order for Gradle projects to work, please see [https://vaadin.com/forum/thread/18241436](https://vaadin.com/forum/thread/18241436) for more info.
+This applies to Visual Studio Code (VSCode) as well since it also uses Eclipse bits and BuildShip
+underneath - see [https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4](https://github.com/mvysny/vaadin14-embedded-jetty-gradle/issues/4)
+for more details.
+
+In order to run your project in production mode from your IDE, simply compile the
+project in production mode, e.g. by using `-Pvaadin.productionMode`. The plugin will
+then produce the `META-INF/VAADIN/config/flow-build-info.json` file with the `"productionMode": true` setting,
+which will then cause Vaadin to start in production mode at runtime. To revert this setting
+back to false, simply recompile your project without the `-Pvaadin.productionMode` switch.
 
 # Developing The Plugin
 
