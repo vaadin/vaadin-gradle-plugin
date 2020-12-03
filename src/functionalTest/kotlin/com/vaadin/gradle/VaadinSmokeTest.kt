@@ -92,7 +92,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         build.find("*.gz", 5..7)
         build.find("*.js", 5..7)
         build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
 
         val tokenFile = File(build, "../config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
@@ -112,7 +112,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         build.find("*.gz", 5..7)
         build.find("*.js", 5..7)
         build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..4)
+        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
     }
 
     /**
