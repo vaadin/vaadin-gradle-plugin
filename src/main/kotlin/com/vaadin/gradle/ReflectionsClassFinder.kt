@@ -40,9 +40,13 @@ public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
 
     init {
         classLoader = URLClassLoader(urls, null) // NOSONAR
-        reflections = Reflections(
-                ConfigurationBuilder().addClassLoader(classLoader)
-                        .setExpandSuperTypes(false).addUrls(*urls))
+        val cfg: ConfigurationBuilder = ConfigurationBuilder().apply {
+            addClassLoader(classLoader)
+            setExpandSuperTypes(false)
+            addUrls(*urls)
+            setInputsFilter { it!!.endsWith(".class") && !it.endsWith("module-info.class") } // only scan .class files: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+        }
+        reflections = Reflections(cfg)
     }
 
     override fun getAnnotatedClasses(
