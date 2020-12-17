@@ -44,7 +44,7 @@ abstract class AbstractGradleTest {
         println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
         val result: BuildResult = GradleRunner.create()
                 .withProjectDir(testProjectDir)
-                .withArguments(args.toList() + "--stacktrace" + "--info")
+                .withArguments(args.toList() + "--stacktrace" + "--debug") // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
                 .withPluginClasspath()
                 .withDebug(true)
                 .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
