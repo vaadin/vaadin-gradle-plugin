@@ -31,7 +31,7 @@ import java.net.URLClassLoader
  *
  * @since 2.0
  */
-public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
+public class ReflectionsClassFinder(vararg urls: URL) : ClassFinder {
     @Transient
     private val classLoader: ClassLoader
 
@@ -49,16 +49,14 @@ public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
         reflections = Reflections(cfg)
     }
 
-    override fun getAnnotatedClasses(
-            clazz: Class<out Annotation?>): Set<Class<*>> {
+    override fun getAnnotatedClasses(clazz: Class<out Annotation>): Set<Class<*>> {
         val classes: MutableSet<Class<*>> = HashSet()
         classes.addAll(reflections.getTypesAnnotatedWith(clazz, true))
         classes.addAll(getAnnotatedByRepeatedAnnotation(clazz))
         return classes
     }
 
-    private fun getAnnotatedByRepeatedAnnotation(
-            annotationClass: AnnotatedElement): Set<Class<*>> {
+    private fun getAnnotatedByRepeatedAnnotation(annotationClass: AnnotatedElement): Set<Class<*>> {
         val repeatableAnnotation = annotationClass
                 .getAnnotation(Repeatable::class.java)
         return if (repeatableAnnotation != null) {
