@@ -147,7 +147,9 @@ fun expectArchiveContainsVaadinWebpackBundle(archive: File,
             "${resourcePackaging}META-INF/VAADIN/config/flow-build-info.json",
             "${resourcePackaging}META-INF/VAADIN/config/stats.json",
             "${resourcePackaging}META-INF/VAADIN/build/*.gz",
-            "${resourcePackaging}META-INF/VAADIN/build/*.js"
+            "${resourcePackaging}META-INF/VAADIN/build/*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
     ) { archive }
     if (!isStandaloneJar) {
         val libPrefix: String = if (isSpringBootJar) "BOOT-INF/lib" else "WEB-INF/lib"
@@ -166,7 +168,7 @@ fun expectArchiveContainsVaadinWebpackBundle(archive: File,
  * the `META-INF/VAADIN/build/` directory.
  */
 fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
-                                                  isSpringBootJar: Boolean) {
+                                             isSpringBootJar: Boolean) {
     val isWar: Boolean = archive.name.endsWith(".war", true)
     val isStandaloneJar: Boolean = !isWar && !isSpringBootJar
     val resourcePackaging: String = when {
@@ -177,7 +179,9 @@ fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
     expectArchiveContains("${resourcePackaging}META-INF/VAADIN/config/flow-build-info.json") { archive }
     expectArchiveDoesntContain("${resourcePackaging}META-INF/VAADIN/config/stats.json",
             "${resourcePackaging}META-INF/VAADIN/build/*.gz",
-            "${resourcePackaging}META-INF/VAADIN/build/*.js"
+            "${resourcePackaging}META-INF/VAADIN/build/*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/webcomponents-*.js",
+            "${resourcePackaging}META-INF/VAADIN/build/webcomponentsjs/bundles/webcomponents-*.js"
     ) { archive }
 
     if (!isStandaloneJar) {

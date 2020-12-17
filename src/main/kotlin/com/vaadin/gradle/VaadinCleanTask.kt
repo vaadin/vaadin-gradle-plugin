@@ -28,8 +28,6 @@ import org.gradle.api.tasks.TaskAction
  * * `webpack.generated.js`
  * * `package-lock.yaml` (used by Vaadin 14.2+ pnpm)
  * * `pnpm-file.js` (used by Vaadin 14.2+ pnpm)
- * * `tsconfig.json` (used by Vaadin 15+)
- * * `types.d.ts` (used by Vaadin 15+)
  *
  * Doesn't delete `webpack.config.js` since it is intended to contain
  * user-specific code. See https://github.com/vaadin/vaadin-gradle-plugin/issues/43
@@ -42,8 +40,7 @@ import org.gradle.api.tasks.TaskAction
 public open class VaadinCleanTask : DefaultTask() {
     init {
         group = "Vaadin"
-        description = "Cleans the project completely and removes node_modules, webpack.generated.js, " +
-                      "tsconfig.json, types.d.ts, pnpm-lock.yaml, pnpmfile.js, package*.json and webpack.*.js"
+        description = "Cleans the project completely and removes node_modules, package*.json and webpack.*.js"
 
         dependsOn("clean")
     }
@@ -55,9 +52,7 @@ public open class VaadinCleanTask : DefaultTask() {
                 "${project.projectDir}/package-lock.json",
                 "${project.projectDir}/webpack.generated.js",
                 "${project.projectDir}/pnpm-lock.yaml", // used by Vaadin 14.2+ pnpm
-                "${project.projectDir}/pnpmfile.js", // used by Vaadin 14.2+ pnpm
-                "${project.projectDir}/tsconfig.json", // used by Vaadin 15+
-                "${project.projectDir}/types.d.ts" // used by Vaadin 15+
+                "${project.projectDir}/pnpmfile.js" // used by Vaadin 14.2+ pnpm
         )
     }
 }

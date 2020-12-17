@@ -31,7 +31,13 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                 
                 dependencies {
                     compile project(':lib')
-                    compile("com.vaadin:vaadin-core:$vaadin17Version")
+                    compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                        ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                         "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                         "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                                .forEach { group -> exclude(group: group) }
+                    }
                 }
 
                 vaadin {
@@ -74,7 +80,13 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                 
                 dependencies {
                     compile project(':lib')
-                    compile("com.vaadin:vaadin-core:$vaadin17Version")
+                    compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                        ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                         "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                         "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                                .forEach { group -> exclude(group: group) }
+                    }
                 }
 
                 vaadin {
