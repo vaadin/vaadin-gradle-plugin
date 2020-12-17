@@ -50,19 +50,16 @@ public class ReflectionsClassFinder(vararg urls: URL) : ClassFinder {
     }
 
     override fun getAnnotatedClasses(clazz: Class<out Annotation>): Set<Class<*>> {
-        val classes: MutableSet<Class<*>> = HashSet()
+        val classes: MutableSet<Class<*>> = mutableSetOf()
         classes.addAll(reflections.getTypesAnnotatedWith(clazz, true))
         classes.addAll(getAnnotatedByRepeatedAnnotation(clazz))
         return classes
     }
 
     private fun getAnnotatedByRepeatedAnnotation(annotationClass: AnnotatedElement): Set<Class<*>> {
-        val repeatableAnnotation = annotationClass
-                .getAnnotation(Repeatable::class.java)
-        return if (repeatableAnnotation != null) {
-            reflections.getTypesAnnotatedWith(
-                    repeatableAnnotation.value.java, true)
-        } else emptySet()
+        val repeatableAnnotation: Repeatable = annotationClass.getAnnotation(Repeatable::class.java)
+            ?: return emptySet()
+        return reflections.getTypesAnnotatedWith(repeatableAnnotation.value.java, true)
     }
 
     override fun getResource(name: String): URL? = classLoader.getResource(name)
