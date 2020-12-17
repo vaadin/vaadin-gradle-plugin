@@ -31,7 +31,7 @@ import java.net.URLClassLoader
  *
  * @since 2.0
  */
-public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
+public class ReflectionsClassFinder(vararg urls: URL) : ClassFinder {
     @Transient
     private val classLoader: ClassLoader
 
@@ -40,27 +40,26 @@ public class ReflectionsClassFinder(vararg urls: URL?) : ClassFinder {
 
     init {
         classLoader = URLClassLoader(urls, null) // NOSONAR
-        reflections = Reflections(
-                ConfigurationBuilder().addClassLoader(classLoader)
-                        .setExpandSuperTypes(false).addUrls(*urls))
+        val cfg: ConfigurationBuilder = ConfigurationBuilder().apply {
+            addClassLoader(classLoader)
+            setExpandSuperTypes(false)
+            addUrls(*urls)
+            setInputsFilter { it!!.endsWith(".class") && !it.endsWith("module-info.class") } // only scan .class files: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+        }
+        reflections = Reflections(cfg)
     }
 
-    override fun getAnnotatedClasses(
-            clazz: Class<out Annotation?>): Set<Class<*>> {
-        val classes: MutableSet<Class<*>> = HashSet()
+    override fun getAnnotatedClasses(clazz: Class<out Annotation>): Set<Class<*>> {
+        val classes: MutableSet<Class<*>> = mutableSetOf()
         classes.addAll(reflections.getTypesAnnotatedWith(clazz, true))
         classes.addAll(getAnnotatedByRepeatedAnnotation(clazz))
         return classes
     }
 
-    private fun getAnnotatedByRepeatedAnnotation(
-            annotationClass: AnnotatedElement): Set<Class<*>> {
-        val repeatableAnnotation = annotationClass
-                .getAnnotation(Repeatable::class.java)
-        return if (repeatableAnnotation != null) {
-            reflections.getTypesAnnotatedWith(
-                    repeatableAnnotation.value.java, true)
-        } else emptySet()
+    private fun getAnnotatedByRepeatedAnnotation(annotationClass: AnnotatedElement): Set<Class<*>> {
+        val repeatableAnnotation: Repeatable = annotationClass.getAnnotation(Repeatable::class.java)
+            ?: return emptySet()
+        return reflections.getTypesAnnotatedWith(repeatableAnnotation.value.java, true)
     }
 
     override fun getResource(name: String): URL? = classLoader.getResource(name)
