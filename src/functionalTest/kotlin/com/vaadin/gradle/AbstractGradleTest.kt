@@ -21,7 +21,7 @@ abstract class AbstractGradleTest {
     /**
      * The testing Gradle project. Automatically deleted after every test.
      * Don't use TemporaryFolder JUnit `@Rule` since it will always delete the folder afterwards,
-     * making it impossible to investigate the folder.
+     * making it impossible to investigate the folder in case of failure.
      */
     lateinit var testProject: TestProject
 
@@ -32,6 +32,7 @@ abstract class AbstractGradleTest {
 
     @After
     fun deleteTestProjectFolder() {
+        // comment out if a test is failing and you need to investigate the project files.
         testProject.delete()
     }
 
