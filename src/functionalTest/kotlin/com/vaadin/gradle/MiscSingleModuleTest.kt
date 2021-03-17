@@ -378,4 +378,26 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         expect(true, result.output) { result.output.contains("Could not download http://localhost:8080/v12.10.0/") }
         expect(true, result.output) { result.output.contains("Could not download Node.js") }
     }
+
+    @Test
+    fun testReflectionsException() {
+        buildFile.writeText("""
+            plugins {
+                id 'com.vaadin'
+            }
+            repositories {
+                mavenCentral()
+                jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
+            }
+            dependencies {
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
+            }
+            vaadin {
+                pnpmEnable = true
+            }
+        """)
+        val result = testProject.build("vaadinPrepareFrontend", debug = true)
+        assert(false) { result.output.contains("org.reflections.ReflectionsException") }
+    }
 }

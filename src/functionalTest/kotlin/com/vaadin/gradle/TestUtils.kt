@@ -255,13 +255,13 @@ class TestProject {
      * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
      * You can suppress this functionality by setting [checkTasksSuccessful] to false.
      */
-    fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
+    fun build(vararg args: String, checkTasksSuccessful: Boolean = true, debug: Boolean = false): BuildResult {
         expect(true, "$buildFile doesn't exist, can't run build") { buildFile.exists() }
 
         println("$dir/./gradlew ${args.joinToString(" ")}")
         val result: BuildResult = GradleRunner.create()
             .withProjectDir(dir)
-            .withArguments(args.toList() + "--stacktrace" + "--debug") // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+            .withArguments(args.toList() + "--stacktrace" + "--console=plain" + (if (debug) "--debug" else "--info"))
             .withPluginClasspath()
             .withDebug(true)
             .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
