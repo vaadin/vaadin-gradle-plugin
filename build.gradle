@@ -210,3 +210,9 @@ functionalTest {
 kotlin {
     explicitApi()
 }
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
