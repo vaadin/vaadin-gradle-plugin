@@ -32,17 +32,6 @@ public open class VaadinFlowPluginExtension(project: Project) {
     public var productionMode: Boolean = false
 
     /**
-     * The plugin will generate additional resource files here. These files need
-     * to be present on the classpath, in order for Vaadin to be
-     * able to run, both in dev mode and in the production mode. The plugin will automatically register
-     * this as an additional resource folder, which should then be picked up by the IDE.
-     * That will allow the app to run for example in Intellij with Tomcat.
-     *
-     * For example the `flow-build-info.json` goes here. Also see [webpackOutputDirectory].
-     */
-    public var buildOutputDirectory: File = File(project.buildDir, "vaadin-generated")
-
-    /**
      * The folder where webpack should output index.js and other generated
      * files. Defaults to `null` which will use the auto-detected value of
      * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/webapp/`.
@@ -176,10 +165,13 @@ public open class VaadinFlowPluginExtension(project: Project) {
 
     /**
      * Defines the output directory for generated non-served resources, such as
-     * the token file. Defaults to `null` which will use the auto-detected value of
-     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/`.
+     * the token file. Defaults to `null` which will use the `build/vaadin-generated` folder.
+     *
+     * The plugin will automatically register
+     * this as an additional resource folder, which should then be picked up by the IDE.
+     * That will allow the app to run for example in Intellij with Tomcat.
      */
-    public var resourceOutputDirectory: File? = null
+    public var resourceOutputDirectory: File = File(project.buildDir, "vaadin-generated")
 
     public companion object {
         public fun get(project: Project): VaadinFlowPluginExtension =
@@ -222,7 +214,6 @@ public open class VaadinFlowPluginExtension(project: Project) {
 
     override fun toString(): String = "VaadinFlowPluginExtension(" +
             "productionMode=$productionMode, " +
-            "buildOutputDirectory=$buildOutputDirectory, " +
             "webpackOutputDirectory=$webpackOutputDirectory, " +
             "npmFolder=$npmFolder, " +
             "webpackTemplate='$webpackTemplate', " +

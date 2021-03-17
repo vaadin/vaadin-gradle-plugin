@@ -1,6 +1,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.plugin.base.PluginAdapterBuild
+import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -121,7 +122,7 @@ internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
     override fun requireHomeNodeExec(): Boolean = extension.requireHomeNodeExec
 
     override fun servletResourceOutputDirectory(): File =
-        requireNotNull(extension.resourceOutputDirectory) { "VaadinFlowPluginExtension.autoconfigure() was not called" }
+        File(extension.resourceOutputDirectory, Constants.VAADIN_SERVLET_RESOURCES)
 
     override fun webpackOutputDirectory(): File =
         requireNotNull(extension.webpackOutputDirectory) { "VaadinFlowPluginExtension.autoconfigure() was not called" }

@@ -75,7 +75,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         // vaadinBuildFrontend should NOT have been executed automatically
         result.expectTaskNotRan("vaadinBuildFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(false, build.toString()) { build.exists() }
     }
 
@@ -85,14 +85,14 @@ class VaadinSmokeTest : AbstractGradleTest() {
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
         build.find("*.gz", 5..10)
         build.find("*.js", 5..10)
 
-        val tokenFile = File(build, "../config/flow-build-info.json")
+        val tokenFile = File(testProjectDir, "build/resources/main/META-INF/VAADIN/config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
-        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
+        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
     }
 
     @Test
@@ -102,14 +102,23 @@ class VaadinSmokeTest : AbstractGradleTest() {
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
         build.find("*.gz", 5..10)
         build.find("*.js", 5..10)
-        val tokenFile = File(build, "../config/flow-build-info.json")
+        val tokenFile = File(testProjectDir, "build/resources/main/META-INF/VAADIN/config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
         expect(true, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
+    }
+
+    @Test
+    fun testBuildWarBuildsFrontendInProductionMode() {
+        val result: BuildResult = build("-Pvaadin.productionMode", "build")
+        result.expectTaskSucceded("vaadinPrepareFrontend")
+        result.expectTaskSucceded("vaadinBuildFrontend")
+        File(testProjectDir, "build/libs").find("*.war", 1..1)
+        // @todo mavi check WAR contents
     }
 
     /**
