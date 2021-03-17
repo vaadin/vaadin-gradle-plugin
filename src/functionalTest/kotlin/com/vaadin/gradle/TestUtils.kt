@@ -236,7 +236,12 @@ class TestProject {
      * Deletes the project directory and nukes all project files.
      */
     fun delete() {
-        dir.toPath().deleteRecursively()
+        // don't throw an exception if the folder fails to be deleted. The folder
+        // is temporary anyway, and Windows tends to randomly fail with
+        // java.nio.file.FileSystemException: C:\Users\RUNNER~1\AppData\Local\Temp\junit-vaadin-gradle-plugin8993583259614232822.tmp\lib\build\libs\lib.jar: The process cannot access the file because it is being used by another process.
+        if (!dir.deleteRecursively()) {
+            println("Failed to delete temp project folder $dir")
+        }
     }
 
     /**
