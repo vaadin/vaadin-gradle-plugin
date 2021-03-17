@@ -17,13 +17,12 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.BuildTask
+import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
-import java.io.IOException
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.PathMatcher
-import java.nio.file.Paths
 import java.util.zip.ZipInputStream
 import kotlin.test.expect
 import kotlin.test.fail
@@ -195,16 +194,6 @@ fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
     }
 }
 
-fun File.touch(name: String): File {
-    check(exists()) { "$this doesn't exist" }
-    check(isDirectory) { "$this isn't a directory" }
-    val file = File(this, name)
-    if (!file.exists()) {
-        file.writeText("")
-    }
-    return file
-}
-
 /**
  * Operating system-related utilities.
  */
@@ -217,6 +206,99 @@ object OsUtils {
     val isWindows: Boolean get() = osName.startsWith("Windows")
 }
 
-fun File.newFolder(folder: String) {
-    Files.createDirectories(File(absoluteFile, folder).toPath())
+fun File.newFolder(folder: String): File {
+    val newFolder = Files.createDirectories(File(absoluteFile, folder).toPath())
+    return newFolder.toFile()
+}
+
+/**
+ * A testing Gradle project, created in a temporary directory.
+ * Used to test the plugin. Contains helpful utility methods to manipulate folders
+ * and files in the project.
+ */
+class TestProject {
+    /**
+     * The project root dir.
+     */
+    val dir: File = createTempDir("junit-vaadin-gradle-plugin")
+
+    /**
+     * The main `build.gradle` file.
+     */
+    val buildFile: File get() = File(dir, "build.gradle")
+
+    val settingsFile: File get() = File(dir, "settings.gradle")
+
+    override fun toString(): String = "TestProject(dir=$dir)"
+    fun delete() {
+        dir.deleteRecursively()
+    }
+
+    fun newFolder(folder: String): File = dir.newFolder(folder)
+
+    /**
+     * Runs build on this project; a `build.gradle` [buildFile] is expected
+     * to be located there.
+     *
+     * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
+     * You can suppress this functionality by setting [checkTasksSuccessful] to false.
+     */
+    fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
+        expect(true, "$buildFile doesn't exist, can't run build") { buildFile.exists() }
+
+        println("$dir/./gradlew ${args.joinToString(" ")}")
+        val result: BuildResult = GradleRunner.create()
+            .withProjectDir(dir)
+            .withArguments(args.toList() + "--stacktrace" + "--debug") // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+            .withPluginClasspath()
+            .withDebug(true)
+            .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
+            .withGradleVersion("5.0")
+            .build()
+
+        if (checkTasksSuccessful) {
+            for (arg: String in args) {
+                val isTask: Boolean = !arg.startsWith("-")
+                if (isTask) {
+                    result.expectTaskSucceded(arg)
+                }
+            }
+        }
+        return result
+    }
+
+    /**
+     * Creates a file in the temporary test project.
+     */
+    fun newFile(fileNameWithPath: String, contents: String = ""): File {
+        val file = File(dir, fileNameWithPath)
+        Files.createDirectories(file.parentFile.toPath())
+        file.writeText(contents)
+        return file
+    }
+
+    /**
+     * Looks up a [folder] in the project and returns it.
+     */
+    fun folder(folder: String): File {
+        val dir = File(dir, folder)
+        check(dir.exists()) { "$dir doesn't exist" }
+        check(dir.isDirectory) { "$dir isn't a directory" }
+        return dir
+    }
+
+    /**
+     * Returns the WAR file built. Fails if there's no war file in `build/libs`.
+     */
+    val builtWar: File get() {
+        val war = folder("build/libs").find("*.war").first()
+        expect(true, "$war is missing") { war.isFile }
+        return war
+    }
+
+    val builtJar: File get() {
+        val jar: File = folder("build/libs").find("*.jar").first()
+        expect(true, "$jar is missing") { jar.isFile }
+        return jar
+    }
 }

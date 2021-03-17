@@ -40,12 +40,12 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                 }
             }
         """.trimIndent())
-        testProjectDir.newFolder("lib")
+        testProject.newFolder("lib")
         testProject.newFolder("web")
 
         // the vaadinPrepareFrontend task would work erratically because of dependent jars not yet produced,
         // or it would blow up with FileNotFoundException straight away.
-        build("web:vaadinPrepareFrontend")
+        testProject.build("web:vaadinPrepareFrontend")
     }
 
     /**
@@ -87,7 +87,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
         testProject.newFolder("lib")
         testProject.newFolder("web")
 
-        val b: BuildResult = build("-Pvaadin.productionMode", "vaadinBuildFrontend", checkTasksSuccessful = false)
+        val b: BuildResult = testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend", checkTasksSuccessful = false)
         b.expectTaskSucceded("web:vaadinPrepareFrontend")
         b.expectTaskSucceded("web:vaadinBuildFrontend")
         expect(null) { b.task(":lib:vaadinPrepareFrontend") }

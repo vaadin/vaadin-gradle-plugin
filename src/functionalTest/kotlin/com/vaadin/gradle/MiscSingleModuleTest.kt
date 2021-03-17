@@ -36,7 +36,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
 
         // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
         // extension would crash even this very simple build.
-        build("tasks")
+        testProject.build("tasks")
     }
 
     /**
@@ -70,12 +70,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "build")
+        val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         build.expectTaskNotRan("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
+        val war: File = testProject.builtWar
         expectArchiveDoesntContainVaadinWebpackBundle(war, false)
     }
 
@@ -110,12 +109,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         // vaadinBuildFrontend should have been executed automatically
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
+        val war: File = testProject.builtWar
         expectArchiveContainsVaadinWebpackBundle(war, false)
     }
 
@@ -156,12 +154,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "build")
+        val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
+        val jar: File = testProject.builtJar
         expectArchiveDoesntContainVaadinWebpackBundle(jar, false)
     }
 
@@ -202,12 +199,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
+        val jar: File = testProject.builtJar
         expectArchiveContainsVaadinWebpackBundle(jar, false)
     }
 
@@ -267,7 +263,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """)
 
         // need to create the Application.java file otherwise bootJar will fail
-        createProjectFile("src/main/java/com/example/demo/DemoApplication.java", """
+        testProject.newFile("src/main/java/com/example/demo/DemoApplication.java", """
             package com.example.demo;
             
             import org.springframework.boot.SpringApplication;
@@ -284,7 +280,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """.trimIndent())
 
         // AppShell.java file creation
-        createProjectFile("src/main/java/com/example/demo/AppShell.java", """
+        testProject.newFile("src/main/java/com/example/demo/AppShell.java", """
             package com.example.demo;
             
             import com.vaadin.flow.component.page.AppShellConfigurator;
@@ -295,12 +291,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
+        val jar: File = testProject.builtJar
         expectArchiveContainsVaadinWebpackBundle(jar, true)
     }
 
@@ -358,12 +353,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
+        val war: File = testProject.builtWar
         expectArchiveContainsVaadinWebpackBundle(war, false)
     }
 
@@ -399,7 +393,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """)
 
         val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProjectDir)
+                .withProjectDir(testProject.dir)
                 .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
                 .withPluginClasspath()
                 .buildAndFail()

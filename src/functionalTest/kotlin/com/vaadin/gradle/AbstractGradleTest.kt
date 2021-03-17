@@ -1,7 +1,5 @@
 package com.vaadin.gradle
 
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
 import org.junit.After
 import org.junit.Before
 import java.io.File
@@ -25,65 +23,23 @@ abstract class AbstractGradleTest {
      * Don't use TemporaryFolder JUnit `@Rule` since it will always delete the folder afterwards,
      * making it impossible to investigate the folder.
      */
-    lateinit var testProject: File
+    lateinit var testProject: TestProject
 
     @Before
     fun createTestProjectFolder() {
-        testProject = createTempDir("junit-vaadin-gradle-plugin")
+        testProject = TestProject()
     }
 
     @After
     fun deleteTestProjectFolder() {
-        testProject.deleteRecursively()
+        testProject.delete()
     }
 
-    /**
-     * The testing Gradle project root.
-     */
-    protected val testProjectDir: File get() = testProject
-    protected val buildFile: File get() = File(testProjectDir, "build.gradle")
-    protected val settingsFile: File get() = File(testProjectDir, "settings.gradle")
-
-    /**
-     * Runs build on [testProjectDir]; a `build.gradle` [buildFile] is expected
-     * to be located there.
-     *
-     * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
-     * You can suppress this functionality by setting [checkTasksSuccessful] to false.
-     */
-    protected fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
-        println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
-        val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProjectDir)
-                .withArguments(args.toList() + "--stacktrace" + "--debug") // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
-                .withPluginClasspath()
-                .withDebug(true)
-                .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
-                .withGradleVersion("5.0")
-                .build()
-
-        if (checkTasksSuccessful) {
-            for (arg: String in args) {
-                val isTask: Boolean = !arg.startsWith("-")
-                if (isTask) {
-                    result.expectTaskSucceded(arg)
-                }
-            }
-        }
-        return result
-    }
+    protected val buildFile: File get() = testProject.buildFile
+    protected val settingsFile: File get() = testProject.settingsFile
 
     @Before
     fun dumpEnvironment() {
-        println("Test project directory: $testProjectDir")
-    }
-
-    /**
-     * Creates a file in the temporary test project.
-     */
-    protected fun createProjectFile(fileNameWithPath: String, contents: String) {
-        val file = File(testProjectDir, fileNameWithPath)
-        Files.createDirectories(file.parentFile.toPath())
-        file.writeText(contents)
+        println("Test project directory: ${testProject.dir}")
     }
 }
