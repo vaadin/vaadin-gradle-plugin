@@ -22,7 +22,9 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id 'com.vaadin'
             }
             repositories {
+                mavenCentral()
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             // test that we can configure both plugins
             vaadin {
@@ -51,6 +53,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id("com.vaadin")
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
@@ -90,6 +93,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id("com.vaadin")
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
@@ -127,6 +131,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id("com.vaadin")
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
@@ -172,6 +177,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id("com.vaadin")
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
@@ -227,6 +233,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             
             repositories {
                 mavenCentral()
+                jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             
@@ -314,6 +321,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id("com.vaadin")
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
@@ -379,7 +387,9 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 id 'com.vaadin'
             }
             repositories {
+                mavenCentral()
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 17
