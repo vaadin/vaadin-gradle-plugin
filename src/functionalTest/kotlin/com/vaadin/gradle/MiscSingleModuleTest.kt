@@ -367,9 +367,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     @Test
     fun testNodeDownload() {
         // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
-        if (!FrontendUtils.getVaadinHomeDirectory().deleteRecursively()) {
-            throw IOException("Failed to delete ${FrontendUtils.getVaadinHomeDirectory()}")
-        }
+        FrontendUtils.getVaadinHomeDirectory().toPath().deleteRecursively()
 
         buildFile.writeText("""
             plugins {

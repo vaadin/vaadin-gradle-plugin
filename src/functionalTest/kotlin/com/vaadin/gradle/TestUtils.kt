@@ -20,8 +20,10 @@ import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
+import java.io.IOException
 import java.nio.file.FileSystems
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.PathMatcher
 import java.util.zip.ZipInputStream
 import kotlin.test.expect
@@ -311,4 +313,12 @@ class TestProject {
         expect(true, "$jar is missing") { jar.isFile }
         return jar
     }
+}
+
+/**
+ * Similar to [File.deleteRecursively] but throws informative [IOException] instead of
+ * just returning false on error. uses Java 8 [Files.deleteIfExists] to delete files and folders.
+ */
+fun Path.deleteRecursively() {
+    toFile().walkBottomUp().forEach { Files.deleteIfExists(it.toPath()) }
 }
