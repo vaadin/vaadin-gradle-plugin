@@ -45,6 +45,10 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             dependencies {
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
+                // @todo mavi see https://github.com/vaadin/flow/issues/10312 for more details
+                compile("com.vaadin:fusion-endpoint:7.0.0.alpha1")
+                providedCompile("javax.servlet:javax.servlet-api:3.1.0")
+                compile("org.slf4j:slf4j-simple:1.7.30")
             }
             vaadin {
                 pnpmEnable = true
@@ -114,6 +118,22 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun testBuildWarBuildsFrontendInProductionMode() {
+        createProjectFile("src/main/java/org/vaadin/example/MainView.java", """
+            package org.vaadin.example;
+
+            import com.vaadin.flow.component.html.Span;
+            import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+            import com.vaadin.flow.router.Route;
+
+            @Route("")
+            public class MainView extends VerticalLayout {
+
+                public MainView() {
+                    add(new Span("It works!"));
+                }
+            }
+        """.trimIndent())
+
         val result: BuildResult = build("-Pvaadin.productionMode", "build")
         result.expectTaskSucceded("vaadinPrepareFrontend")
         result.expectTaskSucceded("vaadinBuildFrontend")

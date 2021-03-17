@@ -7,7 +7,6 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
 import java.io.IOException
-import java.nio.file.Files
 import kotlin.test.expect
 
 class MiscSingleModuleTest : AbstractGradleTest() {
@@ -268,11 +267,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """)
 
         // need to create the Application.java file otherwise bootJar will fail
-        val appPkg = File(testProjectDir, "src/main/java/com/example/demo")
-        Files.createDirectories(appPkg.toPath())
-
-        // DemoApplication.java file creation
-        File(appPkg, "DemoApplication.java").writeText("""
+        createProjectFile("src/main/java/com/example/demo/DemoApplication.java", """
             package com.example.demo;
             
             import org.springframework.boot.SpringApplication;
@@ -289,7 +284,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """.trimIndent())
 
         // AppShell.java file creation
-        File(appPkg, "AppShell.java").writeText("""
+        createProjectFile("src/main/java/com/example/demo/AppShell.java", """
             package com.example.demo;
             
             import com.vaadin.flow.component.page.AppShellConfigurator;

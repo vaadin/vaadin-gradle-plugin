@@ -5,6 +5,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.After
 import org.junit.Before
 import java.io.File
+import java.nio.file.Files
 
 /**
  * Prepares a test Gradle project - creates a temp dir for the [testProject] and allow you to run gradle
@@ -75,5 +76,14 @@ abstract class AbstractGradleTest {
     @Before
     fun dumpEnvironment() {
         println("Test project directory: $testProjectDir")
+    }
+
+    /**
+     * Creates a file in the temporary test project.
+     */
+    protected fun createProjectFile(fileNameWithPath: String, contents: String) {
+        val file = File(testProjectDir, fileNameWithPath)
+        Files.createDirectories(file.parentFile.toPath())
+        file.writeText(contents)
     }
 }
