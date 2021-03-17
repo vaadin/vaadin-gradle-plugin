@@ -35,6 +35,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
     fun setup() {
         buildFile.writeText("""
             plugins {
+                id 'war'
                 id 'com.vaadin'
             }
             repositories {
@@ -60,8 +61,10 @@ class VaadinSmokeTest : AbstractGradleTest() {
     fun testPrepareFrontend() {
         build("vaadinPrepareFrontend")
 
-        val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
-        expect(true, generatedFlowBuildInfoJson.toString()) { generatedFlowBuildInfoJson.isFile }
+        val tokenFile = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
+        expect(true, tokenFile.toString()) { tokenFile.isFile }
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
     }
 
     @Test
@@ -104,6 +107,9 @@ class VaadinSmokeTest : AbstractGradleTest() {
         expect(true) { build.listFiles()!!.isNotEmpty() }
         build.find("*.gz", 5..10)
         build.find("*.js", 5..10)
+        val tokenFile = File(build, "../config/flow-build-info.json")
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        expect(true, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
     }
 
     /**
@@ -125,7 +131,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
      * Tests that VaadinClean task removes TS-related files.
      */
     @Test
-    fun vaadinCleanDeleteTsFiles() {
+    fun vaadinCleanDeletesTsFiles() {
         val tsconfigJson = testProjectDir.touch("tsconfig.json")
         val typesDTs = testProjectDir.touch("types.d.ts")
         build("vaadinClean")

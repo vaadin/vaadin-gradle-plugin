@@ -1,6 +1,5 @@
 package com.vaadin.gradle
 
-import com.vaadin.flow.plugin.base.BuildFrontendUtil
 import com.vaadin.flow.plugin.base.PluginAdapterBuild
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
 import org.gradle.api.Project
