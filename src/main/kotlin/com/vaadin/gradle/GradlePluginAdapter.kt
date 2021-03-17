@@ -52,7 +52,9 @@ internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
             check(it.exists()) { "$it doesn't exist" }
         }
 
-        val classFinder = BuildFrontendUtil.getClassFinder(apis.map { it.absolutePath })
+//        val classFinder = BuildFrontendUtil.getClassFinder(apis.map { it.absolutePath })
+        // temporarily use patched ReflectionsClassFinder until https://github.com/vaadin/vaadin-gradle-plugin/issues/99 is fixed
+        val classFinder = ReflectionsClassFinder(*apis.map { it.toURI().toURL() }.toTypedArray())
 
         // sanity check that the project has flow-server.jar as a dependency
         try {
