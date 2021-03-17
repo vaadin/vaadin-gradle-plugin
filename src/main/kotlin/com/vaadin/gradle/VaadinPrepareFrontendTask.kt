@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.plugin.base.BuildFrontendUtil
+import com.vaadin.flow.server.frontend.FrontendTools
 import org.gradle.api.DefaultTask
 import org.gradle.api.Task
 import org.gradle.api.artifacts.ProjectDependency
@@ -55,6 +56,14 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
         logger.info("Running the vaadinPrepareFrontend task with effective configuration $extension")
         val adapter = GradlePluginAdapter(project)
         val tokenFile = BuildFrontendUtil.propagateBuildInfo(adapter)
+
+        if (extension.requireHomeNodeExec) {
+            // make sure the frontend tools are installed properly from configured URL.
+            // fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/76
+            val tools: FrontendTools = extension.createFrontendTools()
+            tools.forceAlternativeNodeExecutable()
+        }
+
         logger.info("Generated token file $tokenFile")
         BuildFrontendUtil.prepareFrontend(adapter)
     }

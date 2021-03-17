@@ -398,6 +398,6 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """)
         val result = testProject.build("vaadinPrepareFrontend", debug = true)
-        assert(false) { result.output.contains("org.reflections.ReflectionsException") }
+        expect(false) { result.output.contains("org.reflections.ReflectionsException") }
     }
 }
