@@ -56,7 +56,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -98,7 +98,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -136,7 +136,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
             
                 compile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
@@ -181,7 +181,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
             
                 compile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
@@ -231,7 +231,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             
             ext {
-                set('vaadinVersion', "$vaadin17Version")
+                set('vaadinVersion', "$vaadinVersion")
             }
             
             configurations {
@@ -319,7 +319,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
 
                 // logging
@@ -383,7 +383,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
             }
             vaadin {
                 pnpmEnable = true

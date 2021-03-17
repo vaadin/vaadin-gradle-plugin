@@ -43,7 +43,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             dependencies {
                 // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
             }
             vaadin {
                 pnpmEnable = true
