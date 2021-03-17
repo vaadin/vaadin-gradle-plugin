@@ -263,7 +263,7 @@ class TestProject {
             .withProjectDir(dir)
             .withArguments(args.toList() + "--stacktrace" + "--console=plain" + (if (debug) "--debug" else "--info"))
             .withPluginClasspath()
-            .withDebug(true)
+            .withDebug(debug)
             .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
             .withGradleVersion("5.0")
             .build()
