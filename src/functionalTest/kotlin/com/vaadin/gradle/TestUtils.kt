@@ -206,13 +206,9 @@ object OsUtils {
     val isWindows: Boolean get() = osName.startsWith("Windows")
 }
 
-fun File.newFolder(folder: String): File {
-    val newFolder = Files.createDirectories(File(absoluteFile, folder).toPath())
-    return newFolder.toFile()
-}
-
 /**
  * A testing Gradle project, created in a temporary directory.
+ *
  * Used to test the plugin. Contains helpful utility methods to manipulate folders
  * and files in the project.
  */
@@ -227,14 +223,28 @@ class TestProject {
      */
     val buildFile: File get() = File(dir, "build.gradle")
 
+    /**
+     * The main `settings.gradle` file.
+     */
     val settingsFile: File get() = File(dir, "settings.gradle")
 
     override fun toString(): String = "TestProject(dir=$dir)"
+
+    /**
+     * Deletes the project directory and nukes all project files.
+     */
     fun delete() {
         dir.deleteRecursively()
     }
 
-    fun newFolder(folder: String): File = dir.newFolder(folder)
+    /**
+     * Creates a new [folder] in the project folder. Does nothing if the folder
+     * already exists.
+     */
+    fun newFolder(folder: String): File {
+        val newFolder = Files.createDirectories(File(dir.absoluteFile, folder).toPath())
+        return newFolder.toFile()
+    }
 
     /**
      * Runs build on this project; a `build.gradle` [buildFile] is expected
