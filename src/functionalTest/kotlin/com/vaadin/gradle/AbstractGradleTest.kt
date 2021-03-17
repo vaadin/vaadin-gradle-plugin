@@ -3,7 +3,6 @@ package com.vaadin.gradle
 import org.junit.After
 import org.junit.Before
 import java.io.File
-import java.nio.file.Files
 
 /**
  * Prepares a test Gradle project - creates a temp dir for the [testProject] and allow you to run gradle

@@ -45,8 +45,6 @@ class VaadinSmokeTest : AbstractGradleTest() {
             }
             dependencies {
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
-                // @todo mavi see https://github.com/vaadin/flow/issues/10312 for more details
-                compile("com.vaadin:fusion-endpoint:7.0.0.alpha1")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
@@ -138,7 +136,8 @@ class VaadinSmokeTest : AbstractGradleTest() {
         result.expectTaskSucceded("vaadinPrepareFrontend")
         result.expectTaskSucceded("vaadinBuildFrontend")
         val war = testProject.builtWar
-        // @todo mavi check WAR contents
+        // no need to check the WAR contents - this is just a smoke test class.
+        // The war contents will be checked thoroughly in MiscSingleModuleTest.
     }
 
     /**

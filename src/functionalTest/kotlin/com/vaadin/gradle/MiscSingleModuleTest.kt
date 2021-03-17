@@ -6,7 +6,6 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
-import java.io.IOException
 import kotlin.test.expect
 
 class MiscSingleModuleTest : AbstractGradleTest() {
@@ -57,12 +56,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-
-                // logging
-                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
             vaadin {
@@ -99,12 +94,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 pnpmEnable = true
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-
-                // logging
-                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
@@ -137,20 +128,16 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 pnpmEnable = true
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
-            
+                compile("org.slf4j:slf4j-simple:1.7.30")
                 compile("javax.servlet:javax.servlet-api:3.1.0")
+
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
                     exclude(module: "javax.websocket-client-api")
                 }
-            
-                // logging
-                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
 
@@ -182,20 +169,16 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 pnpmEnable = true
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
-            
+                compile("org.slf4j:slf4j-simple:1.7.30")
                 compile("javax.servlet:javax.servlet-api:3.1.0")
+
                 compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
                 compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
                     exclude(module: "javax.websocket-client-api")
                 }
-            
-                // logging
-                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
 
@@ -316,12 +299,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-
-                // logging
-                // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
             
@@ -379,7 +358,6 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 17
                 compile("com.vaadin:vaadin-core:$vaadinVersion")
             }
             vaadin {

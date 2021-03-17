@@ -76,6 +76,8 @@ repositories {
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.31")
     compile("com.vaadin:flow-plugin-base:7.0.0.alpha1")
+    // @todo mavi see https://github.com/vaadin/flow/issues/10312 for more details
+    compile("com.vaadin:fusion-endpoint:7.0.0.alpha1")
 
     testCompile("junit:junit:4.12")
     testCompile("org.jetbrains.kotlin:kotlin-test:1.4.31")

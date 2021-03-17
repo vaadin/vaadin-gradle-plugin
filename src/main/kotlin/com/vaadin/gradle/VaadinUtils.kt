@@ -45,7 +45,7 @@ public fun Project.getBooleanProperty(propertyName: String) : Boolean? {
 }
 
 /**
- * Allows Kotlin-based gradle scripts to be configured via
+ * Allows Kotlin-based gradle scripts to be configured via the `vaadin{}` DSL block:
  * ```
  * vaadin {
  *   optimizeBundle = false
