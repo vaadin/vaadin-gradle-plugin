@@ -19,8 +19,11 @@ import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
+import java.io.IOException
 import java.nio.file.FileSystems
+import java.nio.file.Files
 import java.nio.file.PathMatcher
+import java.nio.file.Paths
 import java.util.zip.ZipInputStream
 import kotlin.test.expect
 import kotlin.test.fail
@@ -212,4 +215,8 @@ object OsUtils {
      * True if we're running on Windows, false on Linux, Mac and others.
      */
     val isWindows: Boolean get() = osName.startsWith("Windows")
+}
+
+fun File.newFolder(folder: String) {
+    Files.createDirectories(File(absoluteFile, folder).toPath())
 }

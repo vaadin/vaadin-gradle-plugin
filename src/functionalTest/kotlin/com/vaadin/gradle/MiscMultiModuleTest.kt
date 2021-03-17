@@ -40,7 +40,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
                 }
             }
         """.trimIndent())
-        testProject.newFolder("lib")
+        testProjectDir.newFolder("lib")
         testProject.newFolder("web")
 
         // the vaadinPrepareFrontend task would work erratically because of dependent jars not yet produced,

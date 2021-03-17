@@ -2,9 +2,8 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import java.io.File
 
 /**
@@ -22,15 +21,25 @@ abstract class AbstractGradleTest {
 
     /**
      * The testing Gradle project. Automatically deleted after every test.
+     * Don't use TemporaryFolder JUnit `@Rule` since it will always delete the folder afterwards,
+     * making it impossible to investigate the folder.
      */
-    @Rule
-    @JvmField
-    val testProject = TemporaryFolder()
+    lateinit var testProject: File
+
+    @Before
+    fun createTestProjectFolder() {
+        testProject = createTempDir("junit-vaadin-gradle-plugin")
+    }
+
+    @After
+    fun deleteTestProjectFolder() {
+        testProject.deleteRecursively()
+    }
 
     /**
      * The testing Gradle project root.
      */
-    protected val testProjectDir: File get() = testProject.root
+    protected val testProjectDir: File get() = testProject
     protected val buildFile: File get() = File(testProjectDir, "build.gradle")
     protected val settingsFile: File get() = File(testProjectDir, "settings.gradle")
 
