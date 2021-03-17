@@ -45,7 +45,7 @@ public open class VaadinFlowPluginExtension(project: Project) {
     /**
      * The folder where webpack should output index.js and other generated
      * files. Defaults to `null` which will use the auto-detected value of
-     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/`.
+     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/webapp/`.
      *
      * In the dev mode, the `flow-build-info.json` file is generated here.
      */
@@ -174,6 +174,13 @@ public open class VaadinFlowPluginExtension(project: Project) {
      */
     public var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
 
+    /**
+     * Defines the output directory for generated non-served resources, such as
+     * the token file. Defaults to `null` which will use the auto-detected value of
+     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/`.
+     */
+    public var resourceOutputDirectory: File? = null
+
     public companion object {
         public fun get(project: Project): VaadinFlowPluginExtension =
                 project.extensions.getByType(VaadinFlowPluginExtension::class.java)
@@ -184,7 +191,12 @@ public open class VaadinFlowPluginExtension(project: Project) {
         if (webpackOutputDirectory == null) {
             val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
             val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
-            webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
+            webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_WEBAPP_RESOURCES)
+        }
+        if (resourceOutputDirectory == null) {
+            val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+            val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
+            resourceOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
         }
 
         val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
@@ -223,5 +235,15 @@ public open class VaadinFlowPluginExtension(project: Project) {
             "frontendResourcesDirectory=$frontendResourcesDirectory, " +
             "optimizeBundle=$optimizeBundle, " +
             "pnpmEnable=$pnpmEnable, " +
-            "requireHomeNodeExec=$requireHomeNodeExec)"
+            "requireHomeNodeExec=$requireHomeNodeExec, " +
+            "useDeprecatedV14Bootstrapping=$useDeprecatedV14Bootstrapping, " +
+            "eagerServerLoad=$eagerServerLoad, " +
+            "applicationProperties=$applicationProperties, " +
+            "openApiJsonFile=$openApiJsonFile, " +
+            "javaSourceFolder=$javaSourceFolder, " +
+            "generatedTsFolder=$generatedTsFolder, " +
+            "nodeVersion=$nodeVersion, " +
+            "nodeDownloadRoot=$nodeDownloadRoot, " +
+            "resourceOutputDirectory=$resourceOutputDirectory" +
+            ")"
 }
