@@ -1,12 +1,17 @@
 package com.vaadin.gradle
 
+import com.vaadin.flow.plugin.base.BuildFrontendUtil
 import com.vaadin.flow.plugin.base.PluginAdapterBuild
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.bundling.War
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
+
+private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 
 internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
     val extension: VaadinFlowPluginExtension =
@@ -22,7 +27,44 @@ internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
 
     override fun generatedTsFolder(): File = extension.generatedTsFolder
 
-    override fun getClassFinder(): ClassFinder = getClassFinder(project)
+    override fun getClassFinder(): ClassFinder {
+        val runtimeClasspathJars: List<File> = project.configurations.findByName("runtimeClasspath")
+            ?.toList() ?: listOf()
+
+        // we need to also analyze the project's classes
+        val sourceSet: SourceSetContainer = project.properties["sourceSets"] as SourceSetContainer
+        val classesDirs: List<File> = sourceSet.getByName("main").output.classesDirs
+            .toList()
+            .filter { it.exists() }
+
+        // for Spring Boot project there is no "providedCompile" scope: the WAR plugin brings that in.
+        val providedDeps: Configuration? = project.configurations.findByName("providedCompile")
+        val servletJar: List<File> = providedDeps
+            ?.filter { it.absolutePath.matches(servletApiJarRegex) }
+            ?.toList()
+            ?: listOf()
+
+        val apis: Set<File> = (runtimeClasspathJars + classesDirs + servletJar).toSet()
+
+        // eagerly check that all the files/folders exist, to avoid spamming the console later on
+        // see https://github.com/vaadin/vaadin-gradle-plugin/issues/38 for more details
+        apis.forEach {
+            check(it.exists()) { "$it doesn't exist" }
+        }
+
+        val classFinder = BuildFrontendUtil.getClassFinder(apis.map { it.absolutePath })
+
+        // sanity check that the project has flow-server.jar as a dependency
+        try {
+            classFinder.loadClass<Any>("com.vaadin.flow.server.webcomponent.WebComponentModulesWriter")
+        } catch (e: ClassNotFoundException) {
+            throw RuntimeException("Failed to find classes from flow-server.jar. The project '${project.name}' needs to have a dependency on flow-server.jar")
+        }
+
+        project.logger.info("Passing this classpath to NodeTasks.Builder: ${apis.toPrettyFormat()}")
+
+        return classFinder
+    }
 
     override fun getJarFiles(): MutableSet<File> {
         val jarFiles = project.configurations
