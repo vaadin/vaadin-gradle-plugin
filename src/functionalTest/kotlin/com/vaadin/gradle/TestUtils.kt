@@ -149,6 +149,7 @@ fun expectArchiveContainsVaadinWebpackBundle(archive: File,
     }
     expectArchiveContains(
             "${resourcePackaging}META-INF/VAADIN/config/flow-build-info.json",
+        // todo mavi uncomment when https://github.com/vaadin/vaadin-gradle-plugin/issues/107 is fixed
 //            "${resourcePackaging}META-INF/VAADIN/config/stats.json",
             "${resourcePackaging}META-INF/VAADIN/webapp/VAADIN/build/*.gz",
             "${resourcePackaging}META-INF/VAADIN/webapp/VAADIN/build/*.js"
