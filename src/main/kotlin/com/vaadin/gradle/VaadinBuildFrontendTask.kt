@@ -65,6 +65,10 @@ public open class VaadinBuildFrontendTask : DefaultTask() {
             VaadinFlowPluginExtension.get(project)
         logger.info("Running the vaadinBuildFrontend task with effective configuration $extension")
         val adapter = GradlePluginAdapter(project)
+        // sanity check
+        val tokenFile = BuildFrontendUtil.getTokenFile(adapter)
+        check(tokenFile.exists()) { "token file $tokenFile doesn't exist!" }
+
         BuildFrontendUtil.updateBuildFile(adapter)
 
         BuildFrontendUtil.runNodeUpdater(adapter)
