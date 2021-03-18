@@ -46,7 +46,7 @@ Vaadin recommends using the latest Vaadin LTS (Long-Term Support) version.
 | 0.14.3.7                     | All other Vaadin 14 LTS versions (recommended) |
 | -                            | Vaadin 15 and 16 are unsupported |
 | 0.17.0.1                     | Vaadin 17 and higher |
-
+| 0.20.0.0.alpha3              | Vaadin 20 and higher, experimental support for Vaadin 19 |
 ## Tasks
 
 Most common commands for all projects:

@@ -33,17 +33,20 @@ import kotlin.test.expect
 class VaadinSmokeTest : AbstractGradleTest() {
     @Before
     fun setup() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
+                id 'war'
                 id 'com.vaadin'
             }
             repositories {
+                mavenCentral()
                 jcenter()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
-                // Vaadin 17
-                compile("com.vaadin:vaadin-core:$vaadin17Version")
+                compile("com.vaadin:vaadin-core:$vaadinVersion")
+                providedCompile("javax.servlet:javax.servlet-api:3.1.0")
+                compile("org.slf4j:slf4j-simple:1.7.30")
             }
             vaadin {
                 pnpmEnable = true
@@ -53,57 +56,88 @@ class VaadinSmokeTest : AbstractGradleTest() {
 
     @Test
     fun smoke() {
-        build("vaadinClean")
+        testProject.build("vaadinClean")
     }
 
     @Test
     fun testPrepareFrontend() {
-        build("vaadinPrepareFrontend")
+        testProject.build("vaadinPrepareFrontend")
 
-        val generatedFlowBuildInfoJson = File(testProjectDir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
-        expect(true, generatedFlowBuildInfoJson.toString()) { generatedFlowBuildInfoJson.isFile }
+        val tokenFile = File(testProject.dir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
+        expect(true, tokenFile.toString()) { tokenFile.isFile }
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
     }
 
     @Test
     fun `vaadinBuildFrontend not ran by default in development mode`() {
-        val result: BuildResult = build("build")
+        val result: BuildResult = testProject.build("build")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
         // vaadinBuildFrontend should NOT have been executed automatically
         result.expectTaskNotRan("vaadinBuildFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProject.dir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(false, build.toString()) { build.exists() }
     }
 
     @Test
     fun `vaadinBuildFrontend can be run manually in development mode`() {
-        val result: BuildResult = build("vaadinBuildFrontend")
+        val result: BuildResult = testProject.build("vaadinBuildFrontend")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProject.dir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
         build.find("*.gz", 5..10)
         build.find("*.js", 5..10)
 
-        val tokenFile = File(build, "../config/flow-build-info.json")
+        val tokenFile = File(testProject.dir, "build/resources/main/META-INF/VAADIN/config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
-        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
+        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
     }
 
     @Test
     fun testBuildFrontendInProductionMode() {
-        val result: BuildResult = build("-Pvaadin.productionMode", "vaadinBuildFrontend")
+        val result: BuildResult = testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProjectDir, "build/resources/main/META-INF/VAADIN/build")
+        val build = File(testProject.dir, "build/resources/main/META-INF/VAADIN/webapp/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
         build.find("*.gz", 5..10)
         build.find("*.js", 5..10)
+        val tokenFile = File(testProject.dir, "build/resources/main/META-INF/VAADIN/config/flow-build-info.json")
+        val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
+        expect(true, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_PRODUCTION_MODE) }
+    }
+
+    @Test
+    fun testBuildWarBuildsFrontendInProductionMode() {
+        testProject.newFile("src/main/java/org/vaadin/example/MainView.java", """
+            package org.vaadin.example;
+
+            import com.vaadin.flow.component.html.Span;
+            import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+            import com.vaadin.flow.router.Route;
+
+            @Route("")
+            public class MainView extends VerticalLayout {
+
+                public MainView() {
+                    add(new Span("It works!"));
+                }
+            }
+        """.trimIndent())
+
+        val result: BuildResult = testProject.build("-Pvaadin.productionMode", "build")
+        result.expectTaskSucceded("vaadinPrepareFrontend")
+        result.expectTaskSucceded("vaadinBuildFrontend")
+        val war = testProject.builtWar
+        // no need to check the WAR contents - this is just a smoke test class.
+        // The war contents will be checked thoroughly in MiscSingleModuleTest.
     }
 
     /**
@@ -111,10 +145,10 @@ class VaadinSmokeTest : AbstractGradleTest() {
      */
     @Test
     fun vaadinCleanDoesntDeletePnpmFiles() {
-        val pnpmLockYaml = testProjectDir.touch("pnpm-lock.yaml")
-        val pnpmFileJs = testProjectDir.touch("pnpmfile.js")
-        val webpackConfigJs = testProjectDir.touch("webpack.config.js")
-        build("vaadinClean")
+        val pnpmLockYaml = testProject.newFile("pnpm-lock.yaml")
+        val pnpmFileJs = testProject.newFile("pnpmfile.js")
+        val webpackConfigJs = testProject.newFile("webpack.config.js")
+        testProject.build("vaadinClean")
         expect(false) { pnpmLockYaml.exists() }
         expect(false) { pnpmFileJs.exists() }
         // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
@@ -125,10 +159,10 @@ class VaadinSmokeTest : AbstractGradleTest() {
      * Tests that VaadinClean task removes TS-related files.
      */
     @Test
-    fun vaadinCleanDeleteTsFiles() {
-        val tsconfigJson = testProjectDir.touch("tsconfig.json")
-        val typesDTs = testProjectDir.touch("types.d.ts")
-        build("vaadinClean")
+    fun vaadinCleanDeletesTsFiles() {
+        val tsconfigJson = testProject.newFile("tsconfig.json")
+        val typesDTs = testProject.newFile("types.d.ts")
+        testProject.build("vaadinClean")
         expect(false) { tsconfigJson.exists() }
         expect(false) { typesDTs.exists() }
     }

@@ -24,12 +24,7 @@ import java.net.URL
 import java.net.URLClassLoader
 
 /**
- * A class finder using org.reflections.
- *
- * @param urls
- *            the list of urls for finding classes.
- *
- * @since 2.0
+ * @todo mavi remove once https://github.com/vaadin/vaadin-gradle-plugin/issues/99 is fixed.
  */
 public class ReflectionsClassFinder(vararg urls: URL) : ClassFinder {
     @Transient

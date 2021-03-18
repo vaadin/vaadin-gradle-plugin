@@ -32,22 +32,9 @@ public open class VaadinFlowPluginExtension(project: Project) {
     public var productionMode: Boolean = false
 
     /**
-     * The plugin will generate additional resource files here. These files need
-     * to be present on the classpath, in order for Vaadin to be
-     * able to run, both in dev mode and in the production mode. The plugin will automatically register
-     * this as an additional resource folder, which should then be picked up by the IDE.
-     * That will allow the app to run for example in Intellij with Tomcat.
-     *
-     * For example the `flow-build-info.json` goes here. Also see [webpackOutputDirectory].
-     */
-    public var buildOutputDirectory: File = File(project.buildDir, "vaadin-generated")
-
-    /**
      * The folder where webpack should output index.js and other generated
      * files. Defaults to `null` which will use the auto-detected value of
-     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/`.
-     *
-     * In the dev mode, the `flow-build-info.json` file is generated here.
+     * resoucesDir of the main SourceSet, usually `build/resources/main/META-INF/VAADIN/webapp/`.
      */
     public var webpackOutputDirectory: File? = null
 
@@ -174,6 +161,20 @@ public open class VaadinFlowPluginExtension(project: Project) {
      */
     public var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
 
+    /**
+     * Defines the output directory for generated non-served resources, such as
+     * the token file. Defaults to `build/vaadin-generated` folder.
+     *
+     * The plugin will automatically register
+     * this as an additional resource folder, which should then be picked up by the IDE.
+     * That will allow the app to run for example in Intellij with Tomcat.
+     * Generating files into build/resources/main wouldn't work since Intellij+Tomcat
+     * ignores that folder.
+     *
+     * The `flow-build-info.json` file is generated here.
+     */
+    public var resourceOutputDirectory: File = File(project.buildDir, "vaadin-generated")
+
     public companion object {
         public fun get(project: Project): VaadinFlowPluginExtension =
                 project.extensions.getByType(VaadinFlowPluginExtension::class.java)
@@ -182,9 +183,7 @@ public open class VaadinFlowPluginExtension(project: Project) {
     internal fun autoconfigure(project: Project) {
         // calculate webpackOutputDirectory if not set by the user
         if (webpackOutputDirectory == null) {
-            val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
-            val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
-            webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
+            webpackOutputDirectory = File(project.buildResourcesDir, Constants.VAADIN_WEBAPP_RESOURCES)
         }
 
         val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
@@ -210,7 +209,6 @@ public open class VaadinFlowPluginExtension(project: Project) {
 
     override fun toString(): String = "VaadinFlowPluginExtension(" +
             "productionMode=$productionMode, " +
-            "buildOutputDirectory=$buildOutputDirectory, " +
             "webpackOutputDirectory=$webpackOutputDirectory, " +
             "npmFolder=$npmFolder, " +
             "webpackTemplate='$webpackTemplate', " +
@@ -223,5 +221,20 @@ public open class VaadinFlowPluginExtension(project: Project) {
             "frontendResourcesDirectory=$frontendResourcesDirectory, " +
             "optimizeBundle=$optimizeBundle, " +
             "pnpmEnable=$pnpmEnable, " +
-            "requireHomeNodeExec=$requireHomeNodeExec)"
+            "requireHomeNodeExec=$requireHomeNodeExec, " +
+            "useDeprecatedV14Bootstrapping=$useDeprecatedV14Bootstrapping, " +
+            "eagerServerLoad=$eagerServerLoad, " +
+            "applicationProperties=$applicationProperties, " +
+            "openApiJsonFile=$openApiJsonFile, " +
+            "javaSourceFolder=$javaSourceFolder, " +
+            "generatedTsFolder=$generatedTsFolder, " +
+            "nodeVersion=$nodeVersion, " +
+            "nodeDownloadRoot=$nodeDownloadRoot, " +
+            "resourceOutputDirectory=$resourceOutputDirectory" +
+            ")"
+}
+
+internal val Project.buildResourcesDir: File get() {
+    val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+    return sourceSets.getByName("main").output.resourcesDir!!
 }
