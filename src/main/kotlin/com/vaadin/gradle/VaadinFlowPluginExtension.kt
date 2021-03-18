@@ -185,11 +185,6 @@ public open class VaadinFlowPluginExtension(project: Project) {
             val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
             webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_WEBAPP_RESOURCES)
         }
-        if (resourceOutputDirectory == null) {
-            val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
-            val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
-            resourceOutputDirectory = File(resourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
-        }
 
         val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
         if (productionModeProperty != null) {
