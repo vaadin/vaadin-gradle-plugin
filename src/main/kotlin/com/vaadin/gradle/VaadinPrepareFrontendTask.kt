@@ -35,6 +35,8 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
 
         // Maven's task run in the LifecyclePhase.PROCESS_RESOURCES phase
 
+        // the processResources copies stuff from build/vaadin-generated
+        // (which is populated by this task) and therefore must run after this task.
         project.tasks.getByName("processResources").mustRunAfter("vaadinPrepareFrontend")
 
         // make sure all dependent projects have finished building their jars, otherwise
@@ -65,6 +67,7 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
         }
 
         logger.info("Generated token file $tokenFile")
+        check(tokenFile.exists()) { "token file $tokenFile doesn't exist!" }
         BuildFrontendUtil.prepareFrontend(adapter)
     }
 }
