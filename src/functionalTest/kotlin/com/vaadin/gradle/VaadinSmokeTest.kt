@@ -136,6 +136,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         result.expectTaskSucceded("vaadinPrepareFrontend")
         result.expectTaskSucceded("vaadinBuildFrontend")
         val war = testProject.builtWar
+        expect(true, "$war file doesn't exist") { war.isFile }
         // no need to check the WAR contents - this is just a smoke test class.
         // The war contents will be checked thoroughly in MiscSingleModuleTest.
     }
