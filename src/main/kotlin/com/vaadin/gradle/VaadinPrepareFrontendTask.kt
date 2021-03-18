@@ -56,7 +56,7 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
     public fun vaadinPrepareFrontend() {
         val extension: VaadinFlowPluginExtension = VaadinFlowPluginExtension.get(project)
         logger.info("Running the vaadinPrepareFrontend task with effective configuration $extension")
-        val adapter = GradlePluginAdapter(project)
+        val adapter = GradlePluginAdapter(project, true)
         val tokenFile = BuildFrontendUtil.propagateBuildInfo(adapter)
 
         if (extension.requireHomeNodeExec) {

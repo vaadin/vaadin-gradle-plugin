@@ -28,7 +28,7 @@ import java.nio.file.Path
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 
-internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
+internal class GradlePluginAdapter(val project: Project, private val isBeforeProcessResources: Boolean): PluginAdapterBuild {
     val extension: VaadinFlowPluginExtension =
         VaadinFlowPluginExtension.get(project)
 
@@ -136,8 +136,21 @@ internal class GradlePluginAdapter(val project: Project): PluginAdapterBuild {
 
     override fun requireHomeNodeExec(): Boolean = extension.requireHomeNodeExec
 
-    override fun servletResourceOutputDirectory(): File =
-        File(extension.resourceOutputDirectory, Constants.VAADIN_SERVLET_RESOURCES)
+    override fun servletResourceOutputDirectory(): File {
+        // when running a task which runs before processResources, we need to
+        // generate stuff to build/vaadin-generated.
+        //
+        // However, after processResources is done, anything generated into
+        // build/vaadin-generated would simply be ignored. In such case we therefore
+        // need to generate stuff directly to build/resources/main.
+        if (isBeforeProcessResources) {
+            return File(
+                extension.resourceOutputDirectory,
+                Constants.VAADIN_SERVLET_RESOURCES
+            )
+        }
+        return File(project.buildResourcesDir, Constants.VAADIN_SERVLET_RESOURCES)
+    }
 
     override fun webpackOutputDirectory(): File =
         requireNotNull(extension.webpackOutputDirectory) { "VaadinFlowPluginExtension.autoconfigure() was not called" }

@@ -168,6 +168,8 @@ public open class VaadinFlowPluginExtension(project: Project) {
      * The plugin will automatically register
      * this as an additional resource folder, which should then be picked up by the IDE.
      * That will allow the app to run for example in Intellij with Tomcat.
+     * Generating files into build/resources/main wouldn't work since Intellij+Tomcat
+     * ignores that folder.
      *
      * The `flow-build-info.json` file is generated here.
      */
@@ -181,9 +183,7 @@ public open class VaadinFlowPluginExtension(project: Project) {
     internal fun autoconfigure(project: Project) {
         // calculate webpackOutputDirectory if not set by the user
         if (webpackOutputDirectory == null) {
-            val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
-            val resourcesDir: File = sourceSets.getByName("main").output.resourcesDir!!
-            webpackOutputDirectory = File(resourcesDir, Constants.VAADIN_WEBAPP_RESOURCES)
+            webpackOutputDirectory = File(project.buildResourcesDir, Constants.VAADIN_WEBAPP_RESOURCES)
         }
 
         val productionModeProperty: Boolean? = project.getBooleanProperty("vaadin.productionMode")
@@ -232,4 +232,9 @@ public open class VaadinFlowPluginExtension(project: Project) {
             "nodeDownloadRoot=$nodeDownloadRoot, " +
             "resourceOutputDirectory=$resourceOutputDirectory" +
             ")"
+}
+
+internal val Project.buildResourcesDir: File get() {
+    val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+    return sourceSets.getByName("main").output.resourcesDir!!
 }
