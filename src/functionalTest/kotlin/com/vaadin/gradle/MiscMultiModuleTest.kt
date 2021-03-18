@@ -10,8 +10,8 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      */
     @Test
     fun `vaadinPrepareFrontend waits for artifacts from dependent projects`() {
-        settingsFile.writeText("include 'lib', 'web'")
-        buildFile.writeText("""
+        testProject.settingsFile.writeText("include 'lib', 'web'")
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id 'com.vaadin' apply false
@@ -54,8 +54,8 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      */
     @Test
     fun `vaadinBuildFrontend only runs on the web project`() {
-        settingsFile.writeText("include 'lib', 'web'")
-        buildFile.writeText("""
+        testProject.settingsFile.writeText("include 'lib', 'web'")
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id 'com.vaadin' apply false

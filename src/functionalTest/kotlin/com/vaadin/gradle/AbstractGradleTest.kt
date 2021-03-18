@@ -6,10 +6,7 @@ import java.io.File
 
 /**
  * Prepares a test Gradle project - creates a temp dir for the [testProject] and allow you to run gradle
- * tasks. Does not generate `build.gradle` for you
- * though - just write the `build.gradle` contents to the [buildFile] instead.
- *
- * Call [build] to run the Gradle build on the test project.
+ * tasks. See [TestProject] for more details.
  * @author mavi
  */
 abstract class AbstractGradleTest {
@@ -34,9 +31,6 @@ abstract class AbstractGradleTest {
         // comment out if a test is failing and you need to investigate the project files.
         testProject.delete()
     }
-
-    protected val buildFile: File get() = testProject.buildFile
-    protected val settingsFile: File get() = testProject.settingsFile
 
     @Before
     fun dumpEnvironment() {

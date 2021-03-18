@@ -14,7 +14,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testVaadin8Vaadin14MPRProject() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id "com.devsoap.plugin.vaadin" version "1.4.1"
                 id 'com.vaadin'
@@ -31,7 +32,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin14 {
                 optimizeBundle = true
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
         // extension would crash even this very simple build.
@@ -44,7 +46,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testWarProjectDevelopmentMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -63,7 +66,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin {
                 pnpmEnable = true
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
@@ -79,7 +83,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testWarProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -98,9 +103,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 providedCompile("javax.servlet:javax.servlet-api:3.1.0")
                 compile("org.slf4j:slf4j-simple:1.7.30")
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult =
+            testProject.build("-Pvaadin.productionMode", "clean", "build")
         // vaadinBuildFrontend should have been executed automatically
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -113,7 +120,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testJarProjectDevelopmentMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'java'
                 id("com.vaadin")
@@ -139,7 +147,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                     exclude(module: "javax.websocket-client-api")
                 }
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
@@ -154,7 +163,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testJarProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'java'
                 id("com.vaadin")
@@ -180,9 +190,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                     exclude(module: "javax.websocket-client-api")
                 }
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult =
+            testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -201,7 +213,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testVaadin17SpringProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'org.springframework.boot' version '2.2.4.RELEASE'
                 id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -243,10 +256,12 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin {
                 pnpmEnable = true
             }
-        """)
+        """
+        )
 
         // need to create the Application.java file otherwise bootJar will fail
-        testProject.newFile("src/main/java/com/example/demo/DemoApplication.java", """
+        testProject.newFile(
+            "src/main/java/com/example/demo/DemoApplication.java", """
             package com.example.demo;
             
             import org.springframework.boot.SpringApplication;
@@ -260,10 +275,12 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 }
             
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // AppShell.java file creation
-        testProject.newFile("src/main/java/com/example/demo/AppShell.java", """
+        testProject.newFile(
+            "src/main/java/com/example/demo/AppShell.java", """
             package com.example.demo;
             
             import com.vaadin.flow.component.page.AppShellConfigurator;
@@ -272,9 +289,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             @PWA(name = "Demo application", shortName = "Demo")
             public class AppShell implements AppShellConfigurator {
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "build")
+        val build: BuildResult =
+            testProject.build("-Pvaadin.productionMode", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -287,7 +306,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testCircularDepsBug() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -330,9 +350,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin {
                 pnpmEnable = true
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult =
+            testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
@@ -348,7 +370,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
         FrontendUtils.getVaadinHomeDirectory().toPath().deleteRecursively()
 
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'com.vaadin'
             }
@@ -366,17 +389,22 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 nodeVersion = "v12.10.0"
                 nodeDownloadRoot = "http://localhost:8080/non-existent"
             }
-        """)
+        """
+        )
 
         val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProject.dir)
-                .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
-                .withPluginClasspath()
-                .buildAndFail()
+            .withProjectDir(testProject.dir)
+            .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
+            .withPluginClasspath()
+            .buildAndFail()
         // the task should fail download the node.js
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
-        expect(true, result.output) { result.output.contains("Could not download http://localhost:8080/v12.10.0/") }
-        expect(true, result.output) { result.output.contains("Could not download Node.js") }
+        expect(true, result.output) {
+            result.output.contains("Could not download http://localhost:8080/v12.10.0/")
+        }
+        expect(true, result.output) {
+            result.output.contains("Could not download Node.js")
+        }
     }
 
     /**
@@ -384,7 +412,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testReflectionsException() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText(
+            """
             plugins {
                 id 'com.vaadin'
             }
@@ -399,7 +428,8 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             vaadin {
                 pnpmEnable = true
             }
-        """)
+        """
+        )
         val result = testProject.build("vaadinPrepareFrontend", debug = true)
         expect(false) { result.output.contains("org.reflections.ReflectionsException") }
     }

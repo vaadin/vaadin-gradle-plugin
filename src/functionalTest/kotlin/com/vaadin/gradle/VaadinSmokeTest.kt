@@ -33,7 +33,7 @@ import kotlin.test.expect
 class VaadinSmokeTest : AbstractGradleTest() {
     @Before
     fun setup() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'war'
                 id 'com.vaadin'
