@@ -379,6 +379,9 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         expect(true, result.output) { result.output.contains("Could not download Node.js") }
     }
 
+    /**
+     * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+     */
     @Test
     fun testReflectionsException() {
         buildFile.writeText("""
