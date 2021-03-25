@@ -391,11 +391,6 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testNodeDownload() {
-        // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
-        if (!FrontendUtils.getVaadinHomeDirectory().deleteRecursively()) {
-            throw IOException("Failed to delete ${FrontendUtils.getVaadinHomeDirectory()}")
-        }
-
         buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
@@ -421,11 +416,23 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """)
 
-        val result: BuildResult = GradleRunner.create()
+        val result: BuildResult
+        
+        // Vaadin downloads the node to ${user.home}/.vaadin.
+        // Set user.home to be the testProject root directory
+        var originalUserHome = System.getProperty("user.home")
+        System.setProperty("user.home", testProjectDir.absolutePath)
+
+        try {
+            result = GradleRunner.create()
                 .withProjectDir(testProjectDir)
                 .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
                 .withPluginClasspath()
                 .buildAndFail()
+        }finally {
+            // Return original user home value
+            System.setProperty("user.home", originalUserHome)
+        }
         // the task should fail download the node.js
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
         expect(true, result.output) { result.output.contains("Could not download http://localhost:8080/v12.10.0/") }
