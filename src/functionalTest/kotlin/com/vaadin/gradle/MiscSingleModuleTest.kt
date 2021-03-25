@@ -367,9 +367,6 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testNodeDownload() {
-        // Vaadin downloads the node here. Delete the folder so that Vaadin is forced to download the node again
-        FrontendUtils.getVaadinHomeDirectory().toPath().deleteRecursively()
-
         testProject.buildFile.writeText(
             """
             plugins {
@@ -392,11 +389,23 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """
         )
 
-        val result: BuildResult = GradleRunner.create()
-            .withProjectDir(testProject.dir)
-            .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
-            .withPluginClasspath()
-            .buildAndFail()
+        val result: BuildResult
+        
+        // Vaadin downloads the node to ${user.home}/.vaadin.
+        // Set user.home to be the testProject root directory
+        var originalUserHome = System.getProperty("user.home")
+        System.setProperty("user.home", testProject.dir.absolutePath)
+
+        try {
+            result = GradleRunner.create()
+                .withProjectDir(testProject.dir)
+                .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
+                .withPluginClasspath()
+                .buildAndFail()
+        }finally {
+            // Return original user home value
+            System.setProperty("user.home", originalUserHome)
+        }
         // the task should fail download the node.js
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
         expect(true, result.output) {
