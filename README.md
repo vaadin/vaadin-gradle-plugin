@@ -35,7 +35,7 @@ Prerequisites:
   * Linux: Use package manager e.g. `sudo apt install npm` 
 
 As opposed to the older version of Gradle plugin, the new plugin doesn't create
-projects any more. We plan to support Gradle projects via [vaadin.com/start](https://vaadin.com/start)
+projects any more. We plan to support Gradle projects via [start.vaadin.com](https://start.vaadin.com)
 at some point. In the meantime, refer to project examples that you can use
 as a basis for your Vaadin modules.
 
