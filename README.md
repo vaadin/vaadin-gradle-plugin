@@ -1,6 +1,6 @@
 # Vaadin 14 Gradle Plugin
 
-This is an unofficial version of the official Vaadin Gradle Plugin for Vaadin 14.
+This is an unofficial Vaadin Gradle Plugin supporting Vaadin 14 only.
 
 ## Official VS Unofficial Vaadin Gradle Plugins
 
