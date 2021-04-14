@@ -1,8 +1,28 @@
-# Vaadin Gradle Plugin
+# Vaadin 14 Gradle Plugin
 
-This is an experimental version of the official Vaadin Gradle Plugin for Vaadin 14
-(Vaadin 15 is not supported at the moment, please see [#50](https://github.com/vaadin/vaadin-gradle-plugin/issues/50) for more details).
-The implementation is now mostly based on the similar Maven plugin.
+This is an unofficial version of the official Vaadin Gradle Plugin for Vaadin 14.
+
+## Official VS Unofficial Vaadin Gradle Plugins
+
+There are two Vaadin Gradle Plugins:
+* Official Vaadin Gradle plugin only works with Vaadin 19+ and is part of the [Vaadin Flow Github repo](https://github.com/vaadin/flow/).
+* Unofficial (this one) which only works with Vaadin 14.
+
+This plugin only supports Vaadin 14. This plugin is developed by Vaadin employees,
+but it only offered as a gesture of good will - it's not an official Vaadin offering.
+Official Vaadin Gradle plugin only works for Vaadin 19+ and is part of the [Vaadin Flow Github repo](https://github.com/vaadin/flow/).
+
+Note that both this plugin and the official Vaadin Gradle Plugin are deployed to
+the same plugin space: [com.vaadin at plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin).
+The unofficial plugin version numbering starts with a zero: `0.*`.
+
+More links for the official Vaadin Gradle plugin:
+* [README](https://github.com/vaadin/flow/tree/master/flow-plugins/flow-gradle-plugin)
+* [Vaadin 19+ documentation: Starting a Gradle project](https://vaadin.com/docs/latest/guide/start/gradle)
+* [Bug tracker](https://github.com/vaadin/flow/issues)
+
+## Features
+
 Compared to Maven plugin, there are the following limitations:
 
 * Vaadin 14 Compatibility mode is not supported
@@ -17,17 +37,20 @@ Prerequisites:
 As opposed to the older version of Gradle plugin, the new plugin doesn't create
 projects any more. We plan to support Gradle projects via [vaadin.com/start](https://vaadin.com/start)
 at some point. In the meantime, refer to project examples that you can use
-as a basis for your Vaadin modules:
+as a basis for your Vaadin modules.
 
-## Installation
+## Getting Started
+
+Please see the [Vaadin 14 documentation: Starting a Gradle Project](https://vaadin.com/docs/v14/guide/start/gradle)
+for more details.
 
 Check out the example project setups for basic WAR project and Spring Boot:
 
 * [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 
-The actual plugin part is as follows (please check the latest version at
-[plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin)): 
+To include the plugin in your project, simply add the plugin into the `plugins{}`
+section of your `build.gradle`: 
 
 ```
 plugins {
@@ -43,7 +66,9 @@ Compatibility chart:
 | 0.6.0 and lower              | Vaadin 14.1.x and lower |
 | 0.7.0                        | Vaadin 14.2.x |
 | 0.8.0                        | Vaadin 14.3.x and higher |
-| -                            | Vaadin 15 and higher are currently unsupported |
+| 0.14.3.7                     | Vaadin 14.3.x and higher |
+| 0.14.5.1                     | Vaadin 14.5.x and higher |
+| -                            | Vaadin 15 and higher are unsupported by this unofficial plugin |
 
 ## Tasks
 
@@ -82,11 +107,13 @@ To configure the plugin, you can use the following snippet in your `build.gradle
 `build.gradle` in Groovy:
 ```groovy
 vaadin {
-  pnpmEnable = true
+  pnpmEnable = false // false is the default, this is just an example
 }
 ```
 
-All configuration options follow. Note that you **RARELY** need to change anything of the below.
+All configuration options follow. With the exception of the `productionMode` setting,
+all other settings are auto-configured by the Plugin with sensible defaults and
+should not be changed, otherwise weird JavaScript toolchain-related bugs might occur:
 
 * `productionMode = false`: Whether or not the plugin should run in productionMode. Defaults to false.
   Responds to the `-Pvaadin.productionMode` property. You need to set this to `true` if you wish
