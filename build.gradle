@@ -14,7 +14,7 @@ plugins {
 
 defaultTasks 'jar'
 group 'com.vaadin'
-version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.5.1-SNAPSHOT'
+version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '0.6.0-SNAPSHOT'
 archivesBaseName = 'vaadin-gradle-plugin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -52,7 +52,7 @@ repositories {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.32")
-    compile("com.vaadin:flow-migration:2.5.1")
+    compile("com.vaadin:flow-migration:2.6.0.rc1")
     compile("org.zeroturnaround:zt-exec:1.12")
 
     testCompile("junit:junit:4.12")
