@@ -23,6 +23,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             // test that we can configure both plugins
             vaadin {
@@ -397,6 +398,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
             repositories {
                 jcenter()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
                 // Vaadin 14
