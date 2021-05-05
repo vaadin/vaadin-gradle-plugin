@@ -17,7 +17,7 @@ import java.io.File
  */
 abstract class AbstractGradleTest {
 
-    val vaadin14Version = "14.4.4"
+    val vaadin14Version = "14.6.0.rc1"
 
     /**
      * The testing Gradle project. Automatically deleted after every test.
