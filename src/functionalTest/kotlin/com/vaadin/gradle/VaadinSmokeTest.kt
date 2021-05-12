@@ -38,7 +38,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
                 id 'com.vaadin'
             }
             repositories {
-                jcenter()
+                mavenCentral()
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             dependencies {
