@@ -50,4 +50,12 @@ example project.
 
 # Releasing
 
-TBW
+Release is performed via Vaadin-internal TeamCity server called Bender.
+
+1. Navigate to [vaadin-gradle-plugin release from plugin repo](https://bender.vaadin.com/admin/editBuild.html?id=buildType:Flow_Release_VaadinGradlePlugin_VaadinGradlePluginReleaseFromPluginRepo)
+2. Click "Run ..."
+3. Navigate to the "Parameters" tab and fill in the `project.version`, e.g. `0.14.6.0`
+4. Click "Run Build"
+5. Check that a new version appeared at [plugins.gradle.org: com.vaadin](https://plugins.gradle.org/plugin/com.vaadin).
+
+Always prefix the version number with a zero, to avoid version clashes with the official Vaadin Gradle plugin.
