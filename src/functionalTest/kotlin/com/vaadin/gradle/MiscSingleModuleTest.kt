@@ -422,16 +422,16 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         
         // Vaadin downloads the node to ${user.home}/.vaadin.
         // Set user.home to be the testProject root directory
-        var originalUserHome = System.getProperty("user.home")
+        val originalUserHome = System.getProperty("user.home")
         System.setProperty("user.home", testProjectDir.absolutePath)
 
         try {
             result = GradleRunner.create()
                 .withProjectDir(testProjectDir)
-                .withArguments(listOf("vaadinPrepareFrontend", "--stacktrace"))
+                .withArguments(listOf("vaadinPrepareFrontend", "--info", "--stacktrace", "-Duser.home=${testProjectDir.absolutePath}"))
                 .withPluginClasspath()
                 .buildAndFail()
-        }finally {
+        } finally {
             // Return original user home value
             System.setProperty("user.home", originalUserHome)
         }

@@ -17,6 +17,7 @@ package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendTools
+import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
@@ -69,6 +70,7 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
 
         val tools: FrontendTools = extension.createFrontendTools()
         if (extension.requireHomeNodeExec) {
+            logger.info("Forcing alternative node executable from ${FrontendUtils.getVaadinHomeDirectory().absolutePath}")
             tools.forceAlternativeNodeExecutable()
         }
         logger.info("validating node and npm version")

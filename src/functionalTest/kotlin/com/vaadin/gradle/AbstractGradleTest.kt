@@ -17,14 +17,19 @@ import java.io.File
  */
 abstract class AbstractGradleTest {
 
-    val vaadin14Version = "14.6.0.rc1"
+    val vaadin14Version = "14.6.0"
 
     /**
      * The testing Gradle project. Automatically deleted after every test.
      */
     @Rule
     @JvmField
-    val testProject = TemporaryFolder()
+    val testProject = object : TemporaryFolder() {
+        override fun after() {
+            // comment out, to see the working folder when a test is failing
+            super.after()
+        }
+    }
 
     /**
      * The testing Gradle project root.
