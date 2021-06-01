@@ -1,12 +1,10 @@
 package com.vaadin.gradle
 
-import com.vaadin.flow.server.frontend.FrontendUtils
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
-import java.io.IOException
 import java.nio.file.Files
 import kotlin.test.expect
 
@@ -439,5 +437,34 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.FAILED)
         expect(true, result.output) { result.output.contains("Could not download http://localhost:8080/v12.10.0/") }
         expect(true, result.output) { result.output.contains("Could not download Node.js") }
+    }
+
+    /**
+     * Fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/115
+     */
+    @Test
+    fun skipNonJarDependencies() {
+        buildFile.writeText("""
+            plugins {
+                id 'com.vaadin'
+            }
+            repositories {
+                mavenCentral()
+                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
+            }
+            dependencies {
+                // Vaadin 14
+                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+            //         Webjars are only needed when running in Vaadin 13 compatibility mode
+                    ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                     "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                     "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                            .forEach { group -> exclude(group: group) }
+                }
+                implementation("com.microsoft.sqlserver:mssql-jdbc_auth:8.4.0.x64")
+            }
+        """)
+        val output = build("vaadinPrepareFrontend").output
+        expect(false, output) { output.contains("could not create Vfs.Dir from url") }
     }
 }
