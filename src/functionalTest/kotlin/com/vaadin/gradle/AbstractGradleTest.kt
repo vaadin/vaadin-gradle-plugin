@@ -38,6 +38,13 @@ abstract class AbstractGradleTest {
     protected val buildFile: File get() = File(testProjectDir, "build.gradle")
     protected val settingsFile: File get() = File(testProjectDir, "settings.gradle")
 
+    private fun createGradleRunner(): GradleRunner = GradleRunner.create()
+        .withProjectDir(testProjectDir)
+        .withPluginClasspath()
+        .withDebug(true) // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+        .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
+        .withGradleVersion("5.0")
+
     /**
      * Runs build on [testProjectDir]; a `build.gradle` [buildFile] is expected
      * to be located there.
@@ -47,13 +54,8 @@ abstract class AbstractGradleTest {
      */
     protected fun build(vararg args: String, checkTasksSuccessful: Boolean = true): BuildResult {
         println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
-        val result: BuildResult = GradleRunner.create()
-                .withProjectDir(testProjectDir)
-                .withArguments(args.toList() + "--stacktrace" + "--info") // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
-                .withPluginClasspath()
-                .withDebug(true)
-                .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
-                .withGradleVersion("5.0")
+        val result: BuildResult = createGradleRunner()
+                .withArguments(args.toList() + "--stacktrace" + "--info")
                 .build()
 
         if (checkTasksSuccessful) {
@@ -64,6 +66,21 @@ abstract class AbstractGradleTest {
                 }
             }
         }
+        return result
+    }
+
+    /**
+     * Runs build on [testProjectDir]; a `build.gradle` [buildFile] is expected
+     * to be located there.
+     *
+     * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
+     * You can suppress this functionality by setting [checkTasksSuccessful] to false.
+     */
+    protected fun buildAndFail(vararg args: String): BuildResult {
+        println("$testProjectDir/./gradlew ${args.joinToString(" ")}")
+        val result: BuildResult = createGradleRunner()
+            .withArguments(args.toList() + "--stacktrace" + "--info")
+            .buildAndFail()
         return result
     }
 
