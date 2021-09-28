@@ -26,7 +26,8 @@ abstract class AbstractGradleTest {
     @JvmField
     val testProject = object : TemporaryFolder() {
         override fun after() {
-            // comment out, to see the working folder when a test is failing
+            // if a test fails, simply comment out the following line:
+            // the temporary folder will not be deleted and you will be able to see its contents
             super.after()
         }
     }

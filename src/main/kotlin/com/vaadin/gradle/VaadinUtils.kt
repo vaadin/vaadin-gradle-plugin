@@ -23,6 +23,8 @@ import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ConfigurationContainer
+import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSetContainer
 import org.zeroturnaround.exec.ProcessExecutor
@@ -162,3 +164,15 @@ internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project):
                 .withHomeNodeExecRequired(requireHomeNodeExec)
                 .withNodeVersion(nodeVersion)
                 .withNodeDownloadRoot(URI(nodeDownloadRoot))
+
+/**
+ * Returns the "runtimeClasspath" file collection.
+ */
+internal val ConfigurationContainer.runtimeClasspath: Configuration
+    get() = getByName("runtimeClasspath")
+
+/**
+ * Returns only jar files from given file collection.
+ */
+internal val Configuration.jars: FileCollection
+    get() = filter { it.name.endsWith(".jar", true) }

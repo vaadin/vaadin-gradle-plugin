@@ -22,8 +22,6 @@ import com.vaadin.flow.server.frontend.NodeTasks
 import elemental.json.Json
 import elemental.json.JsonObject
 import org.gradle.api.DefaultTask
-import org.gradle.api.Task
-import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 import java.io.File
@@ -48,13 +46,7 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
         // the Vaadin classpath scanning will not work properly. See
         // https://github.com/vaadin/vaadin-gradle-plugin/issues/38
         // for more details.
-        val dependentProjectTasks: List<Task> = project.configurations.getByName("runtimeClasspath")
-                .allDependencies
-                .withType(ProjectDependency::class.java)
-                .toList()
-                .map { it.dependencyProject }
-                .mapNotNull { it.tasks.findByName("assemble") }
-        dependsOn(*dependentProjectTasks.toTypedArray())
+        dependsOn(project.configurations.runtimeClasspath.jars)
     }
 
     @TaskAction
@@ -95,11 +87,7 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
         // not be able to read files from jar path.
         val isJarPackaging: Boolean = project.tasks.withType(War::class.java).isEmpty()
         if (isJarPackaging) {
-            val jarFiles: Set<File> = project.configurations
-                    .getByName("runtimeClasspath")
-                    .resolve()
-                    .filter { it.name.endsWith(".jar", true) }
-                    .toSet()
+            val jarFiles: Set<File> = project.configurations.runtimeClasspath.jars.toSet()
             logger.info("runNodeUpdater: using JAR packaging, copyResources=${jarFiles.toPrettyFormat()}")
             builder.copyResources(jarFiles)
         } else {
