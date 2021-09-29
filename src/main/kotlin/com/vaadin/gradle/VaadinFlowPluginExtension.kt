@@ -177,6 +177,7 @@ public open class VaadinFlowPluginExtension(project: Project) {
 }
 
 internal val Project.buildResourcesDir: File get() {
+    // need to use the JavaPluginConvention instead of JavaPluginExtension, in order to stay compatible with Gradle 5.0
     val sourceSets: SourceSetContainer = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
     return sourceSets.getByName("main").output.resourcesDir!!
 }
