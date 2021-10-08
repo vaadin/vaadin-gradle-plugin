@@ -9,7 +9,7 @@ There are two Vaadin Gradle Plugins:
 * Unofficial (this one) which only works with Vaadin 14.
 
 This plugin only supports Vaadin 14. This plugin is developed by Vaadin employees,
-but it only offered as a gesture of good will - it's not an official Vaadin offering.
+but it is only offered as a gesture of good will - it's not an official Vaadin offering.
 Official Vaadin Gradle plugin only works for Vaadin 19+ and is part of the [Vaadin Flow Github repo](https://github.com/vaadin/flow/).
 
 Note that both this plugin and the official Vaadin Gradle Plugin are deployed to
