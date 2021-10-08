@@ -51,7 +51,7 @@ Check out the example project setups for basic WAR project and Spring Boot:
 * [Basic WAR project](https://github.com/vaadin/base-starter-gradle)
 * [Spring Boot project](https://github.com/vaadin/base-starter-spring-gradle)
 * [karibu-dsl example app](https://github.com/mvysny/karibu10-helloworld-application) (uses .kts Kotlin Gradle build script)
-* [Using the plugin in Gradle multi-project setup: vok-helloworld-app](https://github.com/mvysny/vok-helloworld-app) (uses .kts Kotlin Gradle build script)
+* Using the plugin in Gradle multi-project setup: [vok-helloworld-app](https://github.com/mvysny/vok-helloworld-app) (uses .kts Kotlin Gradle build script)
 
 To include the plugin in your project, simply add the plugin into the `plugins{}`
 section of your `build.gradle`: 
