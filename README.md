@@ -16,6 +16,8 @@ Note that both this plugin and the official Vaadin Gradle Plugin are deployed to
 the same plugin space: [com.vaadin at plugins.gradle.org](https://plugins.gradle.org/plugin/com.vaadin).
 The unofficial plugin version numbering starts with a zero: `0.*`.
 
+### Official Plugin (not this one)
+
 More links for the official Vaadin Gradle plugin:
 * [README](https://github.com/vaadin/flow/tree/master/flow-plugins/flow-gradle-plugin)
 * [Vaadin 19+ documentation: Starting a Gradle project](https://vaadin.com/docs/latest/guide/start/gradle)
