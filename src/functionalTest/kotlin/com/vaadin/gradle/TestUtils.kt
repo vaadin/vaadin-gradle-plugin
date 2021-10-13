@@ -227,8 +227,9 @@ object OsUtils {
  *
  * Used to test the plugin. Contains helpful utility methods to manipulate folders
  * and files in the project.
+ * @property gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
  */
-class TestProject {
+class TestProject(val gradleVersion: String = "5.0") {
     /**
      * The project root dir.
      */
@@ -249,7 +250,7 @@ class TestProject {
         .withPluginClasspath()
         .withDebug(true) // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
         .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
-        .withGradleVersion("5.0")
+        .withGradleVersion(gradleVersion)
 
     override fun toString(): String = "TestProject(dir=$dir)"
 
