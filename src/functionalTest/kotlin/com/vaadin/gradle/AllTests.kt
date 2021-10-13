@@ -1,6 +1,7 @@
 package com.vaadin.gradle
 
 import com.github.mvysny.dynatest.DynaNodeGroup
+import com.github.mvysny.dynatest.DynaTest
 import java.lang.RuntimeException
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -45,3 +46,27 @@ data class LateinitProperty<V: Any>(val name: String, private var value: V? = nu
         return value ?: throw RuntimeException("$this: not initialized")
     }
 }
+
+fun DynaNodeGroup.allTests(gradleVersion: String) {
+    group("Gradle $gradleVersion") {
+        group("smoke tests") {
+            vaadinSmokeTests(gradleVersion)
+        }
+        group("single module tests") {
+            singleModuleTests(gradleVersion)
+        }
+        group("multi module tests") {
+            multiModuleTests(gradleVersion)
+        }
+    }
+}
+
+class AllTests : DynaTest({
+    // test with the oldest Gradle supported, but only on JDK 8 or 11 since
+    // Gradle 5.0 doesn't really work on JDK 16+
+    if (jvmVersion < 16) {
+        allTests("5.0")
+    }
+    // test with the newest Gradle on all JDKs
+    allTests("7.2")
+})

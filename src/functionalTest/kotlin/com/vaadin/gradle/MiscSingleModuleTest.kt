@@ -1,14 +1,14 @@
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaTest
+import com.github.mvysny.dynatest.DynaNodeGroup
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.expect
 
-class MiscSingleModuleTest : DynaTest({
-    val testProject: TestProject by withTestProject()
+fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
+    val testProject: TestProject by withTestProject(gradleVersion)
 
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/26
@@ -442,4 +442,4 @@ class MiscSingleModuleTest : DynaTest({
         val output = testProject.build("vaadinPrepareFrontend").output
         expect(false, output) { output.contains("could not create Vfs.Dir from url") }
     }
-})
+}

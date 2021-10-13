@@ -15,7 +15,7 @@
  */
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaTest
+import com.github.mvysny.dynatest.DynaNodeGroup
 import com.vaadin.flow.server.Constants
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
@@ -29,8 +29,8 @@ import kotlin.test.expect
  * other test classes will possibly fail as well.
  * @author mavi
  */
-class VaadinSmokeTest : DynaTest({
-    val testProject: TestProject by withTestProject()
+fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: String) {
+    val testProject: TestProject by withTestProject(gradleVersion)
 
     beforeEach {
         testProject.buildFile.writeText("""
@@ -124,4 +124,4 @@ class VaadinSmokeTest : DynaTest({
         // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
         expect(true) { webpackConfigJs.exists() }
     }
-})
+}

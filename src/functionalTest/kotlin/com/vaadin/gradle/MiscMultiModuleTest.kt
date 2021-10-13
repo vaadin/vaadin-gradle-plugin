@@ -1,11 +1,11 @@
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaTest
+import com.github.mvysny.dynatest.DynaNodeGroup
 import org.gradle.testkit.runner.BuildResult
 import kotlin.test.expect
 
-class MiscMultiModuleTest : DynaTest({
-    val testProject: TestProject by withTestProject()
+fun DynaNodeGroup.multiModuleTests(gradleVersion: String) {
+    val testProject: TestProject by withTestProject(gradleVersion)
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/38
      */
@@ -104,4 +104,4 @@ class MiscMultiModuleTest : DynaTest({
         expect(null) { b.task(":vaadinPrepareFrontend") }
         expect(null) { b.task(":vaadinBuildFrontend") }
     }
-})
+}
