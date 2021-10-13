@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty
  * Call [build] to run the Gradle build on the test project.
  * @author mavi
  */
-val vaadin14Version = "14.6.7"
+val vaadin14Version = "14.7.1"
 
 /**
  * Sets up a folder for a test project.
