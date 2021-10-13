@@ -3,9 +3,7 @@ package com.vaadin.gradle
 import com.github.mvysny.dynatest.DynaNodeGroup
 import com.github.mvysny.dynatest.DynaTest
 import com.github.mvysny.dynatest.LateinitProperty
-import java.lang.RuntimeException
 import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 /**
  * Prepares a test Gradle project - creates a temp dir for the [testProject] and allow you to run gradle
