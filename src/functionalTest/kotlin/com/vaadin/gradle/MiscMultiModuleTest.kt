@@ -4,7 +4,8 @@ import com.github.mvysny.dynatest.DynaNodeGroup
 import org.gradle.testkit.runner.BuildResult
 import kotlin.test.expect
 
-fun DynaNodeGroup.multiModuleTests(gradleVersion: String, compile: String) {
+fun DynaNodeGroup.multiModuleTests(gradleVersion: GradleVersion) {
+    val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/38

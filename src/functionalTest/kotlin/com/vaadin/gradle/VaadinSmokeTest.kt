@@ -29,7 +29,8 @@ import kotlin.test.expect
  * other test classes will possibly fail as well.
  * @author mavi
  */
-fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: String, compile: String) {
+fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: GradleVersion) {
+    val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)
 
     beforeEach {

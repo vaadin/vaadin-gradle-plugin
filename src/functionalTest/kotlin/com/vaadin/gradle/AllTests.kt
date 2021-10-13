@@ -20,7 +20,7 @@ val vaadin14Version = "14.6.7"
  * Sets up a folder for a test project.
  * @param gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
  */
-fun DynaNodeGroup.withTestProject(gradleVersion: String): ReadWriteProperty<Any?, TestProject> {
+fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProperty<Any?, TestProject> {
     /**
      * The testing Gradle project. Automatically deleted after every test.
      */
@@ -47,16 +47,16 @@ data class LateinitProperty<V: Any>(val name: String, private var value: V? = nu
     }
 }
 
-fun DynaNodeGroup.allTests(gradleVersion: String, compile: String) {
+fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
     group("Gradle $gradleVersion") {
         group("smoke tests") {
-            vaadinSmokeTests(gradleVersion, compile)
+            vaadinSmokeTests(gradleVersion)
         }
         group("single module tests") {
-            singleModuleTests(gradleVersion, compile)
+            singleModuleTests(gradleVersion)
         }
         group("multi module tests") {
-            multiModuleTests(gradleVersion, compile)
+            multiModuleTests(gradleVersion)
         }
     }
 }
@@ -65,8 +65,8 @@ class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
     // Gradle 5.0 doesn't really work on JDK 16+
     if (jvmVersion < 16) {
-        allTests("5.0", "compile")
+        allTests(GradleVersion(5, 0))
     }
     // test with the newest Gradle on all JDKs
-    allTests("7.2", "implementation")
+    allTests(GradleVersion(7, 2))
 })

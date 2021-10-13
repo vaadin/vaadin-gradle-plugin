@@ -7,34 +7,37 @@ import java.io.File
 import java.nio.file.Files
 import kotlin.test.expect
 
-fun DynaNodeGroup.singleModuleTests(gradleVersion: String, compile: String) {
+fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
+    val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)
 
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/26
      */
-    test("testVaadin8Vaadin14MPRProject") {
-        testProject.buildFile.writeText("""
-            plugins {
-                id "com.devsoap.plugin.vaadin" version "1.4.1"
-                id 'com.vaadin'
-            }
-            repositories {
-                mavenCentral()
-                maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
-            }
-            // test that we can configure both plugins
-            vaadin {
-                version = "8.9.4"
-            }
-            vaadin14 {
-                optimizeBundle = true
-            }
-        """.trimIndent())
+    if (gradleVersion.supportsVaadin8Plugin) {
+        test("testVaadin8Vaadin14MPRProject") {
+            testProject.buildFile.writeText("""
+                plugins {
+                    id "com.devsoap.plugin.vaadin" version "1.4.1"
+                    id 'com.vaadin'
+                }
+                repositories {
+                    mavenCentral()
+                    maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
+                }
+                // test that we can configure both plugins
+                vaadin {
+                    version = "8.9.4"
+                }
+                vaadin14 {
+                    optimizeBundle = true
+                }""".trimIndent()
+            )
 
-        // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
-        // extension would crash even this very simple build.
-        testProject.build("tasks")
+            // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
+            // extension would crash even this very simple build.
+            testProject.build("tasks")
+        }
     }
 
     /**

@@ -229,7 +229,7 @@ object OsUtils {
  * and files in the project.
  * @property gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
  */
-class TestProject(val gradleVersion: String) {
+class TestProject(val gradleVersion: GradleVersion) {
     /**
      * The project root dir.
      */
@@ -250,7 +250,7 @@ class TestProject(val gradleVersion: String) {
         .withPluginClasspath()
         .withDebug(true) // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
         .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
-        .withGradleVersion(gradleVersion)
+        .withGradleVersion(gradleVersion.toString())
 
     override fun toString(): String = "TestProject(dir=$dir)"
 
@@ -368,4 +368,10 @@ fun String.parseJvmVersion(): Int {
     // taken from https://stackoverflow.com/questions/2591083/getting-java-version-at-runtime
     val version: String = removePrefix("1.").takeWhile { it.isDigit() }
     return version.toInt()
+}
+
+data class GradleVersion(val major: Int, val minor: Int) {
+    override fun toString(): String = "$major.$minor"
+    val supportsVaadin8Plugin: Boolean get() = major < 7
+    val compile: String get() = if (major <= 5) "compile" else "implementation"
 }
