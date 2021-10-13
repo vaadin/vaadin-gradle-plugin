@@ -229,7 +229,7 @@ object OsUtils {
  * and files in the project.
  * @property gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
  */
-class TestProject(val gradleVersion: String = "5.0") {
+class TestProject(val gradleVersion: String) {
     /**
      * The project root dir.
      */

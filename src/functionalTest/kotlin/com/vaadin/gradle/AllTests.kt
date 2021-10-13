@@ -20,7 +20,7 @@ val vaadin14Version = "14.6.7"
  * Sets up a folder for a test project.
  * @param gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
  */
-fun DynaNodeGroup.withTestProject(gradleVersion: String = "5.0"): ReadWriteProperty<Any?, TestProject> {
+fun DynaNodeGroup.withTestProject(gradleVersion: String): ReadWriteProperty<Any?, TestProject> {
     /**
      * The testing Gradle project. Automatically deleted after every test.
      */
