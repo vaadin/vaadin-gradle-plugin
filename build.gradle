@@ -166,16 +166,6 @@ publishing {
 	}
 }
 
-/***********************************************************************************************************************
- *
- * Misc.
- *
- **********************************************************************************************************************/
-wrapper {
-    gradleVersion = '5.0'
-    distributionType = Wrapper.DistributionType.ALL
-}
-
 // CI might kill the build if there's no stdout for 10 minutes: https://docs.travis-ci.com/user/common-build-problems/#build-times-out-because-no-output-was-received
 // This will print ongoing tests, taken from https://stackoverflow.com/a/4292739/377320
 functionalTest {
