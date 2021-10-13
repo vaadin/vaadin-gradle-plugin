@@ -15,13 +15,12 @@
  */
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.DynaTest
 import com.vaadin.flow.server.Constants
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Before
-import org.junit.Test
 import java.io.File
 import kotlin.test.expect
 
@@ -30,9 +29,10 @@ import kotlin.test.expect
  * other test classes will possibly fail as well.
  * @author mavi
  */
-class VaadinSmokeTest : AbstractGradleTest() {
-    @Before
-    fun setup() {
+class VaadinSmokeTest : DynaTest({
+    val testProject: TestProject by withTestProject()
+
+    beforeEach {
         testProject.buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
@@ -57,21 +57,18 @@ class VaadinSmokeTest : AbstractGradleTest() {
         """)
     }
 
-    @Test
-    fun smoke() {
+    test("smoke") {
         testProject.build("vaadinClean")
     }
 
-    @Test
-    fun testPrepareFrontend() {
+    test("PrepareFrontend") {
         testProject.build("vaadinPrepareFrontend")
 
         val generatedFlowBuildInfoJson = File(testProject.dir, "build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json")
         expect(true, generatedFlowBuildInfoJson.toString()) { generatedFlowBuildInfoJson.isFile }
     }
 
-    @Test
-    fun `vaadinBuildFrontend not ran by default in development mode`() {
+    test("vaadinBuildFrontend not ran by default in development mode") {
         val result: BuildResult = testProject.build("build")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskOutcome("vaadinPrepareFrontend", TaskOutcome.SUCCESS)
@@ -82,8 +79,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         expect(false, build.toString()) { build.exists() }
     }
 
-    @Test
-    fun `vaadinBuildFrontend can be run manually in development mode`() {
+    test("vaadinBuildFrontend can be run manually in development mode") {
         val result: BuildResult = testProject.build("vaadinBuildFrontend")
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
@@ -100,8 +96,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
         expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
     }
 
-    @Test
-    fun testBuildFrontendInProductionMode() {
+    test("BuildFrontendInProductionMode") {
         val result: BuildResult = testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
@@ -119,8 +114,7 @@ class VaadinSmokeTest : AbstractGradleTest() {
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/73
      */
-    @Test
-    fun vaadinCleanDoesntDeletePnpmFiles() {
+    test("vaadinCleanDoesntDeletePnpmFiles") {
         val pnpmLockYaml = testProject.newFile("pnpm-lock.yaml")
         val pnpmFileJs = testProject.newFile("pnpmfile.js")
         val webpackConfigJs = testProject.newFile("webpack.config.js")
@@ -130,4 +124,4 @@ class VaadinSmokeTest : AbstractGradleTest() {
         // don't delete webpack.config.js: https://github.com/vaadin/vaadin-gradle-plugin/pull/74#discussion_r444457296
         expect(true) { webpackConfigJs.exists() }
     }
-}
+})

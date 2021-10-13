@@ -1,15 +1,15 @@
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.DynaTest
 import org.gradle.testkit.runner.BuildResult
-import org.junit.Test
 import kotlin.test.expect
 
-class MiscMultiModuleTest : AbstractGradleTest() {
+class MiscMultiModuleTest : DynaTest({
+    val testProject: TestProject by withTestProject()
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/38
      */
-    @Test
-    fun `vaadinPrepareFrontend waits for artifacts from dependent projects`() {
+    test("vaadinPrepareFrontend waits for artifacts from dependent projects") {
         testProject.settingsFile.writeText("include 'lib', 'web'")
         testProject.buildFile.writeText("""
             plugins {
@@ -57,8 +57,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      * Tests that `vaadinPrepareFrontend` and `vaadinBuildFrontend` tasks are run only
      * on the `web` project.
      */
-    @Test
-    fun `vaadinBuildFrontend only runs on the web project`() {
+    test("vaadinBuildFrontend only runs on the web project") {
         testProject.settingsFile.writeText("include 'lib', 'web'")
         testProject.buildFile.writeText("""
             plugins {
@@ -105,4 +104,4 @@ class MiscMultiModuleTest : AbstractGradleTest() {
         expect(null) { b.task(":vaadinPrepareFrontend") }
         expect(null) { b.task(":vaadinBuildFrontend") }
     }
-}
+})

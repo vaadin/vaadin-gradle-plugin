@@ -53,7 +53,7 @@ dependencies {
     implementation('com.vaadin:flow-migration:2.7.0')
     implementation("org.zeroturnaround:zt-exec:1.12")
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("com.github.mvysny.dynatest:dynatest-engine:0.20")
     testImplementation('org.jetbrains.kotlin:kotlin-test:1.5.31')
 }
 
@@ -114,6 +114,7 @@ task functionalTest(type: Test) {
     classpath = sourceSets.functionalTest.runtimeClasspath
     maxParallelForks = 1
     jvmArgs('-Xms512M', '-Xmx1024M')
+    useJUnitPlatform()
     testLogging {
         exceptionFormat = 'full'
         showStandardStreams = true

@@ -1,18 +1,19 @@
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.DynaTest
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.expect
 
-class MiscSingleModuleTest : AbstractGradleTest() {
+class MiscSingleModuleTest : DynaTest({
+    val testProject: TestProject by withTestProject()
+
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/26
      */
-    @Test
-    fun testVaadin8Vaadin14MPRProject() {
+    test("testVaadin8Vaadin14MPRProject") {
         testProject.buildFile.writeText("""
             plugins {
                 id "com.devsoap.plugin.vaadin" version "1.4.1"
@@ -40,8 +41,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      * This test covers the [Base Starter Gradle](https://github.com/vaadin/base-starter-gradle)
      * example project.
      */
-    @Test
-    fun testWarProjectDevelopmentMode() {
+    test("testWarProjectDevelopmentMode") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'war'
@@ -83,8 +83,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      * This test covers the [Base Starter Gradle](https://github.com/vaadin/base-starter-gradle)
      * example project.
      */
-    @Test
-    fun testWarProjectProductionMode() {
+    test("testWarProjectProductionMode") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'war'
@@ -125,8 +124,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     /**
      * This test covers the https://github.com/mvysny/vaadin14-embedded-jetty-gradle example.
      */
-    @Test
-    fun testJarProjectDevelopmentMode() {
+    test("testJarProjectDevelopmentMode") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'java'
@@ -174,8 +172,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     /**
      * This test covers the https://github.com/mvysny/vaadin14-embedded-jetty-gradle example.
      */
-    @Test
-    fun testJarProjectProductionMode() {
+    test("JarProjectProductionMode") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'java'
@@ -229,8 +226,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      *
      * This build script covers the [Spring Boot example](https://github.com/vaadin/base-starter-spring-gradle)
      */
-    @Test
-    fun testVaadin14SpringProjectProductionMode() {
+    test("Vaadin14SpringProjectProductionMode") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'org.springframework.boot' version '2.2.4.RELEASE'
@@ -309,8 +305,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/42
      */
-    @Test
-    fun testCircularDepsBug() {
+    test("CircularDepsBug") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'war'
@@ -375,8 +370,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     /**
      * https://github.com/vaadin/vaadin-gradle-plugin/issues/76
      */
-    @Test
-    fun testNodeDownload() {
+    test("NodeDownload") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
@@ -424,8 +418,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
     /**
      * Fixes https://github.com/vaadin/vaadin-gradle-plugin/issues/115
      */
-    @Test
-    fun skipNonJarDependencies() {
+    test("skipNonJarDependencies") {
         testProject.buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
@@ -449,4 +442,4 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         val output = testProject.build("vaadinPrepareFrontend").output
         expect(false, output) { output.contains("could not create Vfs.Dir from url") }
     }
-}
+})
