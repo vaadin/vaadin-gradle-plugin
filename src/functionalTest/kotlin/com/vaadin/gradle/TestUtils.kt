@@ -353,3 +353,18 @@ class TestProject {
 fun Path.deleteRecursively() {
     toFile().walkBottomUp().forEach { Files.deleteIfExists(it.toPath()) }
 }
+
+/**
+ * Returns the major JVM version, e.g. 6 for Java 1.6, 8 for Java 8, 11 for Java 11 etc.
+ */
+val jvmVersion: Int get() = System.getProperty("java.version").parseJvmVersion()
+
+/**
+ * Returns the major JVM version, 1 for 1.1, 2 for 1.2, 3 for 1.3, 4 for 1.4, 5
+ * for 1.5 etc.
+ */
+fun String.parseJvmVersion(): Int {
+    // taken from https://stackoverflow.com/questions/2591083/getting-java-version-at-runtime
+    val version: String = removePrefix("1.").takeWhile { it.isDigit() }
+    return version.toInt()
+}
