@@ -6,18 +6,16 @@ import com.github.mvysny.dynatest.LateinitProperty
 import kotlin.properties.ReadWriteProperty
 
 /**
- * Prepares a test Gradle project - creates a temp dir for the [testProject] and allow you to run gradle
- * tasks. Does not generate `build.gradle` for you
- * though - just write the `build.gradle` contents to the [buildFile] instead.
- *
- * Call [build] to run the Gradle build on the test project.
- * @author mavi
+ * The Vaadin version to test with. Generally the newest 14.x release.
  */
 val vaadin14Version = "14.7.1"
 
 /**
- * Sets up a folder for a test project.
- * @param gradleVersion which Gradle version to test with, for example "5.0" or "7.2".
+ * Sets up a folder for a test project -
+ * creates a temp dir for the [TestProject] and allow you to run gradle
+ * tasks. Does not generate `build.gradle` for you
+ * though - just write the `build.gradle` contents to the [TestProject.buildFile] instead.
+ * @param gradleVersion which Gradle version to test with.
  */
 fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProperty<Any?, TestProject> {
     /**
@@ -50,6 +48,11 @@ fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
     }
 }
 
+/**
+ * The test class which runs all tests. See the
+ * [DynaTest](https://github.com/mvysny/dynatest) testing framework on
+ * more details on how exactly this works.
+ */
 class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
     // Gradle 5.0 doesn't really work on JDK 16+

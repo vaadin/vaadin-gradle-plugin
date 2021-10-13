@@ -360,16 +360,15 @@ fun Path.deleteRecursively() {
  */
 val jvmVersion: Int get() = System.getProperty("java.version").parseJvmVersion()
 
-/**
- * Returns the major JVM version, 1 for 1.1, 2 for 1.2, 3 for 1.3, 4 for 1.4, 5
- * for 1.5 etc.
- */
-fun String.parseJvmVersion(): Int {
+private fun String.parseJvmVersion(): Int {
     // taken from https://stackoverflow.com/questions/2591083/getting-java-version-at-runtime
     val version: String = removePrefix("1.").takeWhile { it.isDigit() }
     return version.toInt()
 }
 
+/**
+ * The Gradle version, such as `5.0` or `7.2`.
+ */
 data class GradleVersion(val major: Int, val minor: Int) : Comparable<GradleVersion> {
     override fun toString(): String = "$major.$minor"
     val supportsVaadin8Plugin: Boolean get() = this < V7_0
