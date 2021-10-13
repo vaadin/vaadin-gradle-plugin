@@ -4,7 +4,7 @@ import com.github.mvysny.dynatest.DynaNodeGroup
 import org.gradle.testkit.runner.BuildResult
 import kotlin.test.expect
 
-fun DynaNodeGroup.multiModuleTests(gradleVersion: String) {
+fun DynaNodeGroup.multiModuleTests(gradleVersion: String, compile: String) {
     val testProject: TestProject by withTestProject(gradleVersion)
     /**
      * Tests https://github.com/vaadin/vaadin-gradle-plugin/issues/38
@@ -30,8 +30,8 @@ fun DynaNodeGroup.multiModuleTests(gradleVersion: String) {
                 apply plugin: 'com.vaadin'
                 
                 dependencies {
-                    compile project(':lib')
-                    compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                    $compile project(':lib')
+                    $compile("com.vaadin:vaadin-core:$vaadin14Version") {
                 //         Webjars are only needed when running in Vaadin 13 compatibility mode
                         ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                          "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -78,8 +78,8 @@ fun DynaNodeGroup.multiModuleTests(gradleVersion: String) {
                 apply plugin: 'com.vaadin'
                 
                 dependencies {
-                    compile project(':lib')
-                    compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                    $compile project(':lib')
+                    $compile("com.vaadin:vaadin-core:$vaadin14Version") {
                 //         Webjars are only needed when running in Vaadin 13 compatibility mode
                         ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                          "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",

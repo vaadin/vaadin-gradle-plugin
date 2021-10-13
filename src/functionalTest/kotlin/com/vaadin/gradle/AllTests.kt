@@ -47,16 +47,16 @@ data class LateinitProperty<V: Any>(val name: String, private var value: V? = nu
     }
 }
 
-fun DynaNodeGroup.allTests(gradleVersion: String) {
+fun DynaNodeGroup.allTests(gradleVersion: String, compile: String) {
     group("Gradle $gradleVersion") {
         group("smoke tests") {
-            vaadinSmokeTests(gradleVersion)
+            vaadinSmokeTests(gradleVersion, compile)
         }
         group("single module tests") {
-            singleModuleTests(gradleVersion)
+            singleModuleTests(gradleVersion, compile)
         }
         group("multi module tests") {
-            multiModuleTests(gradleVersion)
+            multiModuleTests(gradleVersion, compile)
         }
     }
 }
@@ -65,8 +65,8 @@ class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
     // Gradle 5.0 doesn't really work on JDK 16+
     if (jvmVersion < 16) {
-        allTests("5.0")
+        allTests("5.0", "compile")
     }
     // test with the newest Gradle on all JDKs
-    allTests("7.2")
+    allTests("7.2", "implementation")
 })

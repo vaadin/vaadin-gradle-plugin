@@ -7,7 +7,7 @@ import java.io.File
 import java.nio.file.Files
 import kotlin.test.expect
 
-fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
+fun DynaNodeGroup.singleModuleTests(gradleVersion: String, compile: String) {
     val testProject: TestProject by withTestProject(gradleVersion)
 
     /**
@@ -54,7 +54,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -65,7 +65,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
 
                 // logging
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
+                $compile("org.slf4j:slf4j-simple:1.7.30")
             }
             vaadin {
                 pnpmEnable = true
@@ -99,7 +99,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -110,7 +110,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
 
                 // logging
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
+                $compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
 
@@ -140,7 +140,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -148,17 +148,17 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
                             .forEach { group -> exclude(group: group) }
                 }
             
-                compile("javax.servlet:javax.servlet-api:3.1.0")
-                compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
+                $compile("javax.servlet:javax.servlet-api:3.1.0")
+                $compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
                     exclude(module: "javax.websocket-client-api")
                 }
             
                 // logging
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
+                $compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
 
@@ -188,7 +188,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -196,17 +196,17 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
                             .forEach { group -> exclude(group: group) }
                 }
             
-                compile("javax.servlet:javax.servlet-api:3.1.0")
-                compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
-                compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
+                $compile("javax.servlet:javax.servlet-api:3.1.0")
+                $compile("org.eclipse.jetty:jetty-continuation:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty:jetty-server:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty.websocket:websocket-server:${"$"}{jettyVersion}")
+                $compile("org.eclipse.jetty.websocket:javax-websocket-server-impl:${"$"}{jettyVersion}") {
                     exclude(module: "javax.websocket-client-api")
                 }
             
                 // logging
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
+                $compile("org.slf4j:slf4j-simple:1.7.30")
             }
         """.trimIndent())
 
@@ -318,7 +318,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -329,7 +329,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
 
                 // logging
                 // currently we are logging through the SLF4J API to SLF4J-Simple. See src/main/resources/simplelogger.properties file for the logger configuration
-                compile("org.slf4j:slf4j-simple:1.7.30")
+                $compile("org.slf4j:slf4j-simple:1.7.30")
             }
             
             sourceSets {
@@ -381,7 +381,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
@@ -429,7 +429,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",

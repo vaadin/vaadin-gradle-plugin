@@ -29,7 +29,7 @@ import kotlin.test.expect
  * other test classes will possibly fail as well.
  * @author mavi
  */
-fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: String) {
+fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: String, compile: String) {
     val testProject: TestProject by withTestProject(gradleVersion)
 
     beforeEach {
@@ -43,7 +43,7 @@ fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: String) {
             }
             dependencies {
                 // Vaadin 14
-                compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
             //         Webjars are only needed when running in Vaadin 13 compatibility mode
                     ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
                      "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
