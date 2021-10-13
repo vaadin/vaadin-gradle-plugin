@@ -277,7 +277,11 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
             vaadin {
                 pnpmEnable = true
             }
+            
+            ${if (gradleVersion.springBootPlugin.startsWith("2.5")) "jar { enabled = false }" else ""}
         """)
+        // jar { enabled = false } :
+        // See https://stackoverflow.com/questions/67663728/spring-boot-2-5-0-generates-plain-jar-file-can-i-remove-it
 
         // need to create the Application.java file otherwise bootJar will fail
         val appPkg = File(testProject.dir, "src/main/java/com/example/demo")
