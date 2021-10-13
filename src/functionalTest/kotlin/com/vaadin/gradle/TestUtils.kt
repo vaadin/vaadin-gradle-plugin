@@ -370,8 +370,25 @@ fun String.parseJvmVersion(): Int {
     return version.toInt()
 }
 
-data class GradleVersion(val major: Int, val minor: Int) {
+data class GradleVersion(val major: Int, val minor: Int) : Comparable<GradleVersion> {
     override fun toString(): String = "$major.$minor"
-    val supportsVaadin8Plugin: Boolean get() = major < 7
+    val supportsVaadin8Plugin: Boolean get() = this < V7_0
     val compile: String get() = if (major <= 5) "compile" else "implementation"
+    val springBootPlugin: String get() {
+        // Spring Boot Gradle plugin 2.5.5 requires Gradle 6.8.x
+        // Spring Boot 2.2.4.RELEASE is able to run on Gradle 5.0 but doesn't support JDK 17
+        // Which is okay since Gradle 5.0 doesn't support it either
+        return when {
+            this >= V6_8 -> "2.5.5"
+            else -> "2.2.4.RELEASE"
+        }
+    }
+
+    override fun compareTo(other: GradleVersion): Int = compareValuesBy(this, other, { it.major }, { it.minor })
+
+    companion object {
+        val V5_0 = GradleVersion(5, 0)
+        val V6_8 = GradleVersion(6, 8)
+        val V7_0 = GradleVersion(7, 0)
+    }
 }

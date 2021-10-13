@@ -232,7 +232,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
     test("Vaadin14SpringProjectProductionMode") {
         testProject.buildFile.writeText("""
             plugins {
-                id 'org.springframework.boot' version '2.2.4.RELEASE'
+                id 'org.springframework.boot' version '${gradleVersion.springBootPlugin}'
                 id 'io.spring.dependency-management' version '1.0.9.RELEASE'
                 id 'java'
                 id("com.vaadin")
