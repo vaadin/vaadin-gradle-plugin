@@ -10,8 +10,8 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      */
     @Test
     fun `vaadinPrepareFrontend waits for artifacts from dependent projects`() {
-        settingsFile.writeText("include 'lib', 'web'")
-        buildFile.writeText("""
+        testProject.settingsFile.writeText("include 'lib', 'web'")
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id 'com.vaadin' apply false
@@ -50,7 +50,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
 
         // the vaadinPrepareFrontend task would work erratically because of dependent jars not yet produced,
         // or it would blow up with FileNotFoundException straight away.
-        build("web:vaadinPrepareFrontend")
+        testProject.build("web:vaadinPrepareFrontend")
     }
 
     /**
@@ -59,8 +59,8 @@ class MiscMultiModuleTest : AbstractGradleTest() {
      */
     @Test
     fun `vaadinBuildFrontend only runs on the web project`() {
-        settingsFile.writeText("include 'lib', 'web'")
-        buildFile.writeText("""
+        testProject.settingsFile.writeText("include 'lib', 'web'")
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id 'com.vaadin' apply false
@@ -97,7 +97,7 @@ class MiscMultiModuleTest : AbstractGradleTest() {
         testProject.newFolder("lib")
         testProject.newFolder("web")
 
-        val b: BuildResult = build("-Pvaadin.productionMode", "vaadinBuildFrontend", checkTasksSuccessful = false)
+        val b: BuildResult = testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend", checkTasksSuccessful = false)
         b.expectTaskSucceded("web:vaadinPrepareFrontend")
         b.expectTaskSucceded("web:vaadinBuildFrontend")
         expect(null) { b.task(":lib:vaadinPrepareFrontend") }

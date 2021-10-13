@@ -17,9 +17,13 @@ package com.vaadin.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.BuildTask
+import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
+import java.io.IOException
 import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.PathMatcher
 import java.util.zip.ZipInputStream
 import kotlin.test.expect
@@ -216,4 +220,136 @@ object OsUtils {
      * True if we're running on Windows, false on Linux, Mac and others.
      */
     val isWindows: Boolean get() = osName.startsWith("Windows")
+}
+
+/**
+ * A testing Gradle project, created in a temporary directory.
+ *
+ * Used to test the plugin. Contains helpful utility methods to manipulate folders
+ * and files in the project.
+ */
+class TestProject {
+    /**
+     * The project root dir.
+     */
+    val dir: File = createTempDir("junit-vaadin-gradle-plugin")
+
+    /**
+     * The main `build.gradle` file.
+     */
+    val buildFile: File get() = File(dir, "build.gradle")
+
+    /**
+     * The main `settings.gradle` file.
+     */
+    val settingsFile: File get() = File(dir, "settings.gradle")
+
+    private fun createGradleRunner(): GradleRunner = GradleRunner.create()
+        .withProjectDir(dir)
+        .withPluginClasspath()
+        .withDebug(true) // use --debug to catch ReflectionsException: https://github.com/vaadin/vaadin-gradle-plugin/issues/99
+        .forwardOutput()   // a must, otherwise ./gradlew check freezes on windows!
+        .withGradleVersion("5.0")
+
+    override fun toString(): String = "TestProject(dir=$dir)"
+
+    /**
+     * Deletes the project directory and nukes all project files.
+     */
+    fun delete() {
+        // don't throw an exception if the folder fails to be deleted. The folder
+        // is temporary anyway, and Windows tends to randomly fail with
+        // java.nio.file.FileSystemException: C:\Users\RUNNER~1\AppData\Local\Temp\junit-vaadin-gradle-plugin8993583259614232822.tmp\lib\build\libs\lib.jar: The process cannot access the file because it is being used by another process.
+        if (!dir.deleteRecursively()) {
+            println("Failed to delete temp project folder $dir")
+        }
+    }
+
+    /**
+     * Creates a new [folder] in the project folder. Does nothing if the folder
+     * already exists.
+     */
+    fun newFolder(folder: String): File {
+        val newFolder = Files.createDirectories(File(dir.absoluteFile, folder).toPath())
+        return newFolder.toFile()
+    }
+
+    /**
+     * Runs build on this project; a `build.gradle` [buildFile] is expected
+     * to be located there.
+     *
+     * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
+     * You can suppress this functionality by setting [checkTasksSuccessful] to false.
+     */
+    fun build(vararg args: String, checkTasksSuccessful: Boolean = true, debug: Boolean = false): BuildResult {
+        expect(true, "$buildFile doesn't exist, can't run build") { buildFile.exists() }
+
+        println("$dir/./gradlew ${args.joinToString(" ")}")
+        val result: BuildResult = createGradleRunner()
+            .withArguments(args.toList() + "--stacktrace" + "--info")
+            .build()
+
+        if (checkTasksSuccessful) {
+            for (arg: String in args) {
+                val isTask: Boolean = !arg.startsWith("-")
+                if (isTask) {
+                    result.expectTaskSucceded(arg)
+                }
+            }
+        }
+        return result
+    }
+
+    /**
+     * Runs and fails the build on this project;
+     */
+    fun buildAndFail(vararg args: String): BuildResult {
+        println("$dir/./gradlew ${args.joinToString(" ")}")
+        return createGradleRunner()
+            .withArguments(args.toList() + "--stacktrace" + "--info")
+            .buildAndFail()
+    }
+
+    /**
+     * Creates a file in the temporary test project.
+     */
+    fun newFile(fileNameWithPath: String, contents: String = ""): File {
+        val file = File(dir, fileNameWithPath)
+        Files.createDirectories(file.parentFile.toPath())
+        file.writeText(contents)
+        return file
+    }
+
+    /**
+     * Looks up a [folder] in the project and returns it.
+     */
+    fun folder(folder: String): File {
+        val dir = File(dir, folder)
+        check(dir.exists()) { "$dir doesn't exist" }
+        check(dir.isDirectory) { "$dir isn't a directory" }
+        return dir
+    }
+
+    /**
+     * Returns the WAR file built. Fails if there's no war file in `build/libs`.
+     */
+    val builtWar: File get() {
+        val war = folder("build/libs").find("*.war").first()
+        expect(true, "$war is missing") { war.isFile }
+        return war
+    }
+
+    val builtJar: File get() {
+        val jar: File = folder("build/libs").find("*.jar").first()
+        expect(true, "$jar is missing") { jar.isFile }
+        return jar
+    }
+}
+
+/**
+ * Similar to [File.deleteRecursively] but throws informative [IOException] instead of
+ * just returning false on error. uses Java 8 [Files.deleteIfExists] to delete files and folders.
+ */
+fun Path.deleteRecursively() {
+    toFile().walkBottomUp().forEach { Files.deleteIfExists(it.toPath()) }
 }

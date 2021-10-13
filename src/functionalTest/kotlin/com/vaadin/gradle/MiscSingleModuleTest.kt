@@ -14,7 +14,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testVaadin8Vaadin14MPRProject() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id "com.devsoap.plugin.vaadin" version "1.4.1"
                 id 'com.vaadin'
@@ -34,7 +34,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
 
         // the collision between devsoap's `vaadin` extension and com.vaadin's `vaadin`
         // extension would crash even this very simple build.
-        build("tasks")
+        testProject.build("tasks")
     }
 
     /**
@@ -43,7 +43,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testWarProjectDevelopmentMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -73,13 +73,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "build")
+        val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         build.expectTaskNotRan("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
-        expectArchiveDoesntContainVaadinWebpackBundle(war, false)
+        expectArchiveDoesntContainVaadinWebpackBundle(testProject.builtWar, false)
     }
 
     /**
@@ -88,7 +86,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testWarProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -118,13 +116,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         // vaadinBuildFrontend should have been executed automatically
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
-        expectArchiveContainsVaadinWebpackBundle(war, false)
+        expectArchiveContainsVaadinWebpackBundle(testProject.builtWar, false)
     }
 
     /**
@@ -132,7 +128,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testJarProjectDevelopmentMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id("com.vaadin")
@@ -169,13 +165,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("clean", "build")
+        val build: BuildResult = testProject.build("clean", "build")
         // vaadinBuildFrontend should NOT have been executed automatically
         expect(null) { build.task(":vaadinBuildFrontend") }
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
-        expectArchiveDoesntContainVaadinWebpackBundle(jar, false)
+        expectArchiveDoesntContainVaadinWebpackBundle(testProject.builtJar, false)
     }
 
     /**
@@ -183,7 +177,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testJarProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'java'
                 id("com.vaadin")
@@ -220,13 +214,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
-        expectArchiveContainsVaadinWebpackBundle(jar, false)
+        expectArchiveContainsVaadinWebpackBundle(testProject.builtJar, false)
     }
 
     /**
@@ -240,7 +232,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testVaadin14SpringProjectProductionMode() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'org.springframework.boot' version '2.2.4.RELEASE'
                 id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -290,7 +282,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         """)
 
         // need to create the Application.java file otherwise bootJar will fail
-        val appPkg = File(testProjectDir, "src/main/java/com/example/demo")
+        val appPkg = File(testProject.dir, "src/main/java/com/example/demo")
         Files.createDirectories(appPkg.toPath())
         File(appPkg, "DemoApplication.java").writeText("""
             package com.example.demo;
@@ -308,13 +300,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val jar: File = File(testProjectDir, "build/libs").find("*.jar").first()
-        expect(true, "$jar is missing\n${build.output}") { jar.isFile }
-        expectArchiveContainsVaadinWebpackBundle(jar, true)
+        expectArchiveContainsVaadinWebpackBundle(testProject.builtJar, true)
     }
 
     /**
@@ -322,7 +312,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testCircularDepsBug() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'war'
                 id 'org.gretty' version '3.0.1'
@@ -376,13 +366,11 @@ class MiscSingleModuleTest : AbstractGradleTest() {
             }
         """.trimIndent())
 
-        val build: BuildResult = build("-Pvaadin.productionMode", "clean", "build")
+        val build: BuildResult = testProject.build("-Pvaadin.productionMode", "clean", "build")
         build.expectTaskSucceded("vaadinPrepareFrontend")
         build.expectTaskSucceded("vaadinBuildFrontend")
 
-        val war: File = File(testProjectDir, "build/libs").find("*.war").first()
-        expect(true, "$war is missing\n${build.output}") { war.isFile }
-        expectArchiveContainsVaadinWebpackBundle(war, false)
+        expectArchiveContainsVaadinWebpackBundle(testProject.builtWar, false)
     }
 
     /**
@@ -390,7 +378,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun testNodeDownload() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
             }
@@ -420,10 +408,10 @@ class MiscSingleModuleTest : AbstractGradleTest() {
         // Vaadin downloads the node to ${user.home}/.vaadin.
         // Set user.home to be the testProject root directory
         val originalUserHome = System.getProperty("user.home")
-        System.setProperty("user.home", testProjectDir.absolutePath)
+        System.setProperty("user.home", testProject.dir.absolutePath)
 
         try {
-            result = buildAndFail("vaadinPrepareFrontend", "-Duser.home=${testProjectDir.absolutePath}")
+            result = testProject.buildAndFail("vaadinPrepareFrontend", "-Duser.home=${testProject.dir.absolutePath}")
         } finally {
             // Return original user home value
             System.setProperty("user.home", originalUserHome)
@@ -439,7 +427,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
      */
     @Test
     fun skipNonJarDependencies() {
-        buildFile.writeText("""
+        testProject.buildFile.writeText("""
             plugins {
                 id 'com.vaadin'
             }
@@ -459,7 +447,7 @@ class MiscSingleModuleTest : AbstractGradleTest() {
                 implementation("com.microsoft.sqlserver:mssql-jdbc_auth:8.4.0.x64")
             }
         """)
-        val output = build("vaadinPrepareFrontend").output
+        val output = testProject.build("vaadinPrepareFrontend").output
         expect(false, output) { output.contains("could not create Vfs.Dir from url") }
     }
 }
