@@ -53,7 +53,7 @@ dependencies {
     implementation('com.vaadin:flow-migration:2.7.1')
     implementation("org.zeroturnaround:zt-exec:1.12")
 
-    testImplementation("com.github.mvysny.dynatest:dynatest-engine:0.20")
+    testImplementation("com.github.mvysny.dynatest:dynatest-engine:0.21")
     testImplementation('org.jetbrains.kotlin:kotlin-test:1.5.31')
 }
 

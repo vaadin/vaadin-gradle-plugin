@@ -2,6 +2,7 @@ package com.vaadin.gradle
 
 import com.github.mvysny.dynatest.DynaNodeGroup
 import com.github.mvysny.dynatest.DynaTest
+import com.github.mvysny.dynatest.LateinitProperty
 import java.lang.RuntimeException
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -35,16 +36,6 @@ fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProper
         testProject.delete()
     }
     return testProjectProperty
-}
-
-data class LateinitProperty<V: Any>(val name: String, private var value: V? = null) : ReadWriteProperty<Any?, V> {
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: V) {
-        this.value = value
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): V {
-        return value ?: throw RuntimeException("$this: not initialized")
-    }
 }
 
 fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
