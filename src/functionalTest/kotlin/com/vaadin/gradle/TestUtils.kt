@@ -15,16 +15,13 @@
  */
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.expectFiles
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
-import java.io.IOException
-import java.nio.file.FileSystems
 import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.PathMatcher
 import java.util.zip.ZipInputStream
 import kotlin.test.expect
 import kotlin.test.fail
@@ -58,28 +55,6 @@ fun BuildResult.expectTaskNotRan(taskName: String) {
     expect(null, "$taskName was not expected to be run. Executed tasks: $tasks. Stdout:\n$output") {
         task
     }
-}
-
-/**
- * Finds all files matching given [glob] pattern, for example `libs/ *.war`
- * Always pass in forward slashes as path separators, even on Windows.
- * @param expectedCount expected number of files, defaults to 1.
- */
-fun File.find(glob: String, expectedCount: IntRange = 1..1): List<File> {
-    val pattern: String = if (OsUtils.isWindows) {
-        // replace \ with \\ to avoid collapsing; replace forward slashes in glob with \\
-        "glob:$absolutePath".replace("""\""", """\\""") + """\\""" + glob.replace("/", """\\""")
-    } else {
-        "glob:$absolutePath/$glob"
-    }
-    val matcher: PathMatcher = FileSystems.getDefault().getPathMatcher(pattern)
-    val found: List<File> = absoluteFile.walk()
-            .filter { matcher.matches(it.toPath()) }
-            .toList()
-    if (found.size !in expectedCount) {
-        fail("Expected $expectedCount $glob but found ${found.size}: $found . Folder dump: ${absoluteFile.walk().joinToString("\n")}")
-    }
-    return found
 }
 
 /**
@@ -200,28 +175,6 @@ fun expectArchiveDoesntContainVaadinWebpackBundle(archive: File,
     }
 }
 
-fun File.touch(name: String): File {
-    check(exists()) { "$this doesn't exist" }
-    check(isDirectory) { "$this isn't a directory" }
-    val file = File(this, name)
-    if (!file.exists()) {
-        file.writeText("")
-    }
-    return file
-}
-
-/**
- * Operating system-related utilities.
- */
-object OsUtils {
-    val osName: String = System.getProperty("os.name")
-
-    /**
-     * True if we're running on Windows, false on Linux, Mac and others.
-     */
-    val isWindows: Boolean get() = osName.startsWith("Windows")
-}
-
 /**
  * A testing Gradle project, created in a temporary directory.
  *
@@ -335,24 +288,16 @@ class TestProject(val gradleVersion: GradleVersion) {
      * Returns the WAR file built. Fails if there's no war file in `build/libs`.
      */
     val builtWar: File get() {
-        val war = folder("build/libs").find("*.war").first()
+        val war = folder("build/libs").expectFiles("*.war").first()
         expect(true, "$war is missing") { war.isFile }
         return war
     }
 
     val builtJar: File get() {
-        val jar: File = folder("build/libs").find("*.jar").first()
+        val jar: File = folder("build/libs").expectFiles("*.jar").first()
         expect(true, "$jar is missing") { jar.isFile }
         return jar
     }
-}
-
-/**
- * Similar to [File.deleteRecursively] but throws informative [IOException] instead of
- * just returning false on error. uses Java 8 [Files.deleteIfExists] to delete files and folders.
- */
-fun Path.deleteRecursively() {
-    toFile().walkBottomUp().forEach { Files.deleteIfExists(it.toPath()) }
 }
 
 /**

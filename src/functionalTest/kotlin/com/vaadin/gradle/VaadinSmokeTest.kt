@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.github.mvysny.dynatest.DynaNodeGroup
+import com.github.mvysny.dynatest.expectFiles
 import com.vaadin.flow.server.Constants
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
@@ -85,31 +86,37 @@ fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: GradleVersion) {
         // let's explicitly check that vaadinPrepareFrontend has been run.
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProject.dir, "build/resources/main/META-INF/VAADIN/build")
+        val build =
+            File(testProject.dir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.exists() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
+        build.expectFiles("*.gz", 5..7)
+        build.expectFiles("*.js", 5..7)
+        build.expectFiles("webcomponentsjs/webcomponents-*.js", 2..2)
+        build.expectFiles("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
 
         val tokenFile = File(build, "../config/flow-build-info.json")
         val buildInfo: JsonObject = JsonUtil.parse(tokenFile.readText())
-        expect(false, buildInfo.toJson()) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
+        expect(
+            false,
+            buildInfo.toJson()
+        ) { buildInfo.getBoolean(Constants.SERVLET_PARAMETER_ENABLE_DEV_SERVER) }
     }
 
     test("BuildFrontendInProductionMode") {
-        val result: BuildResult = testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend")
+        val result: BuildResult =
+            testProject.build("-Pvaadin.productionMode", "vaadinBuildFrontend")
         // vaadinBuildFrontend depends on vaadinPrepareFrontend
         // let's explicitly check that vaadinPrepareFrontend has been run
         result.expectTaskSucceded("vaadinPrepareFrontend")
 
-        val build = File(testProject.dir, "build/resources/main/META-INF/VAADIN/build")
+        val build =
+            File(testProject.dir, "build/resources/main/META-INF/VAADIN/build")
         expect(true, build.toString()) { build.isDirectory }
         expect(true) { build.listFiles()!!.isNotEmpty() }
-        build.find("*.gz", 5..7)
-        build.find("*.js", 5..7)
-        build.find("webcomponentsjs/webcomponents-*.js", 2..2)
-        build.find("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
+        build.expectFiles("*.gz", 5..7)
+        build.expectFiles("*.js", 5..7)
+        build.expectFiles("webcomponentsjs/webcomponents-*.js", 2..2)
+        build.expectFiles("webcomponentsjs/bundles/webcomponents-*.js", 4..6)
     }
 
     /**
