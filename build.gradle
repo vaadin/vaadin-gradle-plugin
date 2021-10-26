@@ -50,7 +50,7 @@ repositories {
 
 dependencies {
     implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31')
-    implementation('com.vaadin:flow-migration:2.7.1')
+    implementation('com.vaadin:flow-migration:2.7.2')
     implementation("org.zeroturnaround:zt-exec:1.12")
 
     testImplementation("com.github.mvysny.dynatest:dynatest:0.22")
