@@ -58,7 +58,7 @@ section of your `build.gradle`:
 
 ```
 plugins {
-    id 'com.vaadin' version '0.14.6.0'
+    id 'com.vaadin' version '0.14.7.3'
 }
 ```
 
