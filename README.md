@@ -86,6 +86,8 @@ There are the following tasks:
   will allow you to run the project e.g. in Tomcat with Intellij Ultimate.
   The task checks that node and npm tools are installed, copies frontend resources available inside
   `.jar` dependencies to `node_modules`, and creates or updates `package.json` and `webpack.config.json` files.
+  Most importantly it will also create `build/vaadin-generated/META-INF/VAADIN/config/flow-build-info.json`
+  which properly configures Vaadin.
 * `vaadinBuildFrontend` will use webpack to compile all JavaScript and CSS files into one huge bundle in production mode,
   and will place that by default into the `build/vaadin-generated` folder. The folder is
   then later picked up by `jar` and `war` tasks which then package the folder contents properly

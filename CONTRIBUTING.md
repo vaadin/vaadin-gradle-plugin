@@ -10,7 +10,8 @@ Use Intellij (Community is enough) to open the project.
 
 ## Contributing
 
-A signed CLA is required when contributing to the project.
+A signed CLA is required when contributing to the project. GitHub will guide you through the CLA signing
+process when you create your first pull request.
 
 ## Running The IT/Functional Tests
 
