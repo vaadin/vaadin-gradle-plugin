@@ -73,6 +73,7 @@ Compatibility chart:
 | 0.14.3.7                     | Vaadin 14.3.x and higher |
 | 0.14.5.1                     | Vaadin 14.5.x and higher |
 | 0.14.6.0                     | Vaadin 14.6.x and higher |
+| 0.14.7.3                     | Vaadin 14.7.x and higher |
 | -                            | Vaadin 15 and higher are unsupported by this unofficial plugin |
 
 ## Tasks
