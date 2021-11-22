@@ -19,6 +19,7 @@ import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
 import com.vaadin.flow.server.frontend.scanner.ClassFinder
+import com.vaadin.flow.server.scanner.ReflectionsClassFinder
 import elemental.json.JsonObject
 import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
@@ -32,7 +33,6 @@ import org.zeroturnaround.exec.ProcessResult
 import java.io.File
 import java.net.URI
 import java.net.URL
-import java.util.*
 import java.util.function.Supplier
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
