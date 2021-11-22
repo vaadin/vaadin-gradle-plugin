@@ -234,13 +234,16 @@ class TestProject(val gradleVersion: GradleVersion) {
      *
      * The function by default checks that all tasks have succeeded; if not, throws an informative exception.
      * You can suppress this functionality by setting [checkTasksSuccessful] to false.
+     *
+     * Uses the `--info` log level unless [debug] is true; then it uses the `--debug` log level.
      */
     fun build(vararg args: String, checkTasksSuccessful: Boolean = true, debug: Boolean = false): BuildResult {
         expect(true, "$buildFile doesn't exist, can't run build") { buildFile.exists() }
 
-        println("$dir/./gradlew ${args.joinToString(" ")}")
+        val effectiveArgs = args.toList() + "--stacktrace" + (if (debug) "--debug" else "--info")
+        println("$dir/./gradlew ${effectiveArgs.joinToString(" ")}")
         val result: BuildResult = createGradleRunner()
-            .withArguments(args.toList() + "--stacktrace" + "--info")
+            .withArguments(effectiveArgs)
             .build()
 
         if (checkTasksSuccessful) {
