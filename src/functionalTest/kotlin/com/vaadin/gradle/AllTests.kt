@@ -52,6 +52,9 @@ fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
  * The test class which runs all tests. See the
  * [DynaTest](https://github.com/mvysny/dynatest) testing framework on
  * more details on how exactly this works.
+ *
+ * See [Gradle Releases](https://gradle.org/releases/) to find the available
+ * Gradle versions.
  */
 class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
@@ -61,4 +64,6 @@ class AllTests : DynaTest({
     }
     // test with the newest Gradle on all JDKs
     allTests(GradleVersion(7, 3))
+    // test with the latest Gradle 6.x on all JDKs as well
+    allTests(GradleVersion(6, 9, 1))
 })

@@ -312,12 +312,25 @@ private fun String.parseJvmVersion(): Int {
 }
 
 /**
- * The Gradle version, such as `5.0` or `7.2`.
+ * The Gradle version, such as `5.0` or `7.3` or `6.9.1`.
  */
-data class GradleVersion(val major: Int, val minor: Int) : Comparable<GradleVersion> {
-    override fun toString(): String = "$major.$minor"
+data class GradleVersion(val major: Int, val minor: Int, val bugfix: Int = 0) : Comparable<GradleVersion> {
+    init {
+        require(major >= 1 && minor >= 0 && bugfix >= 0) { "Invalid version:$major.$minor.$bugfix" }
+    }
+
+    override fun toString(): String = "$major.$minor${if (bugfix == 0) "" else ".$bugfix"}"
+
+    /**
+     * JohnDevs' Vaadin 8 Gradle plugin can only run on Gradle 6.x and lower.
+     */
     val supportsVaadin8Plugin: Boolean get() = this < V7_0
-    val compile: String get() = if (major <= 5) "compile" else "implementation"
+
+    /**
+     * The `dependency{}` block API which this version of Gradle uses; either `compile` or
+     * `implementation`.
+     */
+    val compile: String get() = if (major < 6) "compile" else "implementation"
     val springBootPlugin: String get() {
         // Spring Boot Gradle plugin 2.5.5 requires Gradle 6.8.x
         // Spring Boot 2.2.4.RELEASE is able to run on Gradle 5.0 but doesn't support JDK 17
