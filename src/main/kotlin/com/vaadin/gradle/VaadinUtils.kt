@@ -152,7 +152,10 @@ public fun Project.vaadin(block: VaadinFlowPluginExtension.() -> Unit) {
     convention.getByType(VaadinFlowPluginExtension::class.java).apply(block)
 }
 
-internal fun Collection<File>.toPrettyFormat(): String = joinToString(prefix = "[", postfix = "]") { if (it.isFile) it.name else it.absolutePath }
+internal fun Collection<File>.toPrettyFormat(): String =
+    map { if (it.isFile) it.name else it.absolutePath }
+        .sorted() // sort, so that the list of files is order-independent
+        .joinToString(prefix = "[", postfix = "]")
 
 internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
         FrontendTools(npmFolder.absolutePath,
