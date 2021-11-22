@@ -8,7 +8,7 @@ import kotlin.properties.ReadWriteProperty
 /**
  * The Vaadin version to test with. Generally the newest 14.x release.
  */
-val vaadin14Version = "14.7.3"
+val vaadin14Version = "14.7.5"
 
 /**
  * Sets up a folder for a test project -
