@@ -32,6 +32,7 @@ import org.zeroturnaround.exec.ProcessResult
 import java.io.File
 import java.net.URI
 import java.net.URL
+import java.util.*
 import java.util.function.Supplier
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
@@ -62,7 +63,7 @@ internal fun getClassFinder(project: Project): ClassFinder {
 
     // only accept .jar-type dependencies and folders. Fixes
     // https://github.com/vaadin/vaadin-gradle-plugin/issues/115
-    apis = apis.filter { it.isDirectory || it.extension.toLowerCase() == "jar" } .toSet()
+    apis = apis.filter { it.isDirectory || it.extension.lowercase() == "jar" } .toSet()
 
     val apiUrls: List<URL> = apis
             .map { it.toURI().toURL() }
