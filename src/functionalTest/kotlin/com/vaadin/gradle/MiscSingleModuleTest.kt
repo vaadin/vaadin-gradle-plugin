@@ -18,7 +18,7 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
         test("testVaadin8Vaadin14MPRProject") {
             testProject.buildFile.writeText("""
                 plugins {
-                    id "com.devsoap.plugin.vaadin" version "1.4.1"
+                    id "com.devsoap.plugin.vaadin" version "${gradleVersion.vaadin8PluginVersion}"
                     id 'com.vaadin'
                 }
                 repositories {

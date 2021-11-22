@@ -64,8 +64,7 @@ class AllTests : DynaTest({
         allTests(GradleVersion(5, 6, 4))
 
         // test with Gradle 6.x as well.
-        // JohnDevs's Vaadin 8 Gradle plugin only supports 6.8.3 and lower though, let's test that one.
-        allTests(GradleVersion(6, 8, 3))
+        allTests(GradleVersion(6, 9, 1))
     }
     // test with the newest Gradle on all JDKs
     allTests(GradleVersion(7, 3))

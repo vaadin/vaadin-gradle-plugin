@@ -324,7 +324,13 @@ data class GradleVersion(val major: Int, val minor: Int, val bugfix: Int = 0) : 
     /**
      * JohnDevs' Vaadin 8 Gradle plugin can only run on Gradle 6.x and lower.
      */
-    val supportsVaadin8Plugin: Boolean get() = this <= V6_8_3
+    val supportsVaadin8Plugin: Boolean get() = vaadin8PluginVersion != null
+
+    val vaadin8PluginVersion: String? get() = when {
+        this >= V7_0 -> null // unsupported
+        this >= V6_0 -> "2.0.0.beta2" // https://github.com/johndevs/gradle-vaadin-plugin/issues/549
+        else -> "1.4.1"
+    }
 
     /**
      * The `dependency{}` block API which this version of Gradle uses; either `compile` or
@@ -345,13 +351,8 @@ data class GradleVersion(val major: Int, val minor: Int, val bugfix: Int = 0) : 
 
     companion object {
         val V5_0 = GradleVersion(5, 0)
+        val V6_0 = GradleVersion(6, 0)
         val V6_8 = GradleVersion(6, 8)
         val V7_0 = GradleVersion(7, 0)
-
-        /**
-         * The last Gradle which supports JohnDevs's Vaadin 8 Gradle plugin. For example,
-         * the plugin would fail on Gradle 6.9.1.
-         */
-        val V6_8_3 = GradleVersion(6, 8, 3)
     }
 }
