@@ -60,5 +60,5 @@ class AllTests : DynaTest({
         allTests(GradleVersion.V5_0)
     }
     // test with the newest Gradle on all JDKs
-    allTests(GradleVersion(7, 2))
+    allTests(GradleVersion(7, 3))
 })
