@@ -61,6 +61,7 @@ class AllTests : DynaTest({
     // Gradle 5.0 doesn't really work on JDK 16+
     if (jvmVersion < 16) {
         allTests(GradleVersion.V5_0)
+        allTests(GradleVersion(5, 6, 4))
     }
     // test with the newest Gradle on all JDKs
     allTests(GradleVersion(7, 3))
