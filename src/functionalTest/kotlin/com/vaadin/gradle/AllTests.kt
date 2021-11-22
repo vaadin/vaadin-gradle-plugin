@@ -58,13 +58,13 @@ fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
  */
 class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
-    // Gradle 5.0 doesn't really work on JDK 16+
+    // Gradle 6.x and lower doesn't really work on JDK 16+
     if (jvmVersion < 16) {
         allTests(GradleVersion.V5_0)
         allTests(GradleVersion(5, 6, 4))
+        // test with the latest Gradle 6.x
+        allTests(GradleVersion(6, 9, 1))
     }
     // test with the newest Gradle on all JDKs
     allTests(GradleVersion(7, 3))
-    // test with the latest Gradle 6.x on all JDKs as well
-    allTests(GradleVersion(6, 9, 1))
 })
