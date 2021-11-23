@@ -179,4 +179,4 @@ internal val ConfigurationContainer.runtimeClasspath: Configuration
  * Returns only jar files from given file collection.
  */
 internal val Configuration.jars: FileCollection
-    get() = filter { it.name.endsWith(".jar", true) }
+    get() = filter { it.isFile && it.name.endsWith(".jar", true) }
