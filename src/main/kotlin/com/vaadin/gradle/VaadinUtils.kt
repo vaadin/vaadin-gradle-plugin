@@ -26,6 +26,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.ModuleVersionIdentifier
+import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSetContainer
@@ -41,7 +42,12 @@ private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-a
 internal fun getClassFinder(project: Project): ClassFinder {
     val runtimeClasspath: Configuration? = project.configurations.findByName("runtimeClasspath")
     val runtimeClasspathJars: List<File> = if (runtimeClasspath != null) {
-        runtimeClasspath.resolvedConfiguration.resolvedArtifacts.map { it.file }
+        var artifacts: List<ResolvedArtifact> =
+            runtimeClasspath.resolvedConfiguration.resolvedArtifacts.toList()
+        val extension = VaadinFlowPluginExtension.get(project)
+        val artifactFilter = extension.classpathFilter.toPredicate()
+        artifacts = artifacts.filter { artifactFilter.test(it.moduleVersion.id.module) }
+        artifacts.map { it.file }
     } else listOf()
 
     // we need to also analyze the project's classes
