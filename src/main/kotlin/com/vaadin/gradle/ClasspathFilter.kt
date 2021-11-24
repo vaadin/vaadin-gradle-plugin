@@ -24,7 +24,7 @@ public data class ClasspathFilter(
         } else {
             includeMatchers.or()
         }
-        return includeMatcher.and(Predicate.not(excludeMatcher)).or(ModuleIdentifierPredicate.FLOW_SERVER)
+        return includeMatcher.and(excludeMatcher.negate()).or(ModuleIdentifierPredicate.FLOW_SERVER)
     }
 }
 
