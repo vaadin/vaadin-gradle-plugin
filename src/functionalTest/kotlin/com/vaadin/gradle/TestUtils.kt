@@ -194,6 +194,11 @@ class TestProject(val gradleVersion: GradleVersion) {
     val buildFile: File get() = File(dir, "build.gradle")
 
     /**
+     * The same as [buildFile] but in Kotlin.
+     */
+    val buildFileKts: File get() = File(dir, "build.gradle.kts")
+
+    /**
      * The main `settings.gradle` file.
      */
     val settingsFile: File get() = File(dir, "settings.gradle")
@@ -238,7 +243,9 @@ class TestProject(val gradleVersion: GradleVersion) {
      * Uses the `--info` log level unless [debug] is true; then it uses the `--debug` log level.
      */
     fun build(vararg args: String, checkTasksSuccessful: Boolean = true, debug: Boolean = false): BuildResult {
-        expect(true, "$buildFile doesn't exist, can't run build") { buildFile.exists() }
+        expect(true, "$buildFile/$buildFileKts doesn't exist, can't run build") {
+            buildFile.exists() || buildFileKts.exists()
+        }
 
         val effectiveArgs = args.toList() + "--stacktrace" + (if (debug) "--debug" else "--info")
         println("$dir/./gradlew ${effectiveArgs.joinToString(" ")}")

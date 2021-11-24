@@ -489,4 +489,55 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
         // remove version numbers to make the test more stable: drop -2.7.4.jar from flow-dnd-2.7.4.jar
         expectList("flow-client-", "flow-html-components-", "flow-lit-template-", "flow-push-", "flow-server-") { classpath.map { it.dropLastWhile { it != '-' } } }
     }
+
+    if (gradleVersion.major >= 6) {
+        // Kotlin-based build scripts only work on Gradle 6+
+        test("include/exclude kotlin") {
+            testProject.buildFileKts.writeText(
+                """
+            plugins {
+                id("com.vaadin")
+            }
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                // Vaadin 14
+                $compile("com.vaadin:vaadin-core:$vaadin14Version") {
+                    // Webjars are only needed when running in Vaadin 13 compatibility mode
+                    listOf("com.vaadin.webjar", "org.webjars.bowergithub.insites",
+                            "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+                            "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents")
+                            .forEach { exclude(group = it) }
+                }
+            }
+            vaadin {
+                pnpmEnable = true
+                filterClasspath {
+                    include("com.vaadin:flow-*")
+                    exclude("com.vaadin:flow-data")
+                    exclude("com.vaadin:flow-dnd")
+                }
+            }
+        """
+            )
+
+            val output = testProject.build("vaadinPrepareFrontend").output
+            val classpathLines = output.lines()
+                .filter { it.startsWith("Passing this classpath to NodeTasks.Builder") }
+            expect(1, output) { classpathLines.size }
+            // parse the list of jars out of the classpath line
+            val classpath = classpathLines[0].dropWhile { it != '[' }.trim('[', ']')
+                .split(',')
+                .map { it.trim() }.sorted()
+            // remove version numbers to make the test more stable: drop -2.7.4.jar from flow-dnd-2.7.4.jar
+            expectList(
+                "flow-client-",
+                "flow-html-components-",
+                "flow-lit-template-",
+                "flow-push-",
+                "flow-server-"
+            ) { classpath.map { it.dropLastWhile { it != '-' } } }
+        }
+    }
 }
