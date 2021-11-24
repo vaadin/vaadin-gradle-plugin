@@ -16,11 +16,7 @@ public data class ClasspathFilter(
     }
 
     public fun toPredicate(): Predicate<ModuleIdentifier> {
-        val includeMatchers: MutableList<ModuleIdentifierPredicate> =
-            include.map { ModuleIdentifierPredicate.fromGroupNameGlob(it) } .toMutableList()
-        if (includeMatchers.isNotEmpty()) {
-            includeMatchers.add(ModuleIdentifierPredicate.FLOW_SERVER)
-        }
+        val includeMatchers = include.map { ModuleIdentifierPredicate.fromGroupNameGlob(it) }
         val excludeMatchers = exclude.map { ModuleIdentifierPredicate.fromGroupNameGlob(it) }
         val excludeMatcher: Predicate<ModuleIdentifier> = excludeMatchers.or()
         val includeMatcher: Predicate<ModuleIdentifier> = if (includeMatchers.isEmpty()) {
@@ -28,7 +24,7 @@ public data class ClasspathFilter(
         } else {
             includeMatchers.or()
         }
-        return includeMatcher.and(Predicate.not(excludeMatcher))
+        return includeMatcher.and(Predicate.not(excludeMatcher)).or(ModuleIdentifierPredicate.FLOW_SERVER)
     }
 }
 
