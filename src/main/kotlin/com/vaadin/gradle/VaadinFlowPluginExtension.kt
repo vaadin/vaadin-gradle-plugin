@@ -19,7 +19,12 @@ import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.installer.NodeInstaller
+import groovy.lang.Closure
+import groovy.lang.DelegatesTo
+import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
@@ -140,6 +145,22 @@ public open class VaadinFlowPluginExtension(project: Project) {
      * Example: `"https://nodejs.org/dist/"`.
      */
     public var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
+
+    public var classpathFilter: ClasspathFilter = ClasspathFilter()
+
+    public fun filterClasspath(@DelegatesTo(value = ClasspathFilter::class, strategy = Closure.DELEGATE_FIRST) block: Closure<*>? = null): ClasspathFilter {
+        if (block != null) {
+            block.delegate = classpathFilter
+            block.resolveStrategy = Closure.DELEGATE_FIRST
+            block.call()
+        }
+        return classpathFilter
+    }
+
+    public fun filterClasspath(block: Action<ClasspathFilter>): ClasspathFilter {
+        block.execute(classpathFilter)
+        return classpathFilter
+    }
 
     public companion object {
         public fun get(project: Project): VaadinFlowPluginExtension =

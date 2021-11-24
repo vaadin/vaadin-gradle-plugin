@@ -101,6 +101,14 @@ artifacts {
     archives sourcesJar
 }
 
+test {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat = 'full'
+        showStandardStreams = true
+    }
+}
+
 /***********************************************************************************************************************
  *
  * Testing & Quality
