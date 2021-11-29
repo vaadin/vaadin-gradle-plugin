@@ -73,7 +73,8 @@ Compatibility chart:
 | 0.14.3.7                     | Vaadin 14.3.x and higher |
 | 0.14.5.1                     | Vaadin 14.5.x and higher |
 | 0.14.6.0                     | Vaadin 14.6.x and higher |
-| 0.14.7.3                     | Vaadin 14.7.x and higher |
+| 0.14.7.3                     | Vaadin 14.7.0 and higher |
+| 0.14.7.5                     | Vaadin 14.7.5 and higher |
 | -                            | Vaadin 15 and higher are unsupported by this unofficial plugin |
 
 ## Tasks
@@ -146,7 +147,7 @@ should not be changed, otherwise weird JavaScript toolchain-related bugs might o
 * `webpackGeneratedTemplate = "webpack.generated.js"`:
   Copy the `webapp.generated.js` from the specified URL. Default is the
   template provided by this plugin. Set it to empty string to disable the
-  feature.  
+  feature.
 * `generatedFolder = File(project.projectDir, "target/frontend")`:
   The folder where flow will put generated files that will be used by
   webpack. Should be `build/frontend/` but this is only supported in Vaadin 15+
@@ -179,7 +180,7 @@ should not be changed, otherwise weird JavaScript toolchain-related bugs might o
 ### Filtering classpath
 
 The `filterClasspath` closure allows you to filter out Vaadin components to speed up the classpath
-scanning and the JavaScript build process. For example:
+scanning and the JavaScript build process (since 0.14.7.5). For example:
 
 ```groovy
 vaadin {
