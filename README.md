@@ -176,6 +176,29 @@ should not be changed, otherwise weird JavaScript toolchain-related bugs might o
   Handy in heavily firewalled corporate environments where the node.js
   download can be provided from an intranet mirror.
 
+### Filtering classpath
+
+The `filterClasspath` closure allows you to filter out Vaadin components to speed up the classpath
+scanning and the JavaScript build process. For example:
+
+```groovy
+vaadin {
+  filterClasspath {
+//    include("com.vaadin:*")
+    exclude("com.foo:bar-*")
+  }
+}
+```
+
+Note that the `com.vaadin:flow-server` is always included and can not be excluded, since
+it introduces vital interfaces and annotations.
+
+In order to see the exact list of artifacts to be scanned, run Gradle with the `--info`
+parameter, then search for the `Passing this classpath to NodeTasks.Builder` string
+in the log.
+
+See [Issue 120](https://github.com/vaadin/vaadin-gradle-plugin/issues/120) for more details.
+
 ## Automatic Download of node.js and npm/pnpm
 
 Since Vaadin Gradle Plugin 0.7.0, you no longer need to have node.js nor

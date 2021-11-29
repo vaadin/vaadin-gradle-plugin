@@ -25,9 +25,12 @@ import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
+import org.gradle.api.artifacts.ModuleVersionIdentifier
+import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.internal.component.external.model.ModuleComponentArtifactIdentifier
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.io.File
@@ -37,8 +40,15 @@ import java.util.function.Supplier
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 internal fun getClassFinder(project: Project): ClassFinder {
-    val runtimeClasspathJars: List<File> = project.configurations.findByName("runtimeClasspath")
-            ?.toList() ?: listOf()
+    val runtimeClasspath: Configuration? = project.configurations.findByName("runtimeClasspath")
+    val runtimeClasspathJars: List<File> = if (runtimeClasspath != null) {
+        var artifacts: List<ResolvedArtifact> =
+            runtimeClasspath.resolvedConfiguration.resolvedArtifacts.toList()
+        val extension = VaadinFlowPluginExtension.get(project)
+        val artifactFilter = extension.classpathFilter.toPredicate()
+        artifacts = artifacts.filter { artifactFilter.test(it.moduleVersion.id.module) }
+        artifacts.map { it.file }
+    } else listOf()
 
     // we need to also analyze the project's classes
     val sourceSet: SourceSetContainer = project.properties["sourceSets"] as SourceSetContainer
