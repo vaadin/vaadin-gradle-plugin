@@ -3,8 +3,10 @@ plugins {
 	id 'maven-publish'
     id 'idea'
     id 'com.gradle.plugin-publish' version '0.11.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
 }
+
+def kotlinVersion = "1.6.10"
 
 /***********************************************************************************************************************
  *
@@ -49,12 +51,12 @@ repositories {
 }
 
 dependencies {
-    implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0')
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation('com.vaadin:flow-migration:2.7.7')
     implementation("org.zeroturnaround:zt-exec:1.12")
 
     testImplementation("com.github.mvysny.dynatest:dynatest:0.22")
-    testImplementation('org.jetbrains.kotlin:kotlin-test:1.6.0')
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 idea {
