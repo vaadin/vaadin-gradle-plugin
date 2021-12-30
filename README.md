@@ -58,7 +58,7 @@ section of your `build.gradle`:
 
 ```
 plugins {
-    id 'com.vaadin' version '0.14.7.3'
+    id 'com.vaadin' version '0.14.8.1'
 }
 ```
 
@@ -75,6 +75,7 @@ Compatibility chart:
 | 0.14.6.0                     | Vaadin 14.6.x and higher |
 | 0.14.7.3                     | Vaadin 14.7.0 and higher |
 | 0.14.7.5                     | Vaadin 14.7.5 and higher |
+| 0.14.8.1                     | Vaadin 14.8.0 and higher |
 | -                            | Vaadin 15 and higher are unsupported by this unofficial plugin |
 
 ## Tasks
