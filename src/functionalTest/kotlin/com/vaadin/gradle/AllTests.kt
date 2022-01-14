@@ -1,9 +1,6 @@
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaNodeDsl
-import com.github.mvysny.dynatest.DynaNodeGroup
-import com.github.mvysny.dynatest.DynaTest
-import com.github.mvysny.dynatest.LateinitProperty
+import com.github.mvysny.dynatest.*
 import kotlin.properties.ReadWriteProperty
 
 /**
@@ -63,7 +60,7 @@ fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
 class AllTests : DynaTest({
     // test with the oldest Gradle supported, but only on JDK 8 or 11 since
     // Gradle 6.x and lower doesn't really work on JDK 16+
-    if (jvmVersion < 16) {
+    if (jvmVersion <= 15) {
         allTests(GradleVersion.V5_0)
         allTests(GradleVersion(5, 6, 4))
 
