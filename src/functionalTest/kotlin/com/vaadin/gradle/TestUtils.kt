@@ -311,17 +311,6 @@ class TestProject(val gradleVersion: GradleVersion) {
 }
 
 /**
- * Returns the major JVM version, e.g. 6 for Java 1.6, 8 for Java 8, 11 for Java 11 etc.
- */
-val jvmVersion: Int get() = System.getProperty("java.version").parseJvmVersion()
-
-private fun String.parseJvmVersion(): Int {
-    // taken from https://stackoverflow.com/questions/2591083/getting-java-version-at-runtime
-    val version: String = removePrefix("1.").takeWhile { it.isDigit() }
-    return version.toInt()
-}
-
-/**
  * The Gradle version, such as `5.0` or `7.3` or `6.9.1`.
  */
 data class GradleVersion(val major: Int, val minor: Int, val bugfix: Int = 0) : Comparable<GradleVersion> {

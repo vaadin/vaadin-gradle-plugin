@@ -55,7 +55,7 @@ dependencies {
     implementation('com.vaadin:flow-migration:2.7.7')
     implementation("org.zeroturnaround:zt-exec:1.12")
 
-    testImplementation("com.github.mvysny.dynatest:dynatest:0.22")
+    testImplementation("com.github.mvysny.dynatest:dynatest:0.23")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 

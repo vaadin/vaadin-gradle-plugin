@@ -1,9 +1,11 @@
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.DynaNodeDsl
 import com.github.mvysny.dynatest.DynaNodeGroup
 import org.gradle.testkit.runner.BuildResult
 import kotlin.test.expect
 
+@DynaNodeDsl
 fun DynaNodeGroup.multiModuleTests(gradleVersion: GradleVersion) {
     val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)

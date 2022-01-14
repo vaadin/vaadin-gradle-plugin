@@ -1,5 +1,6 @@
 package com.vaadin.gradle
 
+import com.github.mvysny.dynatest.DynaNodeDsl
 import com.github.mvysny.dynatest.DynaNodeGroup
 import com.github.mvysny.dynatest.DynaTest
 import com.github.mvysny.dynatest.LateinitProperty
@@ -17,10 +18,9 @@ val vaadin14Version = "14.8.1"
  * though - just write the `build.gradle` contents to the [TestProject.buildFile] instead.
  * @param gradleVersion which Gradle version to test with.
  */
+@DynaNodeDsl
 fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProperty<Any?, TestProject> {
-    /**
-     * The testing Gradle project. Automatically deleted after every test.
-     */
+    // A new testing Gradle project. Automatically deleted after every test.
     val testProjectProperty = LateinitProperty<TestProject>("testproject")
     var testProject: TestProject by testProjectProperty
     beforeEach {
@@ -34,6 +34,10 @@ fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProper
     return testProjectProperty
 }
 
+/**
+ * Runs all tests on given [gradleVersion].
+ */
+@DynaNodeDsl
 fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
     group("Gradle $gradleVersion") {
         group("smoke tests") {
