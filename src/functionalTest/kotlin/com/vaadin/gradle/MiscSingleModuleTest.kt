@@ -1,7 +1,7 @@
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaNodeDsl
 import com.github.mvysny.dynatest.DynaNodeGroup
+import com.github.mvysny.dynatest.DynaTestDsl
 import com.github.mvysny.dynatest.expectList
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
@@ -9,7 +9,7 @@ import java.io.File
 import java.nio.file.Files
 import kotlin.test.expect
 
-@DynaNodeDsl
+@DynaTestDsl
 fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
     val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)

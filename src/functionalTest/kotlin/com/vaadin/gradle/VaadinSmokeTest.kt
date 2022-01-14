@@ -15,8 +15,8 @@
  */
 package com.vaadin.gradle
 
-import com.github.mvysny.dynatest.DynaNodeDsl
 import com.github.mvysny.dynatest.DynaNodeGroup
+import com.github.mvysny.dynatest.DynaTestDsl
 import com.github.mvysny.dynatest.expectFiles
 import com.vaadin.flow.server.Constants
 import elemental.json.JsonObject
@@ -31,7 +31,7 @@ import kotlin.test.expect
  * other test classes will possibly fail as well.
  * @author mavi
  */
-@DynaNodeDsl
+@DynaTestDsl
 fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: GradleVersion) {
     val compile = gradleVersion.compile
     val testProject: TestProject by withTestProject(gradleVersion)

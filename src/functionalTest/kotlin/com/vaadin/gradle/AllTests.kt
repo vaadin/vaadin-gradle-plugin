@@ -15,7 +15,7 @@ val vaadin14Version = "14.8.1"
  * though - just write the `build.gradle` contents to the [TestProject.buildFile] instead.
  * @param gradleVersion which Gradle version to test with.
  */
-@DynaNodeDsl
+@DynaTestDsl
 fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProperty<Any?, TestProject> {
     // A new testing Gradle project. Automatically deleted after every test.
     val testProjectProperty = LateinitProperty<TestProject>("testproject")
@@ -34,7 +34,7 @@ fun DynaNodeGroup.withTestProject(gradleVersion: GradleVersion): ReadWriteProper
 /**
  * Runs all tests on given [gradleVersion].
  */
-@DynaNodeDsl
+@DynaTestDsl
 fun DynaNodeGroup.allTests(gradleVersion: GradleVersion) {
     group("Gradle $gradleVersion") {
         group("smoke tests") {
