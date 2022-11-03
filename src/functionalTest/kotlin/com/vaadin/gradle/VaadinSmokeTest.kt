@@ -56,6 +56,7 @@ fun DynaNodeGroup.vaadinSmokeTests(gradleVersion: GradleVersion) {
                 }
             }
             vaadin {
+                requireHomeNodeExec = true
                 pnpmEnable = true
             }
         """)

@@ -103,7 +103,7 @@ public open class VaadinBuildFrontendTask : DefaultTask() {
                 .toSet()
 
         logger.info("runNodeUpdater: npmFolder=${extension.npmFolder}, generatedPath=${extension.generatedFolder}, frontendDirectory=${extension.frontendDirectory}")
-        logger.info("runNodeUpdater: runNpmInstall=${extension.runNpmInstall}, enablePackagesUpdate=true, useByteCodeScranner=${extension.optimizeBundle}")
+        logger.info("runNodeUpdater: runNpmInstall=${extension.runNpmInstall}, enablePackagesUpdate=true, useByteCodeScanner=${extension.optimizeBundle}")
         logger.info("runNodeUpdater: copyResources=${jarFiles.toPrettyFormat()}")
         logger.info("runNodeUpdater: copyLocalResources=${extension.frontendResourcesDirectory}")
         logger.info("runNodeUpdater: enableImportsUpdate=true, embeddableWebComponents=${extension.generateEmbeddableWebComponents}, tokenFile=${tokenFile}")

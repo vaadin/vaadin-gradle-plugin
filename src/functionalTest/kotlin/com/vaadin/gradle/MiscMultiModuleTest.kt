@@ -44,6 +44,7 @@ fun DynaNodeGroup.multiModuleTests(gradleVersion: GradleVersion) {
                 }
 
                 vaadin {
+                    requireHomeNodeExec = true
                     pnpmEnable = true
                 }
             }
@@ -92,6 +93,7 @@ fun DynaNodeGroup.multiModuleTests(gradleVersion: GradleVersion) {
                 }
 
                 vaadin {
+                    requireHomeNodeExec = true
                     pnpmEnable = true
                 }
             }
