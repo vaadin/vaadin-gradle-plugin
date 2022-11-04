@@ -19,12 +19,11 @@ import com.vaadin.flow.server.Constants
 import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.installer.NodeInstaller
+import com.vaadin.flow.server.frontend.installer.Platform
 import groovy.lang.Closure
 import groovy.lang.DelegatesTo
 import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
 import java.io.File
@@ -144,7 +143,7 @@ public open class VaadinFlowPluginExtension(project: Project) {
      *
      * Example: `"https://nodejs.org/dist/"`.
      */
-    public var nodeDownloadRoot: String = NodeInstaller.DEFAULT_NODEJS_DOWNLOAD_ROOT
+    public var nodeDownloadRoot: String = Platform.guess().nodeDownloadRoot
 
     public var classpathFilter: ClasspathFilter = ClasspathFilter()
 
@@ -195,6 +194,16 @@ public open class VaadinFlowPluginExtension(project: Project) {
             "optimizeBundle=$optimizeBundle, " +
             "pnpmEnable=$pnpmEnable, " +
             "requireHomeNodeExec=$requireHomeNodeExec)"
+
+    /**
+     * Whether to use old JavaScript license checker and disable server-side
+     * and offline features of the new license checker.
+     *
+     * Compatibility/Bower mode always uses old license checking.
+     */
+    public var oldLicenseChecker: Boolean = false
+
+    internal val compatibility = false
 }
 
 internal val Project.buildResourcesDir: File get() {

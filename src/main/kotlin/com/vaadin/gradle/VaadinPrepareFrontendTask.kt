@@ -16,6 +16,7 @@
 package com.vaadin.gradle
 
 import com.vaadin.flow.server.Constants
+import com.vaadin.flow.server.InitParameters
 import com.vaadin.flow.server.frontend.FrontendTools
 import com.vaadin.flow.server.frontend.FrontendUtils
 import com.vaadin.flow.server.frontend.NodeTasks
@@ -60,6 +61,12 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
 
         propagateBuildInfo(extension)
 
+        // Do nothing when compatibility mode
+        if (extension.compatibility) {
+            logger.debug("Skipped 'prepare-frontend' goal because compatibility mode is set.")
+            return
+        }
+
         val tools: FrontendTools = extension.createFrontendTools()
         if (extension.requireHomeNodeExec) {
             logger.info("Forcing alternative node executable from ${FrontendUtils.getVaadinHomeDirectory().absolutePath}")
@@ -99,18 +106,18 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
     }
 
     private fun propagateBuildInfo(extension: VaadinFlowPluginExtension) {
-        val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
-        Files.createDirectories(configFolder.toPath())
         val buildInfo: JsonObject = Json.createObject().apply {
-            put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, false)
+            put(Constants.SERVLET_PARAMETER_COMPATIBILITY_MODE, extension.compatibility)
             put(Constants.SERVLET_PARAMETER_PRODUCTION_MODE, extension.productionMode)
             put(Constants.NPM_TOKEN, extension.npmFolder.absolutePath)
             put(Constants.GENERATED_TOKEN, extension.generatedFolder.absolutePath)
             put(Constants.FRONTEND_TOKEN, extension.frontendDirectory.absolutePath)
             put(Constants.SERVLET_PARAMETER_ENABLE_PNPM, extension.pnpmEnable)
-            put(Constants.REQUIRE_HOME_NODE_EXECUTABLE, extension.requireHomeNodeExec)
+            put(InitParameters.NODE_VERSION, extension.nodeVersion)
+            put(InitParameters.NODE_DOWNLOAD_ROOT, extension.nodeDownloadRoot)
         }
-        val tokenFile = File(configFolder, "flow-build-info.json")
+        val tokenFile = File(extension.webpackOutputDirectory!!, FrontendUtils.TOKEN_FILE)
+        Files.createDirectories(tokenFile.parentFile.toPath())
         buildInfo.writeToFile(tokenFile)
         logger.info("Wrote token file $tokenFile: $buildInfo")
     }

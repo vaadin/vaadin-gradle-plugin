@@ -106,14 +106,15 @@ private fun ProcessExecutor.executeAndCheckOk(): ProcessResult {
  * @param cwd the current working directory for the subprocess
  * @param args the program to run, including the arguments.
  */
-internal fun exec(logger: Logger, cwd: File, vararg args: String) {
+internal fun exec(logger: Logger, cwd: File, env: Map<String, String> = mapOf(), vararg args: String) {
     logger.info("Running in '$cwd': ${args.joinToString(separator = "' '", prefix = "'", postfix = "'")}")
     val result: ProcessResult = ProcessExecutor()
-            .command(*args)
-            .directory(cwd)
-            .readOutput(true)
-            .destroyOnExit()
-            .executeAndCheckOk()
+        .command(*args)
+        .directory(cwd)
+        .environment(env)
+        .readOutput(true)
+        .destroyOnExit()
+        .executeAndCheckOk()
     logger.info(result.outputUTF8())
 }
 
@@ -169,15 +170,16 @@ internal fun Collection<File>.toPrettyFormat(): String =
 
 internal fun VaadinFlowPluginExtension.createFrontendTools(): FrontendTools =
         FrontendTools(npmFolder.absolutePath,
-                Supplier { FrontendUtils.getVaadinHomeDirectory().absolutePath },
+                { FrontendUtils.getVaadinHomeDirectory().absolutePath },
                 nodeVersion,
-                URI(nodeDownloadRoot))
+                URI(nodeDownloadRoot), requireHomeNodeExec)
 
 internal fun VaadinFlowPluginExtension.createNodeTasksBuilder(project: Project): NodeTasks.Builder =
         NodeTasks.Builder(getClassFinder(project), npmFolder, generatedFolder, frontendDirectory)
-                .withHomeNodeExecRequired(requireHomeNodeExec)
-                .withNodeVersion(nodeVersion)
-                .withNodeDownloadRoot(URI(nodeDownloadRoot))
+            .withHomeNodeExecRequired(requireHomeNodeExec)
+            .withNodeVersion(nodeVersion)
+            .withNodeDownloadRoot(URI(nodeDownloadRoot))
+            .withProductionMode(productionMode)
 
 /**
  * Returns the "runtimeClasspath" file collection.
