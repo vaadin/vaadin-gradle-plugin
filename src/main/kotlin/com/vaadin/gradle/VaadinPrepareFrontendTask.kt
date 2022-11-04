@@ -116,7 +116,10 @@ public open class VaadinPrepareFrontendTask : DefaultTask() {
             put(InitParameters.NODE_VERSION, extension.nodeVersion)
             put(InitParameters.NODE_DOWNLOAD_ROOT, extension.nodeDownloadRoot)
         }
-        val tokenFile = File(extension.webpackOutputDirectory!!, FrontendUtils.TOKEN_FILE)
+        // Don't generate the file here (taken from the Maven plugin code)
+        // val tokenFile = File(extension.webpackOutputDirectory!!, FrontendUtils.TOKEN_FILE)
+        val configFolder = File("${extension.buildOutputDirectory}/META-INF/VAADIN/config")
+        val tokenFile = File(configFolder, "flow-build-info.json")
         Files.createDirectories(tokenFile.parentFile.toPath())
         buildInfo.writeToFile(tokenFile)
         logger.info("Wrote token file $tokenFile: $buildInfo")
