@@ -75,7 +75,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
                 $compile("org.slf4j:slf4j-simple:1.7.30")
             }
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
         """.trimIndent())
@@ -103,7 +102,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
                 maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
             }
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
             dependencies {
@@ -145,7 +143,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
             dependencies {
@@ -194,7 +191,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
             }
             def jettyVersion = "9.4.20.v20190813"
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
             dependencies {
@@ -283,7 +279,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
             }
 
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
             
@@ -372,7 +367,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
             }
 
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
             }
         """.trimIndent())
@@ -480,7 +474,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
                 }
             }
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
                 filterClasspath {
                     include("com.vaadin:flow-*")
@@ -522,7 +515,6 @@ fun DynaNodeGroup.singleModuleTests(gradleVersion: GradleVersion) {
                 }
             }
             vaadin {
-                requireHomeNodeExec = true
                 pnpmEnable = true
                 filterClasspath {
                     include("com.vaadin:flow-*")
