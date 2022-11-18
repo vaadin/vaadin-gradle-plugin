@@ -25,18 +25,15 @@ import elemental.json.impl.JsonUtil
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.artifacts.ModuleVersionIdentifier
 import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSetContainer
-import org.gradle.internal.component.external.model.ModuleComponentArtifactIdentifier
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.io.File
 import java.net.URI
 import java.net.URL
-import java.util.function.Supplier
 
 private val servletApiJarRegex = Regex(".*(/|\\\\)(portlet-api|javax\\.servlet-api)-.+jar$")
 internal fun getClassFinder(project: Project): ClassFinder {
