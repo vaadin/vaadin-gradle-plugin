@@ -35,7 +35,6 @@ import java.io.IOException
 import java.util.*
 import java.util.jar.Attributes
 import java.util.jar.JarFile
-import java.util.jar.Manifest
 
 /**
  * Task that builds the frontend bundle.
@@ -157,7 +156,7 @@ public open class VaadinBuildFrontendTask : DefaultTask() {
                     logger.debug("License check for $component failed. Invalidating output")
                     FileUtils.deleteDirectory(outputFolder)
                 } catch (e1: IOException) {
-                    logger.debug("Failed to remove {}", outputFolder)
+                    logger.debug("Failed to remove $outputFolder", e1)
                 }
                 throw e
             }
@@ -169,10 +168,7 @@ public open class VaadinBuildFrontendTask : DefaultTask() {
         for (f in getJarFiles()) {
             try {
                 JarFile(f).use { jarFile ->
-                    val manifest: Manifest? =
-                        jarFile.manifest
-                    val attributes: Attributes? =
-                        manifest?.mainAttributes
+                    val attributes: Attributes? = jarFile.manifest?.mainAttributes
                     val cvdlName: String? = attributes?.getValue("CvdlName")
                     if (cvdlName != null) {
                         val version = attributes.getValue("Bundle-Version")
